@@ -1,11 +1,14 @@
-# Project feature and readiness map
+# Gridelyx feature and readiness map
 
-Status uses R0-R6 from `PROJECT_PLAN.md`. This is an evidence snapshot, not a marketing promise. The complete retained scope lives in `CHAT_REQUIREMENTS_TRACEABILITY.md`; capabilities omitted from this compact table remain in scope when present there.
+Status uses R0-R6 from `PROJECT_PLAN.md`. This is an evidence snapshot, not a marketing promise. Complete retained scope lives in `CHAT_REQUIREMENTS_TRACEABILITY.md`; dependencies/tools live in `DEPENDENCIES_AND_TOOLCHAIN.md` and `CAPABILITY_DEPENDENCY_MATRIX.md`.
 
 | Domain | Capability | Target | State | Notes |
 |---|---|---|---:|---|
-| Control | Whole-chat requirements traceability | Repository | R3 | Human + machine-readable 32-group ledger and CI path checker are wired. |
+| Control | Whole-chat requirements traceability | Repository | R3 | Human + machine-readable **33-group** ledger and CI path checker are wired. |
+| Control | Dependency/toolchain inventory | Repository | R3 | Human/machine tool inventory, capability matrix and CI evidence-path checker are wired. |
 | Control | AI continuity/drift system | Repository | R3 | Handoff, AI roles, work state, decisions, assumptions, context routing and continuity CI. |
+| Brand | Gridelyx canonical identity | Repository/product | R2-R3 | Identity frozen in `platform/brand.json`; canonical public entrypoints updated. |
+| Brand | Retired terminology compatibility migration | Repository/runtime | R1-R2 transition | Staged terminology manifest/checker exists; source/ABI/protocol/persisted migration remains. |
 | Community | Contributor onboarding | Repository | R2 | Community, support, conduct, architecture and evidence guides are tracked. |
 | Studio | GUI-independent core model | Desktop/shared | R3 | Rust instance/provider/provenance/resolver core has automated tests. |
 | Launcher | Native desktop control plane | Desktop | R1 | Core contracts exist; GUI/runtime shell pending. |
@@ -77,7 +80,11 @@ Status uses R0-R6 from `PROJECT_PLAN.md`. This is an evidence snapshot, not a ma
 | Production | Real-time recording | Java/Bedrock | R0-R1 | Target adapters pending. |
 | Production | Offline deterministic render | Java/Bedrock | R0-R1 | Renderer stepping/integration research required. |
 | Production | Audio stems/export | Cross-edition/desktop | R1 | Architecture/provenance policy defined. |
-| Rebrand | Replacement identity + scrub | Repository/product | R1 transition | Controlled migration plan exists; replacement identity not yet selected. |
+| Toolchain | Java/Gradle/NeoForge/quality libraries | Java | R3 control evidence | Exact versions are locked and machine-documented. |
+| Toolchain | Python/Rust/CMake/compiler release matrix | Cross-project | R1-R2 | Required uses documented; exact supported versions remain to be pinned. |
+| Toolchain | Go/.NET external bridge lanes | Sidecar | R1-R2 | Example implementations exist; release conformance/version policy pending. |
+| Toolchain | External encoder/decompiler adapters | Desktop/dev | R1 | Optional/provenance-gated; not implicit bundled dependencies. |
+| Reference vault | Exact large binary payload on remote GitHub | Repository | R1 pending | Manifest/control layer exists; physical payload remains pending while marker file exists. |
 
 ## UX feature groups
 
@@ -85,7 +92,7 @@ Status uses R0-R6 from `PROJECT_PLAN.md`. This is an evidence snapshot, not a ma
 Instances, recent worlds/projects, modpacks, update state, play/edit/create/produce actions, diagnostics and storage usage.
 
 ### New instance wizard
-Minecraft version → loader → Java auto-resolution → content/modpack → toolkit profile → memory/performance → review resolution graph → create.
+Minecraft version → loader → Java auto-resolution → content/modpack → Gridelyx toolkit profile → memory/performance → review resolution graph → create.
 
 ### Instance editor
 Version components, mods/content, resource packs, shaders, worlds, servers, configs, Java/JVM, launch arguments, environment, logs, screenshots, saves, recordings, creator projects, patch graph and snapshots.
