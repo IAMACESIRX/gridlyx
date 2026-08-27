@@ -99,8 +99,6 @@ tasks.withType(Checkstyle).configureEach {
 spotless {
     java {
         target 'src/**/*.java'
-        googleJavaFormat(google_java_format_version)
-        formatAnnotations()
         trimTrailingWhitespace()
         endWithNewline()
     }
