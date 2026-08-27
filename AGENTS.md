@@ -1,50 +1,36 @@
-# AI Engineering Contract
+# AI engineering contract
 
-This repository is a controlled Minecraft mod R&D environment. AI agents may design, generate, refactor, compile and validate mods, but must preserve reproducibility and reference integrity.
-
-## Canonical target
-
-- Minecraft: `26.2`
-- NeoForge: `26.2.0.67`
-- ModDevGradle: `2.0.144`
-- Gradle: `9.2.1`
-- Java language/toolchain: `25`
-- Exact CI JDK preference: Eclipse Temurin `25.0.4+7`
-- LWJGL bundle available for reference: `3.4.1`
-
-`platform/versions.json` is the machine-readable lock.
+This repository is a private Minecraft R&D and advanced mod-development platform. AI agents may construct complete Java/NeoForge mods, but generated code is not trusted merely because it compiles.
 
 ## Required workflow
 
-1. Read the request and identify target side(s): common/client/server/data generation/GameTest.
-2. Inspect the canonical template and `references/index/` before inventing API calls.
-3. If a required API is uncertain, resolve it from hydrated references, Gradle dependency sources, NeoForge documentation, or a minimal compile probe. Do not guess signatures.
-4. Create or modify a workspace under `mods/<mod_id>/`.
-5. Run `python tools/validate_platform.py --mod <mod_id>`.
-6. Run the workspace Gradle `build` task.
-7. Add unit tests for pure logic. Add NeoForge GameTests for behaviour that requires Minecraft state when practical.
-8. Run GameTest only when the workspace declares tests; an empty GameTest server may fail by design.
-9. Inspect the built JAR and verify metadata/resources.
-10. Report assumptions, unresolved API uncertainty, validation actually performed, and output artifact path.
+1. Identify the target `mods/<mod_id>` workspace or create a new one with `tools/new_mod.py`.
+2. Read `platform/versions.json` and relevant `references/index/` entries before guessing external APIs.
+3. Keep normal gameplay code in `src/main`; use `src/advanced` only for mechanisms that genuinely require bytecode/native/GPU/IPC/network interception.
+4. Use registries and datagen rather than duplicated hard-coded resource state where appropriate.
+5. Run `python tools/validate_platform.py` and `python tools/diagnose.py --static`.
+6. Run Spotless, Checkstyle/check, build, and applicable GameTests.
+7. Review generated resources and built JAR contents.
+8. Record uncertainty and target-specific assumptions in code/docs/issues.
 
-## Reference boundary
+## Architecture rules
 
-Treat `vault/` and `references/upstream/` as immutable evidence.
+- `templates/` is canonical scaffolding; `mods/` contains independent distributable workspaces.
+- Reference/vault material must not leak into normal `implementation` classpaths.
+- Multiple mods must remain independently buildable and must not share writable runtime state by accident.
+- Global registries own registration; feature modules consume registered holders rather than creating parallel registries.
+- Generated resources go to `src/generated/resources` and must be deterministic.
 
-Never:
+## Advanced-engine rules
 
-- silently edit or replace supplied reference artifacts;
-- add the bundled JDK or entire LWJGL distribution to a mod runtime classpath;
-- add a second Minecraft/NeoForge runtime to `implementation` just because it exists in the vault;
-- fabricate Minecraft/NeoForge methods, registries, event names, mappings or signatures;
-- commit generated Gradle caches, run directories, decompiled Minecraft source, authentication tokens or secrets.
+Advanced engines are disabled by default. Every native, bytecode, instrumentation, Mixin, Netty, IPC or direct GPU change needs an explicit lifecycle and failure path. Bytecode/Mixin targets must lock exact class/method descriptors and fail closed on mapping drift. Do not block Netty event loops or Minecraft render threads. Keep worker queues bounded. Validate all native-memory/IPC lengths. Do not attach agents to unrelated JVMs.
 
-The LWJGL bundle is primarily an API/native-reference corpus. Minecraft/NeoForge already controls the runtime LWJGL graph. A direct LWJGL dependency is permitted only for an explicitly justified experiment and must pass dependency-conflict validation.
+A target-specific Mixin redirect or ASM patch must be derived from the exact Minecraft/NeoForge mappings/reference source. Never invent descriptors from memory.
 
-## Security / trust boundary
+## Security and provenance
 
-Generated mods and third-party JARs are untrusted code. CI workflows use read-only repository permissions by default and must not expose secrets to compilation, tests or GameTests. Do not execute arbitrary downloaded installers during ordinary validation.
+Never commit credentials, tokens or personal data. Treat generated source as untrusted until reviewed. Third-party code/assets require licence and provenance review even in a private repository. Preserve NeoForge MDK template licensing separately from the licence chosen for each generated mod.
 
-## Architecture preference
+## Definition of done
 
-Prefer small explicit modules, deterministic data generation, testable pure logic, side-safe code, version-pinned dependencies and replaceable integrations. Keep experiments outside canonical mod code until validated.
+A change is done only when the relevant formatting/lint/build/test gates pass and the resulting architecture remains replaceable, bounded, diagnosable and version-aware.

@@ -6,10 +6,20 @@
 **/out/
 **/.idea/
 **/*.iml
+**/.classpath
+**/.project
+**/.settings/
 
 # Local reference reconstruction/cache
 .reference-cache/
 reference-cache/
+.native-cache/
+
+# Diagnostics/profilers
+**/*.hprof
+**/*.jfr
+**/hs_err_pid*
+**/replay_pid*
 
 # OS/editor
 .DS_Store
@@ -22,3 +32,6 @@ Thumbs.db
 .env.*
 !.env.example
 secrets/
+**/secrets.*
+**/local.properties
+**/gradle-local.properties

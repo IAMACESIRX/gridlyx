@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "minecraft": "26.2",
   "neoforge": "26.2.0.67",
   "moddevgradle": "2.0.144",
@@ -10,6 +10,14 @@
     "exact": "25.0.4+7",
     "vendor": "Eclipse Adoptium"
   },
-  "lwjgl_reference": "3.4.1",
+  "quality": {
+    "spotless": "8.10.0",
+    "google_java_format": "1.36.0",
+    "checkstyle": "14.0.0"
+  },
+  "advanced": {
+    "asm": "9.10.1",
+    "lwjgl_reference": "3.4.1"
+  },
   "template": "templates/neoforge-26.2"
 }
