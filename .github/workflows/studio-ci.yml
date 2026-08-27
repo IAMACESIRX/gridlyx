@@ -1,11 +1,13 @@
-name: Studio and Project Continuity CI
+name: Gridelyx Studio and Project Continuity CI
 
 on:
   push:
     paths:
       - 'studio/**'
       - 'ai/**'
+      - 'platform/brand.json'
       - 'platform/chat-requirements.json'
+      - 'platform/toolchain-requirements.json'
       - 'AI_HANDOFF.md'
       - 'AGENTS.md'
       - 'COMMUNITY.md'
@@ -16,6 +18,8 @@ on:
       - 'docs/PROJECT_OVERVIEW.md'
       - 'docs/PROJECT_STRUCTURE.md'
       - 'docs/CHAT_REQUIREMENTS_TRACEABILITY.md'
+      - 'docs/DEPENDENCIES_AND_TOOLCHAIN.md'
+      - 'docs/REBRAND_PLAN.md'
       - 'docs/community/**'
       - 'docs/ROADMAP.md'
       - 'docs/FEATURE_MAP.md'
@@ -25,6 +29,7 @@ on:
       - 'docs/AI_CONTEXT_SYSTEM.md'
       - 'tools/continuity_check.py'
       - 'tools/chat_requirements_check.py'
+      - 'tools/toolchain_requirements_check.py'
       - 'tools/repo_index.py'
       - 'tools/ai_context_pack.py'
       - 'tools/studio_check.py'
@@ -33,7 +38,9 @@ on:
     paths:
       - 'studio/**'
       - 'ai/**'
+      - 'platform/brand.json'
       - 'platform/chat-requirements.json'
+      - 'platform/toolchain-requirements.json'
       - 'AI_HANDOFF.md'
       - 'AGENTS.md'
       - 'COMMUNITY.md'
@@ -43,6 +50,7 @@ on:
       - 'docs/**'
       - 'tools/continuity_check.py'
       - 'tools/chat_requirements_check.py'
+      - 'tools/toolchain_requirements_check.py'
       - 'tools/repo_index.py'
       - 'tools/ai_context_pack.py'
       - 'tools/studio_check.py'
@@ -58,10 +66,12 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
-      - name: Validate AI continuity and drift-control structure
+      - name: Validate Gridelyx continuity and brand state
         run: python tools/continuity_check.py
       - name: Validate whole-chat requirements traceability
         run: python tools/chat_requirements_check.py
+      - name: Validate dependency and toolchain inventory
+        run: python tools/toolchain_requirements_check.py
       - name: Validate Studio architecture and provider policy
         run: python tools/studio_check.py
       - name: Validate AI repository index contract
