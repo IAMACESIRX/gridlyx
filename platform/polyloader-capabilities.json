@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "plane": "gridelyx-polyloader",
+  "capabilities": {
+    "java_instrumentation_bootstrap": "implemented",
+    "prelaunch_agent_hook": "implemented",
+    "asm_invocation_translation": "framework",
+    "unified_abstraction_layer": "implemented",
+    "runtime_loader_fingerprint": "implemented",
+    "fabric_adapter": "requires-loader-adapter",
+    "quilt_adapter": "requires-loader-adapter",
+    "forge_adapter": "requires-loader-adapter",
+    "neoforge_adapter": "requires-loader-adapter",
+    "liteloader_adapter": "requires-loader-adapter",
+    "live_mod_artifact_analysis": "implemented",
+    "isolated_sideload_classloader": "implemented",
+    "live_cross_loader_activation": "capability-negotiated",
+    "mixin_and_coremod_late_injection": "prelaunch-required",
+    "runtime_method_handle_scanner": "implemented",
+    "semantic_symbol_binding": "requires-validation-layer",
+    "legacy_java8_bootstrap": "requires-separate-artifact",
+    "dynamic_model_registry": "implemented",
+    "dynamic_texture_registry": "implemented",
+    "vertex_mesh_override_pipeline": "framework",
+    "voxel_editor_workspace": "framework",
+    "minecraft_gpu_asset_adapter": "requires-target-integration",
+    "cooperative_script_deadlines": "implemented",
+    "global_recoverable_fault_boundary": "implemented",
+    "process_isolated_script_worker": "requires-integration",
+    "transactional_world_rollback": "framework",
+    "absolute_all-version-compatibility": "not-claimed"
+  }
+}
