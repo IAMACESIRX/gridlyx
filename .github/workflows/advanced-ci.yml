@@ -9,6 +9,7 @@ on:
       - 'templates/neoforge-26.2/gradle.properties'
       - 'platform/**'
       - 'tools/world_editor_check.py'
+      - 'tools/polyloader_check.py'
       - '.github/workflows/advanced-ci.yml'
   pull_request:
     paths:
@@ -18,6 +19,7 @@ on:
       - 'templates/neoforge-26.2/gradle.properties'
       - 'platform/**'
       - 'tools/world_editor_check.py'
+      - 'tools/polyloader_check.py'
       - '.github/workflows/advanced-ci.yml'
   workflow_dispatch:
 
@@ -45,6 +47,7 @@ jobs:
           python tools/script_gatekeeper.py
           python tools/validate_platform.py
           python tools/world_editor_check.py
+          python tools/polyloader_check.py
       - name: Compile and test advanced engines
         working-directory: templates/neoforge-26.2
         run: ./gradlew --no-daemon -Penable_advanced_engines=true spotlessCheck check build
