@@ -1,4 +1,4 @@
-name: Advanced Engine CI
+name: Gridelyx Advanced Engine CI
 
 on:
   push:
@@ -7,9 +7,12 @@ on:
       - 'templates/neoforge-26.2/src/test/**'
       - 'templates/neoforge-26.2/build.gradle'
       - 'templates/neoforge-26.2/gradle.properties'
+      - 'bedrock/**'
+      - 'native/**'
       - 'platform/**'
       - 'tools/world_editor_check.py'
       - 'tools/polyloader_check.py'
+      - 'tools/bedrock_check.py'
       - '.github/workflows/advanced-ci.yml'
   pull_request:
     paths:
@@ -17,9 +20,12 @@ on:
       - 'templates/neoforge-26.2/src/test/**'
       - 'templates/neoforge-26.2/build.gradle'
       - 'templates/neoforge-26.2/gradle.properties'
+      - 'bedrock/**'
+      - 'native/**'
       - 'platform/**'
       - 'tools/world_editor_check.py'
       - 'tools/polyloader_check.py'
+      - 'tools/bedrock_check.py'
       - '.github/workflows/advanced-ci.yml'
   workflow_dispatch:
 
@@ -41,16 +47,17 @@ jobs:
         with:
           gradle-version: '9.2.1'
           cache-provider: basic
-      - name: Validate locked platform
+      - name: Validate Gridelyx platform
         run: |
           python tools/build_lock.py --check
           python tools/script_gatekeeper.py
           python tools/validate_platform.py
           python tools/world_editor_check.py
           python tools/polyloader_check.py
+          python tools/bedrock_check.py
       - name: Compile and test advanced engines
         working-directory: templates/neoforge-26.2
         run: ./gradlew --no-daemon -Penable_advanced_engines=true spotlessCheck check build
-      - name: GraalJS polyglot smoke test
+      - name: Gridelyx polyglot and bridge smoke tests
         working-directory: templates/neoforge-26.2
         run: ./gradlew --no-daemon -Penable_advanced_engines=true -Penable_polyglot_engines=true polyglotSmokeTest

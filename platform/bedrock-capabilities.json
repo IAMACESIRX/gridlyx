@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "plane": "gridelyx-bedrock",
+  "baseline": {
+    "bedrock": "1.26.40",
+    "minecraft_server": "2.9.0",
+    "editor_preview": "1.26.50-preview.26"
+  },
+  "capabilities": {
+    "bedrock_behavior_pack": "implemented",
+    "bedrock_resource_pack": "implemented",
+    "bedrock_script_api_adapter": "implemented",
+    "script_event_command_ingress": "implemented",
+    "bedrock_editor_extension": "preview-scaffold",
+    "bedrock_dedicated_server_network_bridge": "requires-preview-integration",
+    "java_ffm_project_panama_bridge": "implemented",
+    "named_native_shared_memory_transport": "implemented",
+    "cross_process_frame_sequence": "implemented",
+    "ual_binary_frames": "framework",
+    "mesh_binary_frames": "framework",
+    "texture_patch_binary_frames": "framework",
+    "world_delta_binary_frames": "framework",
+    "telemetry_binary_frames": "framework",
+    "native_bedrock_companion": "implemented",
+    "native_bedrock_render_adapter": "requires-versioned-adapter",
+    "direct_bedrock_executable_hooking": "not-platform-baseline",
+    "bedrock_internal_renderer_injection": "not-claimed",
+    "client_native_shared_memory_from_script_api": "not-supported-by-official-script-api",
+    "realm_native_bridge": "not-supported-by-official-script-api"
+  }
+}

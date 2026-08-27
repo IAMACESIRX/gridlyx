@@ -1,28 +1,137 @@
-# Minecraft Advanced Mod Development Kit
+# Gridelyx Studio
 
-Private R&D platform for **AI-assisted Minecraft/NeoForge engineering, live scripting, runtime experimentation, multi-language extensions and in-game construction systems**. The stable mod template stays reproducible while advanced bytecode/native/polyglot/render/network/world-edit systems remain isolated and opt-in.
+Private R&D platform for **AI-assisted Minecraft engineering, live scripting, polyloader compatibility, in-game world/asset authoring, native acceleration and cross-edition runtime tooling**. Gridelyx Studio targets both Minecraft Java Edition and Minecraft Bedrock Edition through neutral operation, asset, transaction and bridge contracts while keeping engine-specific adapters isolated.
 
-## Canonical toolchain
+## Current target matrix
 
-| Component | Locked version |
+| Target | Baseline |
 |---|---:|
-| Minecraft | 26.2 |
+| Minecraft Java | 26.2 |
 | NeoForge | 26.2.0.67 |
-| ModDevGradle | 2.0.144 |
-| Gradle | 9.2.1 |
+| Minecraft Bedrock stable | 1.26.40 |
+| Bedrock `@minecraft/server` | 2.9.0 |
+| Bedrock Editor preview | 1.26.50-preview.26 |
 | Java | Temurin 25.0.4+7 |
-| Spotless | 8.10.0 |
-| Checkstyle | 14.0.0 |
-| JUnit | 6.1.3 |
-| ArchUnit | 1.4.2 |
+| Gradle | 9.2.1 |
+| ModDevGradle | 2.0.144 |
 | ASM | 9.10.1 |
-| LWJGL reference | 3.4.1 |
 | GraalVM Polyglot | 25.3.4.1 |
-| MCP target | 2026-07-28 |
+| VFSB bridge protocol | 1 |
+| Gridelyx native ABI | 1 |
 
-The canonical `templates/neoforge-26.2/build.gradle` is protected by `platform/master-build.lock.json`; generated mod workspaces must match it byte-for-byte unless the lock is deliberately refreshed.
+The canonical Java template `templates/neoforge-26.2/build.gradle` remains protected by `platform/master-build.lock.json`; generated Java mod workspaces must match it byte-for-byte unless the lock is deliberately refreshed.
 
-## Multi-mod workspaces
+Canonical product and ABI naming lives in `platform/brand.json`.
+
+## Architecture
+
+```text
+                          Gridelyx Studio
+                                 |
+                AI / IDE / scripts / authoring tools
+                                 |
+                  Unified Abstraction Layer (UAL)
+                        /                    \
+                       /                      \
+           Java Edition target             Bedrock target
+                    |                            |
+       loader/version adapters          Script API adapter
+                    |                     Editor adapter
+      Instrumentation + ASM                   |
+                    |                    behavior/resource packs
+                    |                            |
+                    +--------- VFSB ------------+
+                                 |
+                         Java FFM / Panama
+                                 |
+                         gridelyx_native
+                                 |
+                      named shared memory
+                                 |
+                     native Bedrock companion
+                                 |
+                       versioned adapter
+```
+
+Gridelyx Studio deliberately distinguishes neutral platform contracts from engine-specific integration. Minecraft Java classes and Bedrock C++ object pointers are not allowed in portable UAL/VFSB payloads.
+
+## Java polyloader plane
+
+The advanced Java runtime includes:
+
+- Java Instrumentation prelaunch bootstrap integrated with the ASM transform engine;
+- runtime loader/JVM fingerprinting without compile-time Minecraft or loader API imports in the polyloader core;
+- UAL domains for registry, event, network, resource, render, world, input and lifecycle operations;
+- exact-descriptor ASM invocation translation rules;
+- capability-negotiated mod JAR analysis and isolated sideload classloaders;
+- explicit `LIVE_SAFE`, `EMULATED`, `PRELAUNCH_REQUIRED` and `UNSUPPORTED` decisions;
+- reflection/MethodHandle structural scanning for runtime symbol discovery;
+- revisioned dynamic mesh and texture registries with vertex overrides;
+- version-neutral voxel editor workspace state;
+- cooperative script deadlines and recoverable event fault boundaries;
+- prepared forward/inverse world transactions with rollback reporting.
+
+Gridelyx does **not** claim arbitrary Fabric/Forge/NeoForge/Quilt/Liteloader mods are universally hot-injectable. Mixins, access wideners, coremods, transformation services, frozen registries and early lifecycle hooks remain prelaunch/restart-sensitive until an adapter proves otherwise.
+
+Read `docs/POLYLOADER_ARCHITECTURE.md`, `docs/LIVE_ASSET_EDITING.md` and `docs/FAULT_TOLERANCE.md`.
+
+## Bedrock runtime plane
+
+`bedrock/` makes Bedrock a first-class Gridelyx target instead of duplicating the Java feature stack.
+
+### Stable Add-On runtime
+
+`bedrock/addon` contains a behavior pack and resource pack targeting Bedrock 1.26.40 and `@minecraft/server` 2.9.0. The script runtime exposes a neutral dispatcher through:
+
+```text
+/scriptevent gridelyx:<action> <payload>
+```
+
+Built-in actions currently provide bridge diagnostics/capability reporting and establish the supported ingress used by future UAL operation adapters.
+
+### Bedrock Editor extension
+
+`bedrock/editor-extension` is a separately pinned preview scaffold for Gridelyx world/asset authoring tools. Because `@minecraft/server-editor` is pre-release, Editor changes cannot alter or destabilise the stable Add-On/runtime protocol.
+
+### Project Panama native bridge
+
+Java 25 binds the Gridelyx native C ABI through FFM. `gridelyx_native` provides named cross-process shared memory with bounded payload capacity, CRC metadata and atomic publication sequences.
+
+The portable VFSB envelope carries:
+
+1. control messages;
+2. UAL operations;
+3. mesh revisions;
+4. texture patches;
+5. world deltas/transactions;
+6. telemetry;
+7. script results.
+
+`native/bedrock` consumes those frames behind a `BedrockAdapter` interface. Its checked-in default adapter validates/logs frames; it does not hard-code Bedrock addresses or require executable patching. A lower-level Bedrock renderer adapter remains version-scoped and must be validated separately.
+
+Read `docs/BEDROCK_ARCHITECTURE.md` and `docs/GRIDELYX_BRIDGE_PROTOCOL.md`.
+
+## Live world authoring
+
+The advanced platform contains a palette-indexed, server-authoritative world-edit architecture for already-generated chunks:
+
+- parallel 16x16x16 section-array blitting;
+- asynchronous immutable snapshot/delta preparation;
+- server-thread-only commit scheduling;
+- deferred bulk lighting and reconciliation;
+- compressed/uncompressed `.nbt` structure blueprint decoding;
+- blueprint slicing across chunk/section boundaries;
+- dynamic event/structure matrices;
+- sparse sub-voxel paint/overlay buffers;
+- progressive world transmutation;
+- volumetric density/material frame streaming;
+- hierarchical scene graph and transform gizmos;
+- embedded IDE/console, live Java compilation and AI passthrough;
+- edit framing, revision consensus, ACK state and replication culling.
+
+The neutral authoring state is shared conceptually across editions; final Java and Bedrock world/render adapters remain engine-specific.
+
+## Multi-mod Java workspaces
 
 ```bash
 python tools/new_mod.py spectral_tools "Spectral Tools" com.iamacesirx.mods.spectraltools
@@ -32,61 +141,9 @@ python tools/workspace.py build spectral_tools
 python tools/workspace.py build world_lab --advanced
 ```
 
-Every `mods/<mod_id>` is an independent NeoForge project with isolated generated resources, runs and JARs while sharing the locked platform contract.
+`mods/<mod_id>` remains a generated Java workspace area. Placeholder package/mod identifiers such as `examplemod` are template variables, not Gridelyx Studio product branding.
 
-## Gridelyx Studio polyloader plane
-
-The advanced runtime now includes the first loader-neutral Gridelyx Studio substrate:
-
-- Java Instrumentation prelaunch bootstrap integrated with the existing ASM transform engine;
-- runtime loader/JVM fingerprinting without compile-time Minecraft or loader API imports;
-- Unified Abstraction Layer domains for registry, event, network, resource, render, world, input and lifecycle operations;
-- exact-descriptor ASM invocation translation rules;
-- capability-negotiated mod JAR analysis and isolated sideload classloaders;
-- explicit `LIVE_SAFE`, `EMULATED`, `PRELAUNCH_REQUIRED` and `UNSUPPORTED` decisions;
-- reflection/MethodHandle structural scanning for runtime symbol discovery;
-- revisioned dynamic mesh and texture registries with a vertex override pipeline;
-- version-neutral voxel editor workspace state;
-- cooperative asynchronous script deadlines and recoverable event fault boundaries;
-- prepared forward/inverse world transactions with rollback reporting.
-
-The project deliberately does **not** claim that arbitrary Fabric/Forge/NeoForge/Quilt/Liteloader mods are universally hot-injectable. Mixins, access wideners, coremods, transformation services, frozen registries and early lifecycle hooks default to prelaunch or restart-required behaviour until an adapter proves otherwise.
-
-Run the Gridelyx structural gate with:
-
-```bash
-python tools/polyloader_check.py
-```
-
-Read `docs/POLYLOADER_ARCHITECTURE.md`, `docs/LIVE_ASSET_EDITING.md` and `docs/FAULT_TOLERANCE.md` before implementing loader-specific adapters or renderer bindings.
-
-## Live world authoring plane
-
-The advanced template includes a palette-indexed, server-authoritative world-edit architecture for MCEdit-style edits over already-generated chunks:
-
-- parallel 16x16x16 section-array blitting;
-- asynchronous immutable snapshot/delta preparation;
-- server-thread-only commit scheduling;
-- deferred bulk lighting with explicit reconciliation;
-- compressed/uncompressed `.nbt` structure blueprint decoding;
-- blueprint slicing across existing chunk/section boundaries;
-- dynamic event/structure matrices for triggered procedural events;
-- sparse sub-voxel paint/overlay buffers;
-- progressive world transmutation state machine;
-- real-time volumetric density/material frame streaming;
-- hierarchical scene graph, typed property serialization and transform gizmos;
-- embedded IDE/console models, live Java compilation, key/menu action routing and AI passthrough;
-- Netty edit framing, section revision consensus, ACK state and near-player replication culling.
-
-Run the structural gate with:
-
-```bash
-python tools/world_editor_check.py
-```
-
-Read `docs/WORLD_EDIT_RUNTIME.md`, `docs/INGAME_DEVELOPMENT_ENVIRONMENT.md`, `docs/MULTIPLAYER_WORLD_EDIT.md` and `docs/WORLD_EDITOR_ROADMAP.md` before wiring target-specific Minecraft adapters.
-
-## Quality, tests and automation
+## Quality gates
 
 ```bash
 python tools/build_lock.py --check
@@ -94,6 +151,7 @@ python tools/script_gatekeeper.py
 python tools/ecosystem_check.py
 python tools/world_editor_check.py
 python tools/polyloader_check.py
+python tools/bedrock_check.py
 python tools/validate_platform.py
 python tools/diagnose.py --static
 python tools/autodoc.py --check
@@ -102,68 +160,62 @@ python tools/bytecode_diff.py --self-test
 python tools/csv_recipe_pipeline.py --self-test
 ```
 
-The platform uses Spotless, Checkstyle, JUnit, ArchUnit, CodeQL, deterministic diagnostics, headless NeoForge GameTest orchestration, bytecode diffing and independent native/advanced CI lanes. MCTester is treated as an optional adapter until exact target-version compatibility is verified; the native NeoForge GameTest API is the locked baseline.
+CI is split by responsibility:
 
-## AI, MCP and local context
+- **Gridelyx Advanced Engine CI** — Java advanced engines, UAL/polyloader, Bedrock bridge codec and polyglot smoke tests;
+- **Gridelyx Bedrock CI** — Bedrock manifests and Script/Editor JavaScript syntax;
+- **Gridelyx Native CI** — Rust ABI plus Windows/Linux C++ shared-memory and Bedrock companion builds;
+- **Minecraft Mod Platform CI** — locked Java template/workspace validation;
+- **CodeQL** — security/static analysis.
 
-The advanced AI plane includes a stateless MCP 2026-07-28 endpoint contract and a local cosine vector index with replaceable embedding providers. `tools/ai_autodoc.py` can hand a provenance-aware documentation request to a local model or sidecar without hard-wiring a cloud vendor/API key.
-
-## Polyglot, native and cross-process execution
+## AI, polyglot and sidecars
 
 - GraalJS and GraalPy contexts are replaceable and deny host access by default.
-- Java 25 FFM/Panama binds versioned native C ABIs.
-- Rust and C++ native examples compile in their own CI lane.
-- Python, Go and C# share the same bounded big-endian bridge-frame protocol.
-- Existing shared-memory IPC and Netty injection are extended by a loopback-first development HTTP endpoint.
+- Java 25 FFM/Panama binds the versioned `gridelyx_` native C ABI.
+- Rust and C++ have independent native validation lanes.
+- Python, Go and C# use bounded bridge protocols.
+- VFSB is transport-neutral and can be carried over shared memory or future validated network transports.
+- Bedrock Dedicated Server networking is optional because `@minecraft/server-net` is not a normal-client or Realm transport.
 
-## External hotloading core
+## External hotloading
 
-`ExternalHotloadCore` uses NIO.2 `WatchService` to recursively monitor approved development roots and publish debounced typed reload events for scripts, data, assets and bytecode.
+`ExternalHotloadCore` recursively monitors approved development roots and publishes debounced typed reload events for scripts, data, assets and bytecode.
 
-Restartless strategy is deliberately split:
+Restartless strategy remains capability-based:
 
-- scripts: replace GraalVM context/module;
-- data/procedural definitions: validate then atomically replace versioned runtime state;
-- assets: revisioned Gridelyx registries and target-specific render upload/override paths;
+- scripts: replace script context/module;
+- data/procedural definitions: validate then atomically replace versioned state;
+- assets: revisioned Gridelyx registries and target-specific upload/override paths;
 - compatible Java class changes: `Instrumentation.redefineClasses`;
-- schema-changing Java: new implementation JAR behind a stable service interface and replaceable classloader;
+- schema-changing Java: replaceable implementation JAR/classloader;
 - dynamic gameplay content: virtual/versioned registries;
-- frozen vanilla/loader registry additions: not falsely claimed to be universally hotloadable.
+- frozen Java loader registries: prelaunch/restart when required;
+- Bedrock stable content: Creator API/pack lifecycle rules;
+- Bedrock Editor/native integrations: explicit version capability checks.
 
-See `docs/HOTLOAD_ARCHITECTURE.md` and `docs/POLYLOADER_ARCHITECTURE.md`.
+## Native safety boundary
 
-## Construction sandbox
+Native extensions are trusted code. FFM/native ABI mismatch, invalid pointers or native memory corruption can terminate a process. Untrusted AI-generated/native workloads belong in a separate worker-process fault domain. Shared memory is a transport and must never be treated as authority over world state; authoritative edits retain transaction/rollback rules.
 
-The construction plane contains a deterministic physics world, constraint graph, raycast tool-gun controller, procedural matrix engine, algorithmic asset provider, dynamic collision-shape model, Minecraft `VoxelShape` composer, zero-entity teleport channels, dynamic dimension lifecycle manager, custom geometry provider and prioritised client render-event/override pipelines.
-
-The live world editor extends this into section-array world manipulation, event-driven structure placement, volumetric previews, scene graph editing and multiplayer replication infrastructure.
-
-## Profiling and chaos engineering
-
-The telemetry plane includes bounded real-time event storage, deterministic opt-in fault injection and JDK Flight Recorder control. Chaos mode is development/test-only and must not silently activate in release builds.
-
-## Mod import/fork analysis
-
-`tools/fork_mod.py` safely extracts an authorised JAR, records its SHA-256/provenance, creates `javap` disassembly and can invoke an explicitly supplied local decompiler. Nothing is downloaded or executed automatically merely because a JAR was imported.
-
-## Project management
+## Project management and architecture docs
 
 Read:
 
-- `docs/PROJECT_PLAN.md` — R0-R6 readiness model, workstreams, milestones and release gates.
-- `docs/WORLD_EDITOR_ROADMAP.md` — R0-R5 world-editor integration and validation roadmap.
-- `docs/POLYLOADER_ARCHITECTURE.md` — loader-neutral bootstrap, UAL and compatibility contract.
-- `docs/LIVE_ASSET_EDITING.md` — dynamic mesh/texture and voxel authoring pipeline.
-- `docs/FAULT_TOLERANCE.md` — script isolation and transactional recovery rules.
-- `docs/TODO.md` — implementation/validation ledger.
-- `docs/DECISIONS.md` — architecture decision records.
-- `docs/TEST_STRATEGY.md` — layered verification model.
-- `docs/AUTO_CAPABILITIES.md` — generated capability status.
-- `docs/AI_AUTODOC.md` — provider-independent AI documentation pipeline.
-- `SECURITY.md` and `CONTRIBUTING.md` — operational rules.
+- `docs/PROJECT_PLAN.md`
+- `docs/WORLD_EDITOR_ROADMAP.md`
+- `docs/POLYLOADER_ARCHITECTURE.md`
+- `docs/BEDROCK_ARCHITECTURE.md`
+- `docs/GRIDELYX_BRIDGE_PROTOCOL.md`
+- `docs/LIVE_ASSET_EDITING.md`
+- `docs/FAULT_TOLERANCE.md`
+- `docs/TEST_STRATEGY.md`
+- `docs/TODO.md`
+- `docs/DECISIONS.md`
+- `SECURITY.md`
+- `CONTRIBUTING.md`
 
-The repository issue tracker is the live execution backlog. Use the world-editor and Gridelyx work items to separate framework presence from loader-specific, client-specific and production validation.
+The issue tracker is the live execution backlog. Capabilities are promoted from framework/preview status only when their relevant compatibility and regression cells are green.
 
 ## Reference vault
 
-`references/index/` is the fast lookup layer; `vault/` is exact recovery/deep-inspection storage. Large supplied binary payloads remain represented by exact checksums/chunk manifests until their deterministic local import is pushed. Do not treat pending remote binary payloads as hydrated merely because their manifests exist.
+`references/index/` is the fast lookup layer; `vault/` is exact recovery/deep-inspection storage. Large supplied binary payloads remain represented by exact checksums/chunk manifests until deterministic hydration is complete.

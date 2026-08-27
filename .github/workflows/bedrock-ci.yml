@@ -1,0 +1,39 @@
+name: Gridelyx Bedrock CI
+
+on:
+  push:
+    paths:
+      - 'bedrock/**'
+      - 'platform/bedrock-capabilities.json'
+      - 'platform/brand.json'
+      - 'tools/bedrock_check.py'
+      - '.github/workflows/bedrock-ci.yml'
+  pull_request:
+    paths:
+      - 'bedrock/**'
+      - 'platform/bedrock-capabilities.json'
+      - 'platform/brand.json'
+      - 'tools/bedrock_check.py'
+      - '.github/workflows/bedrock-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bedrock-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Validate Bedrock manifests and bridge contract
+        run: python tools/bedrock_check.py
+      - name: Validate stable Bedrock scripts
+        run: |
+          node --check bedrock/addon/behavior_pack/scripts/main.js
+          node --check bedrock/addon/behavior_pack/scripts/gridelyx_runtime.js
+      - name: Validate Editor preview entrypoint syntax
+        run: node --check bedrock/editor-extension/behavior_pack/scripts/main.js

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "product_name": "Gridelyx Studio",
+  "product_slug": "gridelyx-studio",
+  "native_library": "gridelyx_native",
+  "native_symbol_prefix": "gridelyx_",
+  "bridge_magic": "VFSB",
+  "bridge_protocol_version": 1,
+  "java_plane": "Gridelyx Studio Java Polyloader",
+  "bedrock_plane": "Gridelyx Studio Bedrock Runtime",
+  "canonical_name_policy": "Use Gridelyx Studio for platform-facing product, runtime, protocol, native ABI and documentation names. Generated mod template identifiers remain replaceable workspace placeholders."
+}

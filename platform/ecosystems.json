@@ -1,25 +1,29 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "ecosystems": {
     "java": {
-      "role": "NeoForge host/runtime",
+      "role": "Gridelyx Studio Java polyloader host/runtime",
       "gate": "Gradle + Spotless + Checkstyle + JUnit + ArchUnit"
     },
+    "bedrock": {
+      "role": "Minecraft Bedrock Add-On, Editor and native companion target",
+      "gate": "bedrock_check + manifest/script syntax + native bridge CI"
+    },
     "javascript": {
-      "role": "GraalJS live scripts and procedural logic",
-      "gate": "script_gatekeeper + polyglot smoke test"
+      "role": "GraalJS live scripts, procedural logic and Bedrock Script API runtime",
+      "gate": "script_gatekeeper + polyglot smoke test + Bedrock script syntax"
     },
     "python": {
       "role": "GraalPy scripts, AI sidecars and tooling",
       "gate": "AST syntax gate + bridge conformance"
     },
     "rust": {
-      "role": "memory-safe native acceleration",
+      "role": "memory-safe Gridelyx native acceleration",
       "gate": "cargo check/test"
     },
     "cpp": {
-      "role": "native/graphics/legacy integration",
-      "gate": "CMake compile"
+      "role": "Gridelyx native shared-memory, graphics and Bedrock companion integration",
+      "gate": "cross-platform CMake compile"
     },
     "go": {
       "role": "service/sidecar bridge",

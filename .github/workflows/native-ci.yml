@@ -1,13 +1,17 @@
-name: Native Extension CI
+name: Gridelyx Native CI
 
 on:
   push:
     paths:
       - 'native/**'
+      - 'bedrock/**'
+      - 'tools/bedrock_check.py'
       - '.github/workflows/native-ci.yml'
   pull_request:
     paths:
       - 'native/**'
+      - 'bedrock/**'
+      - 'tools/bedrock_check.py'
       - '.github/workflows/native-ci.yml'
   workflow_dispatch:
 
@@ -16,13 +20,19 @@ permissions:
 
 jobs:
   native-check:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
-      - name: Rust ABI check
+      - name: Validate Bedrock/native contracts
+        run: python tools/bedrock_check.py
+      - name: Rust Gridelyx ABI check
         run: cargo check --manifest-path native/rust/Cargo.toml
-      - name: Configure C++ ABI
-        run: cmake -S native/cpp -B build/native-cpp -DCMAKE_BUILD_TYPE=Release
-      - name: Build C++ ABI
-        run: cmake --build build/native-cpp --config Release
+      - name: Configure Gridelyx native workspace
+        run: cmake -S native -B build/native -DCMAKE_BUILD_TYPE=Release
+      - name: Build Gridelyx native workspace
+        run: cmake --build build/native --config Release

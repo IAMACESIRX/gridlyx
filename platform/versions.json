@@ -1,7 +1,14 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "minecraft": "26.2",
   "neoforge": "26.2.0.67",
+  "bedrock": {
+    "stable": "1.26.40",
+    "minecraft_server": "2.9.0",
+    "preview": "1.26.50-preview.26",
+    "server_editor": "0.1.0-beta.1.26.50-preview.26",
+    "server_net": "1.0.0-beta.1.26.50-preview.26"
+  },
   "moddevgradle": "2.0.144",
   "gradle": "9.2.1",
   "java": {
@@ -25,7 +32,9 @@
   },
   "protocols": {
     "mcp": "2026-07-28",
-    "bridge": "1.0"
+    "bridge": "1.0",
+    "vfsb": 1,
+    "native_abi": 1
   },
   "template": "templates/neoforge-26.2"
 }

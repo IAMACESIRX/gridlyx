@@ -1,0 +1,5 @@
+add_executable(gridelyx_bedrock_companion src/main.cpp)
+target_include_directories(gridelyx_bedrock_companion PRIVATE include)
+target_link_libraries(gridelyx_bedrock_companion PRIVATE gridelyx_native)
+target_compile_features(gridelyx_bedrock_companion PRIVATE cxx_std_20)
+set_target_properties(gridelyx_bedrock_companion PROPERTIES CXX_EXTENSIONS OFF)

@@ -1,4 +1,4 @@
-name: CodeQL
+name: Gridelyx CodeQL
 
 on:
   push:
