@@ -5,7 +5,15 @@ Private R&D platform for **AI-assisted, non-MCreator Minecraft mod engineering**
 The repository is intentionally two systems in one:
 
 1. **Construction/test environment** — a reproducible NeoForge 26.2 + Java 25 development template, isolated mod workspaces, CI builds, static validation, optional GameTests and JAR inspection.
-2. **Reference environment** — immutable version locks, upstream MDK snapshot, source/API indexes, and a vault format that can preserve the exact tool/reference archives supplied to the project without putting them on a mod's compile/runtime classpath.
+2. **Reference environment** — immutable version locks, upstream MDK snapshot, source/API indexes, and a vault format that preserves exact supplied tool/reference archives without putting them on a mod's compile/runtime classpath.
+
+## Repository status
+
+The AI/control/source layer is live in this private repository. `vault/manifest.json` records the exact identity of every supplied artifact and every large-file chunk.
+
+The exact ~632 MB binary payload is the only remaining remote import step because the connected GitHub API can write source text but cannot stream the local binary archives. While `vault/REMOTE_BINARY_IMPORT_PENDING.md` exists, the repository deliberately reports that state instead of pretending the binaries are present. See `docs/REMOTE_BINARY_IMPORT.md` for the deterministic one-command import/hydration path.
+
+A complete byte-verified offline repository bundle also exists as a recovery/import copy.
 
 ## Canonical toolchain
 
@@ -46,9 +54,10 @@ python tools/build_all.py --include-template
 ## Reference vault
 
 ```bash
-python tools/vault.py verify
+python tools/vault.py verify --all
 python tools/vault.py reconstruct --all --output .reference-cache/raw
 python tools/vault.py extract --all --output .reference-cache/extracted
+python tools/reference_lookup.py search GLFW
 ```
 
 `references/index/` is designed for fast AI lookup. The vault is for exact recovery and deep inspection.
