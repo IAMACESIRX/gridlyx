@@ -1,8 +1,8 @@
-# AI engineering contract
+# Gridelyx AI engineering contract
 
 Scope: the entire repository.
 
-This is a cross-edition Minecraft launcher, instance/content manager, creator toolkit, advanced runtime R&D platform and machinima/production project. Its public product brand is currently under rebrand. AI-generated code or documentation is not trusted merely because it exists or compiles.
+Gridelyx is a cross-edition Minecraft launcher, instance/content manager, creator toolkit, advanced runtime R&D platform, world editor and machinima/production project. The integrated suite is **Gridelyx Studio**. AI-generated code or documentation is not trusted merely because it exists or compiles.
 
 ## Human authority
 
@@ -13,113 +13,128 @@ The human project owner has final authority over mission, product direction, bra
 For non-trivial work:
 
 1. Read `AI_HANDOFF.md`.
-2. For broad, architectural or scope-affecting work, read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json`.
+2. Read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and identify affected CR IDs.
 3. Read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`.
-4. Inspect `ai/work-state.json`, `ai/decision-ledger.json` and `ai/assumption-ledger.json`.
-5. Use the relevant domain in `ai/context-map.json` rather than scanning unrelated trees.
-6. Read `platform/versions.json` and relevant `references/index/` entries before guessing external APIs.
-7. For broad tasks, use `tools/repo_index.py` and `tools/ai_context_pack.py` to narrow source context.
-8. Treat authoritative source, schemas, CI/runtime evidence and explicit corrections as stronger than AI summaries or generated indexes.
-9. Update planning/readiness/decision/assumption state when a change materially changes project truth.
+4. Inspect `platform/brand.json`, `platform/chat-requirements.json`, `platform/toolchain-requirements.json`, work state, decision ledger and assumption ledger.
+5. Use the relevant domain in `ai/context-map.json` instead of scanning unrelated trees.
+6. Read `platform/versions.json`, provider manifests and relevant `references/index/` entries before guessing external APIs.
+7. For broad tasks, use `tools/repo_index.py` and `tools/ai_context_pack.py`.
+8. Treat implementation, schemas, CI/runtime evidence and explicit human corrections as stronger than AI summaries/generated indexes.
+9. Update planning/readiness/decision/assumption/dependency state when a change alters project truth.
+
+## Brand rule
+
+**Gridelyx** is the canonical root brand; **Gridelyx Studio** is the integrated suite. New project-owned names use Gridelyx. Existing Gridelyx/VFSB source, ABI, protocol, persisted and filename identifiers are migration compatibility state governed by `docs/REBRAND_PLAN.md`. Do not introduce new retired-brand identifiers and do not blindly rename compatibility boundaries without migration tests.
+
+## Requirements preservation
+
+`docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json` are the retained whole-chat scope. A future agent may not remove or materially weaken a requirement because it is difficult, outside normal Minecraft APIs, or not currently target-validated. Such discoveries change the integration level, schedule and evidence burden. Scope removal needs explicit human approval recorded in the decision ledger.
 
 ## Source-of-truth discipline
 
-When sources conflict, follow the hierarchy in `docs/PROJECT_PLAN.md` and `AI_HANDOFF.md`. Do not resolve contradictions by silently choosing the most convenient summary.
+When sources conflict, follow `docs/PROJECT_PLAN.md` and `AI_HANDOFF.md`. Do not choose the most convenient summary.
 
-`docs/CHAT_REQUIREMENTS_TRACEABILITY.md` preserves requested project scope. A requirement may be planned or low-readiness, but it may not be silently removed or materially weakened because a normal Minecraft/loader API cannot implement it. Such a limitation changes integration depth, schedule and validation burden. Scope removal requires an explicit human-approved superseding decision.
-
-Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRES VALIDATION when useful. A capability is only as mature as its recorded R0-R6 evidence.
+Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRES VALIDATION when useful. Capability maturity cannot exceed its recorded R0-R6 evidence.
 
 ## Repository ownership
 
-- `studio/` owns desktop-independent launcher/instance/provider/resolver contracts and desktop orchestration boundaries.
-- `templates/` is canonical Java scaffolding; `mods/` contains independent distributable/generated workspaces.
-- `bedrock/` owns supported Bedrock Add-On/Editor targets.
-- `native/` owns trusted native ABI/companion code.
-- `bridges/` owns neutral sidecar/language bridge examples and protocols.
-- `ai/` owns compact navigation, handoff/work state and AI continuity controls; it must not duplicate full source truth.
-- `platform/chat-requirements.json` is the machine-readable retained-scope graph; its paths must remain valid.
-- `references/index/` is compact reference knowledge; `vault/` is exact recovery/deep-inspection storage and should not be scanned by default.
+- `studio/` — launcher/instance/provider/resolver contracts and desktop orchestration boundaries.
+- `templates/` — canonical Java scaffolding/advanced runtime; `mods/` — independent distributable/generated workspaces.
+- `bedrock/` — supported Bedrock Add-On/Editor targets.
+- `native/` — trusted native ABI/companion code.
+- `bridges/` — neutral sidecar/language bridge examples and protocols.
+- `ai/` — compact navigation/handoff/work state/continuity controls, not duplicated source truth.
+- `references/index/` — compact reference knowledge; `vault/` — exact recovery/deep-inspection material and should not be scanned by default.
+- `platform/` — versions, brand, capabilities, whole-chat requirements and toolchain manifests.
+
+## Dependency/toolchain rules
+
+`docs/DEPENDENCIES_AND_TOOLCHAIN.md` and `platform/toolchain-requirements.json` are canonical.
+
+- Never invent a version for an unpinned tool.
+- Tool installation is not proof that a feature works.
+- Optional language/native/production tooling is capability-specific, not universally required.
+- Reference JDK/LWJGL archives are not default Minecraft runtime dependencies.
+- Do not claim the large remote reference-vault payload is complete while `vault/REMOTE_BINARY_IMPORT_PENDING.md` exists.
+- Before release claims, presently unpinned Python/Rust/CMake/compiler/Go/.NET/encoder policies need supported-version evidence.
 
 ## Launcher / acquisition rules
 
-- The desktop application must start without requiring Java merely to launch the UI. Java is resolved per Java Edition instance.
-- “Any loader” means an extensible adapter contract. Never invent unknown loader versions, Maven coordinates, launch arguments or metadata.
-- Prefer Mojang launcher metadata for Minecraft/version/library/runtime truth; official loader metadata/Mavens for loaders; Modrinth and authorized CurseForge APIs for content.
+- The desktop application must start without Java merely to open the UI. Java is resolved per Java Edition instance.
+- “Any loader/version” means extensible versioned adapters. Never invent loader versions, Maven coordinates, launch arguments or metadata.
+- Prefer Mojang metadata for Minecraft/version/library/runtime truth; official loader metadata/Mavens for loaders; Modrinth and authorized CurseForge APIs for content.
 - CurseForge access must respect approved API/current terms and author third-party-distribution controls.
-- Never scrape around a provider outage/authentication failure when a supported API/channel is required.
-- Every downloaded artifact gets a local SHA-256; verify upstream hashes/signatures when available and retain provenance.
+- Never scrape around a provider outage/auth failure where a supported API/channel is required.
+- Every acquired artifact gets local SHA-256; verify upstream hashes/signatures when available and retain provenance.
 - Imported local files are not assumed redistributable.
-- Dependency resolution preserves required/optional/incompatible/embedded semantics and explains selection/rejection decisions.
-- Writable instance state remains isolated; immutable hash-addressed artifacts may be deliberately deduplicated.
+- Dependency resolution preserves required/optional/incompatible/embedded semantics and explains decisions.
+- Writable instance state stays isolated; immutable hash-addressed artifacts may be deliberately deduplicated.
 
 ## Java/mod engineering workflow
 
-1. Identify the target `mods/<mod_id>` workspace or create one with `tools/new_mod.py`.
-2. Keep normal gameplay code in `src/main`; use `src/advanced` only for mechanisms genuinely requiring bytecode/native/GPU/IPC/network interception or shared runtime infrastructure.
-3. Use registries/datagen instead of duplicated hard-coded resource state where appropriate.
-4. Run relevant static/platform diagnostics.
+1. Identify/create the target `mods/<mod_id>` workspace.
+2. Keep ordinary gameplay code in `src/main`; use `src/advanced` for shared advanced mechanisms such as bytecode/native/GPU/IPC/network interception/runtime infrastructure.
+3. Use registries/datagen rather than duplicate hard-coded resource state where appropriate.
+4. Run static/platform diagnostics.
 5. Run formatting, Checkstyle/check, build and applicable GameTests.
 6. Review generated resources and built JAR contents.
-7. Record uncertainty and target-specific assumptions in code/docs/issues or `ai/assumption-ledger.json`.
+7. Record target/version assumptions and unresolved API behavior.
 
 ## Advanced-engine rules
 
-Advanced engines are disabled by default. Every native, bytecode, instrumentation, Mixin, Netty, IPC or direct GPU change needs explicit lifecycle and failure paths.
+Advanced engines remain opt-in and version/capability gated.
 
-- Bytecode/Mixin targets lock exact descriptors and fail closed on mapping drift.
+- Bytecode/Mixin targets lock exact descriptors/fingerprints and fail closed on mapping drift.
 - Never invent descriptors from memory.
 - Do not block Netty event loops or Minecraft render threads.
-- Keep worker queues bounded.
-- Validate native-memory/IPC lengths.
+- Worker queues are bounded.
+- Native-memory/IPC lengths are validated.
 - Do not attach agents to unrelated JVMs.
-- External scripts/tools do not gain world/server authority merely by connecting through a bridge.
-- Crash-prone or untrusted execution should move to process isolation when the same-process fault domain cannot safely contain it.
-- When ordinary APIs are insufficient, follow `docs/DEEP_INTEGRATION_ARCHITECTURE.md`: escalate deliberately through loader/JVM/native/bootstrap/patch/project-owned component layers with exact fingerprints, provenance, validation and rollback.
+- Crash-prone/non-cooperative execution moves to process isolation when same-process containment is insufficient.
+- Deep changes preserve a verified base, patch/overlay graph and rollback.
+
+## Non-Java modification rules
+
+Gridelyx intentionally supports external modification through GraalJS/GraalPy, Python, Go, C#, Rust/C++, MCP, Netty/web/IPC/shared-memory/native and Bedrock adapters. Each uses explicit capabilities/permissions. A bridge connection never grants implicit server/world authority.
 
 ## Multiplayer/world rules
 
 - Live world mutation is server-authoritative.
-- Asynchronous workers may compute deltas, geometry, structures or simulations but commit through controlled server-thread/transaction boundaries.
-- World editing must preserve rollback/recovery semantics where feasible.
-- Client tools do not bypass server permissions, visibility boundaries or anti-cheat expectations.
+- Async workers may compute section deltas/geometry/structures/simulations but commits cross controlled server-thread/transaction boundaries.
+- Bulk section mutation must reconcile lighting, heightmaps, POI, block entities, persistence and client state.
+- World editing preserves rollback/recovery where feasible.
+- Multiplayer edit channels require authorization, bounded transactions, revision/consensus handling and replication culling.
+
+## Geometry/render/physics rules
+
+Microgeometry, curved/slanted shapes and custom hitboxes must keep authoring geometry, render geometry and collision representation explicit. Use `VoxelShape` where sufficient; deeper collision/renderer augmentation is allowed when justified. Client rendering work must respect render-thread/context ownership and measure batching/culling/performance before support claims. Multiplayer physics truth remains server-side.
 
 ## Bedrock rules
 
-Use supported Script/Add-On/Editor APIs whenever they can express the capability because they are lower-maintenance integration surfaces. Preview APIs are version-pinned and isolated. Native companions consume neutral project bridge frames behind explicit adapter boundaries. If a required Bedrock capability cannot be expressed through supported APIs, deeper additive native/bootstrap/executable integration may be researched and version-gated under `docs/DEEP_INTEGRATION_ARCHITECTURE.md`; it must not be presented as universally stable across Bedrock versions.
+Use supported Script/Add-On/Editor APIs when sufficient. Preview APIs are version-pinned and isolated. Native companions consume neutral Gridelyx bridge operations behind explicit adapters. Unsupported required capabilities may escalate to deeper additive integration under exact fingerprints and rollback; do not present undocumented native/executable behavior as stable across Bedrock versions.
 
 ## Machinima / production rules
 
-- Production timeline/project data is neutral and non-destructive; Java/Bedrock adapters declare concrete capabilities.
-- Store exact timing as rational frame/tick time, not only floating-point seconds.
-- Replay/production projects reference exact source instance/content locks when compatibility matters.
-- Renderer/audio passes are advertised only after target-specific evidence.
-- External encoders are replaceable/provenance-recorded executables; never shell-concatenate untrusted arguments.
-
-## Rebrand rules
-
-The replacement product brand has not yet been selected.
-
-- Use neutral project terminology in newly created control-plane material.
-- Do not perform piecemeal protocol/package/ABI renames.
-- After the human selects the replacement brand, follow the rebrand protocol in `ai/DRIFT_MITIGATION.md` and add a CI ban for retired terminology.
-- Rewriting Git history is destructive and requires separate explicit approval; a current-tree scrub does not imply history rewriting.
+- Production timeline/project data is neutral and non-destructive.
+- Exact timing uses rational frame/tick time, not only floating-point seconds.
+- Projects reference exact source instance/content locks when compatibility matters.
+- Renderer/audio passes are advertised only after target evidence.
+- External encoders are replaceable/provenance-recorded executables and are invoked with structured, bounded arguments.
 
 ## Security and provenance
 
-Never commit credentials, tokens or personal data. Treat generated source, mods and imported archives as untrusted until reviewed. Sanitize archive paths before extraction. Third-party code/assets require licence/provenance review even in a private repository. Preserve upstream/template licensing separately from project licensing.
+Never commit credentials, tokens or personal data. Treat generated source, mods and imported archives as untrusted until reviewed. Sanitize archive paths before extraction. Third-party code/assets require licence/provenance review. Preserve upstream/template licensing separately from project licensing. Deep integration must not bypass authentication, entitlement, DRM, anti-cheat or platform security controls.
 
-## Required continuity checks
-
-Run:
+## Required continuity gates
 
 ```bash
 python tools/continuity_check.py
 python tools/chat_requirements_check.py
+python tools/toolchain_requirements_check.py
 ```
 
-These prove only that the AI/project-control and retained-scope structures are internally coherent. They do not prove Minecraft/runtime compatibility.
+These prove control-plane consistency, not Minecraft runtime compatibility.
 
 ## Definition of done
 
-A change is done only when relevant formatting/lint/build/test gates pass, evidence/readiness claims are synchronized, retained requirements remain accounted for, and the architecture remains replaceable, bounded, diagnosable, version-aware, recoverable and provenance-aware. Interface presence alone is not runtime support.
+A change is done only when relevant formatting/lint/build/test gates pass, evidence/readiness and requirements/dependency paths are synchronized, and the architecture remains replaceable, bounded, diagnosable, version-aware, recoverable and provenance-aware. Interface presence alone is not runtime support.
