@@ -3,6 +3,7 @@
   "entrypoints": [
     "AGENTS.md",
     "AI_HANDOFF.md",
+    "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
     "ai/AI_ORGANISATION.md",
     "ai/DRIFT_MITIGATION.md",
     "ai/CONTEXT.md"
@@ -10,6 +11,8 @@
   "domains": {
     "project-control": [
       "docs/PROJECT_PLAN.md",
+      "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
+      "platform/chat-requirements.json",
       "docs/REBRAND_PLAN.md",
       "docs/AI_CONTINUITY_DESIGN.md",
       "docs/DEEP_INTEGRATION_ARCHITECTURE.md",
@@ -19,11 +22,21 @@
       "ai/work-state.json",
       "ai/decision-ledger.json",
       "ai/assumption-ledger.json",
-      "tools/continuity_check.py"
+      "tools/continuity_check.py",
+      "tools/chat_requirements_check.py"
+    ],
+    "requirements": [
+      "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
+      "platform/chat-requirements.json",
+      "docs/PROJECT_PLAN.md",
+      "docs/FEATURE_MAP.md",
+      "docs/TODO.md",
+      "tools/chat_requirements_check.py"
     ],
     "product": [
       "docs/PROJECT_OVERVIEW.md",
       "docs/PROJECT_STRUCTURE.md",
+      "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
       "docs/DEEP_INTEGRATION_ARCHITECTURE.md",
       "docs/ROADMAP.md",
       "docs/FEATURE_MAP.md"
@@ -48,6 +61,7 @@
       "docs/WORLD_EDIT_RUNTIME.md",
       "docs/WORLD_EDITOR_ROADMAP.md",
       "docs/MULTIPLAYER_WORLD_EDIT.md",
+      "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
       "tools/world_editor_check.py"
     ],
     "bedrock": [
@@ -69,21 +83,37 @@
       "docs/MACHINIMA_PRODUCTION.md",
       "studio/production/README.md"
     ],
+    "community": [
+      "COMMUNITY.md",
+      "CONTRIBUTING.md",
+      "CODE_OF_CONDUCT.md",
+      "SUPPORT.md",
+      "SECURITY.md",
+      "docs/community/GETTING_STARTED.md",
+      "docs/community/CONTRIBUTOR_ONBOARDING.md",
+      "docs/community/ARCHITECTURE_TOUR.md",
+      "docs/community/TESTING_AND_EVIDENCE.md",
+      "docs/community/GLOSSARY.md"
+    ],
     "ai": [
       "ai/AI_ORGANISATION.md",
       "ai/DRIFT_MITIGATION.md",
       "docs/AI_CONTINUITY_DESIGN.md",
       "docs/AI_CONTEXT_SYSTEM.md",
       "docs/AI_AUTODOC.md",
+      "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
       "tools/repo_index.py",
       "tools/ai_context_pack.py",
       "tools/continuity_check.py",
+      "tools/chat_requirements_check.py",
       "references/index"
     ],
     "validation": [
       "AGENTS.md",
       "docs/TEST_STRATEGY.md",
       "docs/TODO.md",
+      "platform/chat-requirements.json",
+      "tools/chat_requirements_check.py",
       "tools/validate_platform.py",
       "tools/diagnose.py",
       ".github/workflows"
