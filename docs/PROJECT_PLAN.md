@@ -1,82 +1,193 @@
-# Gridelyx Studio project plan
+# Project control plan
 
-## Objective
+This document is the durable program-control layer for the Minecraft Advanced Mod Development Platform repository. The public product name is currently **under rebrand**; architecture and requirements must not depend on a temporary brand.
 
-Build Gridelyx Studio as one coherent Minecraft platform spanning launcher/instance management, legitimate content acquisition, cross-loader/cross-edition creator tooling, advanced runtime experimentation and machinima/production. Consumer simplicity and expert transparency must share the same underlying resolver, lockfiles and capability model.
+## Mission
+
+Build one coherent cross-edition Minecraft platform that combines:
+
+- launcher and isolated instance management;
+- legitimate Minecraft/runtime/loader/content acquisition;
+- cross-loader and cross-version mod development;
+- live creator tooling and in-game development;
+- Java, Bedrock, native, scripting and external-tool extension planes;
+- transactional live world editing and multiplayer-safe authoring;
+- advanced geometry, physics, assets and sandbox construction;
+- replay, animation, camera, capture and virtual-production tooling;
+- AI-assisted development with auditable, drift-resistant project continuity.
+
+Consumer simplicity and expert transparency must use the same resolver, lockfiles, capability model and evidence state.
+
+## Authority and source-of-truth order
+
+When sources conflict, use this order unless a newer explicit decision says otherwise:
+
+1. user-approved project direction and explicit corrections;
+2. executable code, schemas and reproducible runtime evidence;
+3. locked platform/version/provider manifests;
+4. accepted architecture and decision records;
+5. project plan, roadmap, feature map and TODO state;
+6. AI handoff/context/index material;
+7. generated summaries, experiments and speculative notes.
+
+Generated AI material never upgrades itself into architectural truth.
 
 ## Readiness levels
 
 | Level | Meaning |
 |---|---|
 | R0 | Idea only |
-| R1 | Interface/contract/schema defined |
+| R1 | Interface, contract or schema defined |
 | R2 | Compiles or deterministic static tooling passes |
 | R3 | Automated unit/integration test passes |
-| R4 | Headless Minecraft/Bedrock integration validation passes |
+| R4 | Headless target integration validation passes |
 | R5 | Interactive target validation passes |
-| R6 | Release candidate with packaging/migration/rollback evidence |
+| R6 | Release candidate with packaging, migration and rollback evidence |
 
-## Workstreams
+Readiness is evidence-bound. A feature can be demoted when upstream APIs, mappings, loader behavior or runtime assumptions change.
 
-1. **Desktop/product shell** — native launch-without-Java shell, settings, credentials, updater, downloads, accounts and process lifecycle.
-2. **Runtime acquisition** — Mojang metadata/libraries/assets, managed Java, cache, hashes and platform classifiers.
-3. **Loaders** — vanilla/Fabric/Quilt/Forge/NeoForge plus extensible legacy/future adapter contract.
-4. **Content/resolution** — Modrinth, authorized CurseForge, local import, dependency solving, lockfiles, pack import/export and instance transactions.
-5. **Creator Studio** — UAL, in-game IDE, live scripting, world/voxel/mesh/texture tools, AI authoring, hotload and scene/property editing.
-6. **Bedrock** — stable Add-On runtime, Editor extension, VFSB/native companion and capability-negotiated production adapters.
-7. **Production** — replay, animation, camera direction, timeline, shots/takes, real-time/offline capture, audio and exports.
-8. **Native/polyglot** — Panama FFM, VFSB, Rust/C++, Python/Go/C# sidecars, shared memory and replaceable encoder/render bridges.
-9. **AI/project intelligence** — AGENTS contract, handoff/context maps, deterministic repo/chunk index, vector retrieval, auto-doc and evidence-aware summaries.
-10. **Validation/security/operations** — CI, GameTest, client tests, CodeQL, archive safety, provenance, SBOM, profiling, chaos, signing and rollback.
+## Program workstreams
 
-## Architecture principles
+1. **Desktop/product shell** — launcher shell, settings, credentials, updates, downloads, accounts and process lifecycle without requiring Java merely to start the desktop app.
+2. **Runtime acquisition** — Mojang metadata/libraries/assets, managed Java, caches, hashes, classifiers and provenance.
+3. **Loader adaptation** — vanilla, Fabric, Quilt, Forge, NeoForge and an extensible adapter contract for legacy/future loaders.
+4. **Content/resolution** — Modrinth, authorized CurseForge, local import, dependency solving, content locks, pack import/export and transactional instance updates.
+5. **Creator runtime** — UAL, in-game IDE, scripts, AI interface, assets, models, microgeometry, scene graph, physics, construction tools and hotload.
+6. **World systems** — live world editor, structures, ores/events, rollback/WAL, dynamic liquids, paint layers and progression-gated transmutation.
+7. **Cross-edition adaptation** — Java and Bedrock capability adapters with explicit parity gaps rather than fabricated equivalence.
+8. **Polyglot/native extensions** — JVM, Graal languages, Python/Go/C# sidecars, Rust/C++, shared memory, IPC and capability-gated external tools.
+9. **Production** — replay, animation, cameras, timeline, shots/takes, real-time/offline capture, audio and export.
+10. **AI/project intelligence** — context routing, agent roles, work-state handoff, decision/assumption tracking, deterministic indexing and drift detection.
+11. **Validation/security/operations** — CI, tests, provenance, archive safety, bounded execution, profiling, chaos/fault containment, signing and recovery.
 
-- The desktop application must not require Java to start.
-- Java/Bedrock/loader differences belong in adapters, not duplicated product logic.
-- One source of truth for dependency resolution and instance locks.
-- Official/authorized download channels only; provider restrictions are part of resolver policy.
-- Immutable downloaded artifacts use content-addressed storage; writable instance data stays isolated.
-- All downloads get local SHA-256 and provenance.
-- Native/bytecode/preview capabilities are opt-in, version-aware and fail closed on drift.
-- Production projects are non-destructive and bind to exact source instance/content locks.
-- AI context is layered and source-referential rather than a duplicated repo dump.
-- A capability name must never imply a readiness level that has not been evidenced.
+## Work item lifecycle
+
+Every non-trivial work item should move through explicit states:
+
+`PROPOSED -> FRAMED -> DESIGNED -> IMPLEMENTING -> VERIFYING -> ACCEPTED`
+
+Exceptional terminal/holding states:
+
+- `BLOCKED` — external dependency or unresolved prerequisite;
+- `DEFERRED` — deliberately postponed;
+- `REJECTED` — evaluated and intentionally not pursued;
+- `SUPERSEDED` — replaced by a newer decision;
+- `REGRESSED` — previously working evidence no longer holds.
+
+A handoff must not call an item complete merely because source files exist.
+
+## Decision protocol
+
+For an architectural or compatibility decision, record:
+
+- problem and desired outcome;
+- affected subsystem and versions/editions/loaders;
+- known constraints and unknowns;
+- candidate approaches;
+- chosen approach and why;
+- evidence supporting the choice;
+- falsification/review trigger;
+- rollback or migration route;
+- files/issues/tests affected.
+
+Use `ai/decision-ledger.json` for compact durable records and `docs/DECISIONS.md` for human-readable architectural decisions.
+
+## Assumption protocol
+
+Unverified assumptions belong in `ai/assumption-ledger.json`. Each assumption must identify:
+
+- scope;
+- confidence;
+- evidence or reason;
+- validation route;
+- expiry/review trigger;
+- what breaks if it is false.
+
+An assumption must never silently become a fact because multiple AI sessions repeat it.
+
+## Session and handoff protocol
+
+For substantial AI-assisted work:
+
+1. read `AGENTS.md`, `AI_HANDOFF.md`, `ai/AI_ORGANISATION.md`, `ai/DRIFT_MITIGATION.md` and the relevant `ai/context-map.json` domain;
+2. inspect authoritative implementation/evidence before making maturity claims;
+3. record the active objective and boundaries in `ai/work-state.json` when the work spans sessions or agents;
+4. make the smallest coherent change set;
+5. run the relevant verification lane;
+6. update decision/assumption/readiness/TODO state if the result changes project truth;
+7. leave a handoff that distinguishes completed, verified, unverified, blocked and next work.
+
+## Drift review cadence
+
+Run a drift review when any of these occurs:
+
+- product or protocol rename;
+- loader/Minecraft/Bedrock/API version update;
+- major architecture change;
+- new runtime or language bridge;
+- readiness promotion/demotion;
+- milestone completion;
+- long-running branch or AI handoff;
+- conflicting documentation discovered;
+- user correction supersedes prior terminology or design.
+
+The detailed controls are in `ai/DRIFT_MITIGATION.md`.
+
+## Recovery and reversibility
+
+Changes should preserve a known-good recovery path whenever feasible:
+
+- instance updates use locks/snapshots;
+- world edits use transactions/WAL/rollback boundaries;
+- hotload keeps last-known-good artifacts;
+- target adapters fail closed when fingerprints/mappings drift;
+- destructive migrations require backups and versioned schemas;
+- AI/project-control changes retain enough decision provenance to reconstruct why a choice was made.
 
 ## Milestones
 
-### M0 — Repository/product convergence
-Full Gridelyx product docs, Studio core contracts, provider policy, AI indexing/context and unified roadmap/feature/TODO structure.
+### M0 — Repository and control-plane convergence
+Canonical architecture, AI operating model, drift controls, evidence/readiness model, provider policy and synchronized planning surfaces.
 
 ### M1 — Vanilla launcher
-Native shell, supported Minecraft authentication, Mojang metadata, managed Java, cache, instance lock and reliable vanilla launch.
+Desktop shell, supported authentication, Mojang metadata, managed Java, cache, instance lock and reliable vanilla launch.
 
 ### M2 — Modded launcher
-Fabric/Quilt/Forge/NeoForge adapters, Modrinth and authorized CurseForge providers, dependency solver, simple/advanced instance UI and update rollback.
+Fabric/Quilt/Forge/NeoForge adapters, Modrinth and authorized CurseForge providers, dependency solver, simple/advanced instance UX and rollback.
 
 ### M3 — Instance/modpack ecosystem
-Pack import/export, Prism/MultiMC migration, server profiles, snapshots, portable bundles and advanced diagnostics.
+Pack import/export, Prism/MultiMC migration, server profiles, snapshots, portable bundles and diagnostics.
 
 ### M4 — Creator integration
-Desktop workspace tied to in-game Gridelyx toolkit, live authoring, loader capability matrix, Bedrock project workflows and safe hotload/rollback.
+Desktop workspace plus in-game creator runtime, live authoring, loader capability adapters, world systems, non-Java extension gateway and safe hotload.
 
-### M5 — Machinima MVP
-Replay/event log, rational-time timeline, camera rigs, actor tracks, shot/take editor, image/video capture and reproducible production-project reopen/render.
+### M5 — Cross-edition creator validation
+Java/Bedrock capability parity manifest, target-specific asset/world/IDE/extension adapters and explicit unsupported-capability reporting.
 
-### M6 — Professional production
-Offline render, higher-quality passes, audio stems, multi-camera/take tooling, render queue, collaboration and interchange research.
+### M6 — Machinima MVP
+Replay/event log, rational-time timeline, camera rigs, actor tracks, shot/take editor and reproducible capture/reopen/render.
 
-### M7 — Hardening/release
+### M7 — Professional production
+Offline render, advanced passes, audio stems, multi-camera/take tooling, queues, collaboration and interchange research.
+
+### M8 — Hardening/release
 Cross-platform packaging, security/provenance reports, fuzz/chaos/performance evidence, signed updates, migrations and stable/beta/nightly channels.
 
 ## Release gates
 
-A milestone does not advance solely because the code compiles. Relevant tests, target validation, migration and failure recovery must be recorded. An API/provider update may demote an adapter's readiness until revalidated.
+A milestone advances only when its claimed readiness is backed by matching evidence. Compile success alone is insufficient for interactive/runtime claims. Provider/API or game-version drift can reopen completed milestones for revalidation.
 
-## Planning sources
+## Planning surfaces
 
-- `PROJECT_OVERVIEW.md` — canonical product architecture.
-- `ROADMAP.md` — staged delivery details.
-- `FEATURE_MAP.md` — capability/readiness matrix.
-- `TODO.md` — live implementation ledger.
-- `PROJECT_STRUCTURE.md` — ownership boundaries.
-- `AI_HANDOFF.md` + `ai/context-map.json` — compact continuation/navigation state.
+- `docs/PROJECT_OVERVIEW.md` — product architecture;
+- `docs/PROJECT_STRUCTURE.md` — ownership boundaries;
+- `docs/ROADMAP.md` — staged delivery details;
+- `docs/FEATURE_MAP.md` — capability/readiness matrix;
+- `docs/TODO.md` — live implementation ledger;
+- `AI_HANDOFF.md` — compact continuation state;
+- `ai/AI_ORGANISATION.md` — AI roles and authority;
+- `ai/DRIFT_MITIGATION.md` — continuity/drift controls;
+- `ai/work-state.json` — machine-readable active work state;
+- `ai/decision-ledger.json` — compact decision trace;
+- `ai/assumption-ledger.json` — unresolved assumptions;
+- `ai/context-map.json` — task/domain navigation.
