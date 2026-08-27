@@ -1,0 +1,33 @@
+name: Feature / R&D request
+description: Propose a new mod-platform capability
+title: "[R&D]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: State the user-visible or engineering outcome, not only the mechanism.
+    validations:
+      required: true
+  - type: textarea
+    id: mechanism
+    attributes:
+      label: Proposed mechanism
+      description: Include APIs, data flow, state ownership and trust boundaries.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation plan
+      description: Define compile, unit, GameTest, benchmark or profiling evidence needed.
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk class
+      options: [normal, experimental, native, bytecode, networking, security-sensitive]
+    validations:
+      required: true

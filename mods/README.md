@@ -1,7 +1,11 @@
-# Mod Workspaces
+# Mod workspaces
 
-Create standalone mod projects here with `python tools/new_mod.py ...`.
+Each direct child directory is an independent NeoForge project and produces its own JAR. This allows multiple mods to be developed, built and validated side by side without merging their dependency graphs.
 
-Each workspace owns its source, resources, tests and build output. Reference-vault material must not be copied into a mod unless the mod genuinely owns/adapts that source and its licence permits it.
+Create one with:
 
-To opt a workspace into automated NeoForge GameTest execution, add registered GameTests and create an `.enable-gametest` marker file in that workspace.
+```bash
+python tools/new_mod.py my_mod "My Mod" com.iamacesirx.mods.mymod
+```
+
+Build all workspaces with `python tools/build_all.py`. Keep experimental cross-cutting work in `experiments/` until it has a stable interface and validation evidence.

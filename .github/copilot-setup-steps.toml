@@ -1,0 +1,22 @@
+# Platform-specific AI tuning manifest. GitHub Copilot itself consumes
+# .github/workflows/copilot-setup-steps.yml; this TOML is consumed by humans/tools.
+[environment]
+java = "25.0.4+7"
+gradle = "9.2.1"
+minecraft = "26.2"
+neoforge = "26.2.0.67"
+
+[policy]
+read_agents_md = true
+reference_before_guessing_api = true
+run_static_validation = true
+run_spotless_check = true
+run_checkstyle = true
+no_secrets_in_generated_code = true
+advanced_engines_default = false
+
+[workspace]
+template = "templates/neoforge-26.2"
+mods = "mods"
+experiments = "experiments"
+reference_index = "references/index"

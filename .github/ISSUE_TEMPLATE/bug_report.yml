@@ -1,0 +1,48 @@
+name: Build or runtime bug
+description: Report a reproducible platform or mod failure
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [platform, template, generated-mod, datagen, rendering, networking, bytecode, tooling, CI]
+    validations:
+      required: true
+  - type: input
+    id: mod
+    attributes:
+      label: Mod workspace
+      placeholder: mods/examplemod or template
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      placeholder: Include exact Gradle task and relevant launch profile.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / diagnostics
+      render: shell
+  - type: checkboxes
+    id: validation
+    attributes:
+      label: Validation
+      options:
+        - label: I ran tools/diagnose.py or attached equivalent diagnostics.
+        - label: I did not include credentials, tokens, private keys, or personal data.
