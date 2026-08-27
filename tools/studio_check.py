@@ -16,6 +16,7 @@ REQUIRED = [
     "studio/core/src/solver.rs",
     "studio/providers/providers.json",
     "studio/providers/loader-adapters.json",
+    "docs/PROJECT_PLAN.md",
     "docs/PROJECT_OVERVIEW.md",
     "docs/ROADMAP.md",
     "docs/FEATURE_MAP.md",
@@ -24,6 +25,8 @@ REQUIRED = [
     "docs/MACHINIMA_PRODUCTION.md",
     "docs/AI_CONTEXT_SYSTEM.md",
     "AI_HANDOFF.md",
+    "ai/AI_ORGANISATION.md",
+    "ai/DRIFT_MITIGATION.md",
     "ai/CONTEXT.md",
     "ai/context-map.json",
 ]
@@ -31,6 +34,12 @@ REQUIRED = [
 ALLOWED_PROVIDER_IDS = {
     "mojang", "fabric-meta", "quilt-meta", "forge-official", "neoforge-maven",
     "modrinth", "curseforge", "adoptium", "local-import",
+}
+
+IDENTITY_MARKERS = {
+    "AI_HANDOFF.md": ("Minecraft", "launcher", "creator"),
+    "ai/CONTEXT.md": ("Minecraft", "instance", "loader"),
+    "docs/PROJECT_PLAN.md": ("Minecraft", "cross-edition", "readiness"),
 }
 
 
@@ -60,16 +69,20 @@ def main() -> int:
             if required not in ids:
                 errors.append(f"missing loader adapter contract: {required}")
 
-    for rel in ("AI_HANDOFF.md", "ai/CONTEXT.md"):
+    for rel, markers in IDENTITY_MARKERS.items():
         path = ROOT / rel
-        if path.exists() and "Gridelyx" not in path.read_text(encoding="utf-8"):
-            errors.append(f"{rel} does not identify Gridelyx")
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        missing = [marker for marker in markers if marker.lower() not in text.lower()]
+        if missing:
+            errors.append(f"{rel} is missing project identity markers: {', '.join(missing)}")
 
     if errors:
         for error in errors:
             print("ERROR:", error)
         return 2
-    print("PASS: Gridelyx Studio architecture, provider and AI-context contracts")
+    print("PASS: Studio architecture, provider and AI-context contracts")
     return 0
 
 
