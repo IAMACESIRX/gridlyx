@@ -1,0 +1,10 @@
+// TARGET-SPECIFIC BLUEPRINT ONLY. Generate this after confirming mappings/signatures.
+// @Mixin(TargetClass.class)
+// abstract class ExampleRedirectMixin {
+//   @Redirect(method = "targetMethod", at = @At(value = "INVOKE", target = "Lowner/Class;method()V"))
+//   private void redirect(owner/Class instance) {
+//       // bounded replacement behaviour
+//   }
+// }
+//
+// Record the exact Minecraft/NeoForge version and target descriptor beside every redirect.

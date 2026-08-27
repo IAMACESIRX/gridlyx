@@ -44,7 +44,6 @@ repositories {
 
 neoForge {
     version = project.neo_version
-
     runs {
         client {
             client()
@@ -68,11 +67,8 @@ neoForge {
             logLevel = org.slf4j.event.Level.DEBUG
         }
     }
-
     mods {
-        "${mod_id}" {
-            sourceSet(sourceSets.main)
-        }
+        "${mod_id}" { sourceSet(sourceSets.main) }
     }
 }
 
@@ -83,7 +79,7 @@ configurations {
 }
 
 dependencies {
-    // Keep normal runtime dependencies minimal. The vault is reference material, not a dependency source.
+    // The vault is reference material, not a dependency source.
     advancedImplementation "org.ow2.asm:asm:${asm_version}"
     advancedImplementation "org.ow2.asm:asm-commons:${asm_version}"
     advancedCompileOnly "org.lwjgl:lwjgl:${lwjgl_version}"
@@ -96,12 +92,8 @@ checkstyle {
     configFile = file('config/checkstyle/checkstyle.xml')
     maxWarnings = 0
 }
-
 tasks.withType(Checkstyle).configureEach {
-    reports {
-        xml.required = true
-        html.required = true
-    }
+    reports { xml.required = true; html.required = true }
 }
 
 spotless {
@@ -144,7 +136,6 @@ tasks.register('generateAssets') {
     description = 'Generate client assets and server data through the NeoForge data run.'
     dependsOn 'runData'
 }
-
 tasks.register('generateData') {
     group = 'minecraft modding'
     description = 'Generate deterministic resources through the NeoForge data run.'
@@ -159,7 +150,7 @@ tasks.named('processAdvancedResources').configure { onlyIf { advancedEnabled.get
 
 tasks.register('advancedJar', Jar) {
     group = 'build'
-    description = 'Build a full mod JAR with the opt-in advanced engine classes.'
+    description = 'Build a full NeoForge mod JAR with opt-in advanced engine classes.'
     onlyIf { advancedEnabled.get() }
     archiveClassifier = 'advanced'
     from sourceSets.main.output
@@ -167,7 +158,25 @@ tasks.register('advancedJar', Jar) {
     dependsOn tasks.named('classes'), tasks.named('advancedClasses')
 }
 
-tasks.named('build').configure { dependsOn tasks.named('advancedJar') }
+tasks.register('agentJar', Jar) {
+    group = 'build'
+    description = 'Build the optional Java instrumentation agent JAR.'
+    onlyIf { advancedEnabled.get() }
+    archiveClassifier = 'agent'
+    from sourceSets.advanced.output
+    dependsOn tasks.named('advancedClasses')
+    manifest {
+        attributes(
+                'Premain-Class': "${mod_group_id}.advanced.bytecode.AgentBootstrap",
+                'Agent-Class': "${mod_group_id}.advanced.bytecode.AgentBootstrap",
+                'Can-Redefine-Classes': 'true',
+                'Can-Retransform-Classes': 'true')
+    }
+}
+
+tasks.named('build').configure {
+    dependsOn tasks.named('advancedJar'), tasks.named('agentJar')
+}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
@@ -176,18 +185,11 @@ tasks.withType(JavaCompile).configureEach {
 
 publishing {
     publications {
-        register('mavenJava', MavenPublication) {
-            from components.java
-        }
+        register('mavenJava', MavenPublication) { from components.java }
     }
-    repositories {
-        maven { url "file://${project.projectDir}/repo" }
-    }
+    repositories { maven { url "file://${project.projectDir}/repo" } }
 }
 
 idea {
-    module {
-        downloadSources = true
-        downloadJavadoc = true
-    }
+    module { downloadSources = true; downloadJavadoc = true }
 }

@@ -1,0 +1,5 @@
+Example generated-mod licence placeholder.
+
+Default status: All Rights Reserved.
+
+Before redistribution, replace this file with the intended mod licence and keep `mod_license` in gradle.properties consistent. The NeoForge MDK-derived template portions remain covered by TEMPLATE_LICENSE.txt.

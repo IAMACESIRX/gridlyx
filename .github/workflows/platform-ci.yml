@@ -8,7 +8,12 @@ on:
   workflow_dispatch:
     inputs:
       run_gametests:
-        description: 'Run opted-in NeoForge GameTest workspaces'
+        description: Run opted-in NeoForge GameTest workspaces
+        required: false
+        default: false
+        type: boolean
+      advanced:
+        description: Compile the isolated advanced-engine source sets
         required: false
         default: false
         type: boolean
@@ -27,30 +32,28 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
-
       - name: Set up exact Temurin JDK 25
         uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '25.0.4+7'
           architecture: x64
-
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
         with:
           gradle-version: '9.2.1'
           cache-provider: basic
-
+      - name: Check Gradle execution privilege
+        run: test -x templates/neoforge-26.2/gradlew
       - name: Validate repository invariants
         run: python tools/validate_platform.py
-
+      - name: Automated diagnostics
+        run: python tools/diagnose.py --static
       - name: Build template and all mod workspaces
-        run: python tools/build_all.py --include-template
-
+        run: python tools/build_all.py --include-template ${{ inputs.advanced && '--advanced' || '' }}
       - name: Run opted-in GameTests
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_gametests }}
-        run: python tools/build_all.py --gametest
-
+        run: python tools/build_all.py --gametest ${{ inputs.advanced && '--advanced' || '' }}
       - name: Upload compiled mod JARs and reports
         if: always()
         uses: actions/upload-artifact@v5
