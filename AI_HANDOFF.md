@@ -8,9 +8,12 @@ This repository is the Minecraft Advanced Mod Development Platform project. The 
 
 Build a cross-edition Minecraft launcher, instance/content manager, cross-loader development environment, live creator/sandbox runtime and machinima/production suite with strong fault containment, provenance, hotload and AI-assisted engineering.
 
+This is **not constrained to conventional modding extension points**. Where required capability cannot be provided through normal APIs/loaders, the platform may escalate into JVM/runtime instrumentation, native components, external services, launch/bootstrap changes, version-pinned executable/library patching or maintained project-owned runtime components. These changes remain additive, fingerprint-gated, attributable and reversible rather than turning the base game into an unknowable mutation.
+
 ## Current architecture
 
 - Java advanced runtime: loader-neutral UAL, hotload, scripting, world/asset editing, scene/physics tooling and advanced native/polyglot mechanisms under `templates/neoforge-26.2/src/advanced`.
+- Deep integration: `docs/DEEP_INTEGRATION_ARCHITECTURE.md` defines L0-L8 escalation from supported APIs through deterministic binary/runtime patching and project-owned components, with immutable-base, provenance and rollback rules.
 - Bedrock: stable Add-On runtime, preview Editor extension and native companion under `bedrock/` and `native/bedrock/`.
 - Native/IPC: project-owned C ABI, binary bridge framing, Panama/FFM, shared memory and language sidecars.
 - Studio/launcher core: `studio/core` defines GUI-independent instance, provider, provenance and dependency-resolution contracts.
@@ -41,12 +44,14 @@ Never resolve a conflict by averaging incompatible summaries.
 4. Writable instance state is isolated; immutable cached artifacts may be deduplicated deliberately.
 5. Simple and expert UX use the same resolver/lockfile truth.
 6. Java and Bedrock share neutral capability contracts where useful but target adapters must report real differences.
-7. Native/bytecode/preview/instrumentation paths are version-gated and fail closed on drift.
+7. Native/bytecode/preview/instrumentation/patch paths are version-gated and fail closed on drift.
 8. Multiplayer live world mutation remains server-authoritative.
 9. External scripts/tools do not gain authority merely because they connect through IPC, MCP, web, native or polyglot bridges.
 10. A feature claim cannot exceed its R0-R6 evidence.
 11. AI summaries/indexes point to authoritative source and never supersede it.
 12. Destructive migrations require an explicit recovery route.
+13. A requirement must not be rejected merely because normal Minecraft/loader/Bedrock APIs cannot express it. Use the shallowest reliable integration layer, but deeper additive engine/runtime/binary integration is allowed when justified and recoverable.
+14. Deep integration must not bypass authentication, entitlement, DRM, anti-cheat or platform security controls as a means of obtaining capability.
 
 ## Active transition: rebrand
 
@@ -69,8 +74,9 @@ After selection, follow `ai/DRIFT_MITIGATION.md` → **Rebrand protocol** and ad
 4. Extend loader/content resolution through the supported adapter/provider model.
 5. Integrate the live creator runtime: world editing, assets/models, microgeometry, physics, scripting, AI/IDE and non-Java extensions.
 6. Validate Java/Bedrock capability parity explicitly.
-7. Harden hotload, rollback and process-isolated fault containment.
-8. Promote replay/timeline/camera foundations into the production suite.
+7. Build the additive deep-integration/patch-management path so capabilities can escalate beyond ordinary API/loader limits without sacrificing provenance or rollback.
+8. Harden hotload, rollback and process-isolated fault containment, preserving editor state across broader supervised restart scopes.
+9. Promote replay/timeline/camera foundations into the production suite.
 
 ## Session start protocol
 
@@ -126,7 +132,7 @@ python tools/diagnose.py --static
 cargo test --manifest-path studio/Cargo.toml --all-targets
 ```
 
-Then run applicable Java advanced/native/Bedrock/game/runtime tests for the actual subsystem changed.
+Then run applicable Java advanced/native/Bedrock/game/runtime tests for the actual subsystem changed. L5-L8 changes additionally require target fingerprints, derived-artifact/overlay verification and an explicit rollback check.
 
 ## Compact handoff template
 
