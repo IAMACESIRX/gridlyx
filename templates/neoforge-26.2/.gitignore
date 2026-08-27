@@ -1,40 +1,50 @@
-### Gradle ###
-.gradle
+### Gradle / build ###
+.gradle/
 build/
+repo/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/**/build/
 
-### IntelliJ IDEA ###
+### Minecraft runtime ###
+run/
+logs/
+crash-reports/
+saves/
+local/
+
+### Generated data ###
+src/generated/**/.cache/
+# Generated resources are intentionally versionable after review.
+
+### IDE ###
 .idea/
 *.iws
 *.iml
 *.ipr
 out/
-!**/src/**/out/
-
 .run/
-
-### Eclipse ###
-.apt_generated
 .classpath
-.eclipse/
-.factorypath
 .project
-.settings
-.springBeans
-.sts4-cache
+.settings/
+.factorypath
 bin/
-!**/src/**/bin/
-
-### VS Code ###
 .vscode/
 
-### Mac OS ###
-.DS_Store
+### Native / profiler / diagnostics ###
+*.hprof
+hs_err_pid*
+replay_pid*
+*.jfr
+.native-cache/
+.reference-cache/
 
-### Minecraft Modding ###
-run/
-!**/src/**/run/
-**/src/generated/**/.cache/
-repo/
-!**/src/**/repo/
+### Secrets / local overrides ###
+.env
+.env.*
+!.env.example
+secrets.*
+local.properties
+gradle-local.properties
+
+### OS ###
+.DS_Store
+Thumbs.db

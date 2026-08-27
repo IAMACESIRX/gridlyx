@@ -3,6 +3,8 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.144'
     id 'idea'
+    id 'checkstyle'
+    id 'com.diffplug.spotless' version '8.10.0'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -11,22 +13,34 @@ tasks.named('wrapper', Wrapper).configure {
 
 version = mod_version
 group = mod_group_id
+base.archivesName = mod_id
 
-sourceSets.main.resources {
-    srcDir('src/generated/resources')
-    exclude("**/*.bbmodel")
-    exclude("src/generated/**/.cache")
+def advancedEnabled = providers.gradleProperty('enable_advanced_engines').map { it.toBoolean() }.orElse(false)
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
+    withSourcesJar()
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir('src/generated/resources')
+            exclude('**/*.bbmodel')
+            exclude('src/generated/**/.cache')
+        }
+    }
+    advanced {
+        java.srcDir('src/advanced/java')
+        resources.srcDir('src/advanced/resources')
+        compileClasspath += sourceSets.main.output + configurations.compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
 }
 
 repositories {
+    mavenCentral()
 }
-
-base {
-    archivesName = mod_id
-}
-
-// Minecraft 26.2 targets Java 25.
-java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 neoForge {
     version = project.neo_version
@@ -42,12 +56,12 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
         gameTestServer {
-            type = "gameTestServer"
+            type = 'gameTestServer'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
         data {
             clientData()
-            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').absolutePath, '--existing', file('src/main/resources/').absolutePath
         }
         configureEach {
             systemProperty 'forge.logging.markers', 'REGISTRIES'
@@ -64,13 +78,48 @@ neoForge {
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime
+    advancedImplementation.extendsFrom implementation
+    advancedCompileOnly.extendsFrom compileOnly
 }
 
 dependencies {
-    // Add intentional mod/API dependencies here. Do not inject the vault JDK/LWJGL bundles.
+    // Keep normal runtime dependencies minimal. The vault is reference material, not a dependency source.
+    advancedImplementation "org.ow2.asm:asm:${asm_version}"
+    advancedImplementation "org.ow2.asm:asm-commons:${asm_version}"
+    advancedCompileOnly "org.lwjgl:lwjgl:${lwjgl_version}"
+    advancedCompileOnly "org.lwjgl:lwjgl-opengl:${lwjgl_version}"
+    advancedCompileOnly "org.lwjgl:lwjgl-glfw:${lwjgl_version}"
 }
 
-var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+checkstyle {
+    toolVersion = checkstyle_version
+    configFile = file('config/checkstyle/checkstyle.xml')
+    maxWarnings = 0
+}
+
+tasks.withType(Checkstyle).configureEach {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat(google_java_format_version)
+        formatAnnotations()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    format 'misc', {
+        target '*.gradle', '*.properties', '*.md', 'src/**/*.json', 'src/**/*.toml'
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
     var replaceProperties = [
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,
@@ -79,14 +128,51 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_name               : mod_name,
             mod_license            : mod_license,
             mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
-    from "src/main/templates"
-    into "build/generated/sources/modMetadata"
+    from 'src/main/templates'
+    into 'build/generated/sources/modMetadata'
 }
 sourceSets.main.resources.srcDir generateModMetadata
 neoForge.ideSyncTask generateModMetadata
+
+tasks.register('generateAssets') {
+    group = 'minecraft modding'
+    description = 'Generate client assets and server data through the NeoForge data run.'
+    dependsOn 'runData'
+}
+
+tasks.register('generateData') {
+    group = 'minecraft modding'
+    description = 'Generate deterministic resources through the NeoForge data run.'
+    dependsOn 'runData'
+}
+
+tasks.named('compileAdvancedJava').configure {
+    onlyIf { advancedEnabled.get() }
+    options.encoding = 'UTF-8'
+}
+tasks.named('processAdvancedResources').configure { onlyIf { advancedEnabled.get() } }
+
+tasks.register('advancedJar', Jar) {
+    group = 'build'
+    description = 'Build a full mod JAR with the opt-in advanced engine classes.'
+    onlyIf { advancedEnabled.get() }
+    archiveClassifier = 'advanced'
+    from sourceSets.main.output
+    from sourceSets.advanced.output
+    dependsOn tasks.named('classes'), tasks.named('advancedClasses')
+}
+
+tasks.named('build').configure { dependsOn tasks.named('advancedJar') }
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs.addAll(['-Xlint:unchecked', '-Xlint:deprecation'])
+}
 
 publishing {
     publications {
@@ -95,14 +181,8 @@ publishing {
         }
     }
     repositories {
-        maven {
-            url "file://${project.projectDir}/repo"
-        }
+        maven { url "file://${project.projectDir}/repo" }
     }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
 }
 
 idea {

@@ -1,0 +1,7 @@
+{
+  "purpose": "Item model generation blueprint",
+  "namespace": "examplemod",
+  "id": "example_item",
+  "texture": "examplemod:item/example_item",
+  "generator": "Prefer NeoForge ModelProvider/datagen; do not hand-copy Minecraft assets."
+}

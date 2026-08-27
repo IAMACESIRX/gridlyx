@@ -1,0 +1,6 @@
+{
+  "purpose": "Codec-driven dynamic-registry/worldgen blueprint",
+  "registry": "minecraft:worldgen/*",
+  "namespace": "examplemod",
+  "rule": "Define ResourceKey + codec-backed object + RegistrySetBuilder bootstrap, then emit with GatherDataEvent.Client#createDatapackRegistryObjects."
+}

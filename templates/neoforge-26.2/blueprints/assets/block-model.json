@@ -1,0 +1,7 @@
+{
+  "purpose": "Block/model/blockstate generation blueprint",
+  "namespace": "examplemod",
+  "id": "example_block",
+  "texture": "examplemod:block/example_block",
+  "generator": "Prefer NeoForge ModelProvider/datagen and deterministic source textures."
+}
