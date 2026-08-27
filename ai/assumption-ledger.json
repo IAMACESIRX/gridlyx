@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "assumptions": [
+    {
+      "id": "ASM-2026-08-28-001",
+      "status": "open",
+      "scope": "rebrand",
+      "statement": "The replacement brand can be selected without preserving the current Gridelyx-derived public terminology.",
+      "confidence": "high",
+      "validation_route": "Select a replacement brand, inventory persistent protocol/data identifiers, then determine which identifiers can be renamed immediately and which require migration aliases.",
+      "review_trigger": "Replacement brand selected",
+      "impact_if_false": "Some existing identifiers may require compatibility aliases or staged migration rather than immediate deletion."
+    },
+    {
+      "id": "ASM-2026-08-28-002",
+      "status": "open",
+      "scope": "brand-clearance",
+      "statement": "A web/GitHub collision screen can identify obvious existing uses but cannot prove trademark, company-name, domain or worldwide legal availability.",
+      "confidence": "high",
+      "validation_route": "For the final candidate, perform jurisdiction-appropriate trademark/business/domain clearance before commercial release.",
+      "review_trigger": "Final brand candidate chosen",
+      "impact_if_false": "A name considered clear from ordinary search could still conflict legally or commercially."
+    }
+  ]
+}
