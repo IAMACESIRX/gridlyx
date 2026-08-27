@@ -33,7 +33,7 @@
     {"id":"CR-028","title":"Dynamic dimensions, zero-entity teleport and runtime worldgen","state":"mixed","paths":["platform/capabilities.json","docs/PROJECT_PLAN.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
     {"id":"CR-029","title":"Rendering overrides, custom geometry, volumetrics, pose and IK","state":"mixed","paths":["docs/ADVANCED_ENGINES.md","docs/WORLD_EDIT_RUNTIME.md","platform/capabilities.json"]},
     {"id":"CR-030","title":"Additive deep integration, patch manager and engine augmentation","state":"planned","paths":["docs/DEEP_INTEGRATION_ARCHITECTURE.md","docs/PROJECT_PLAN.md","ai/decision-ledger.json"]},
-    {"id":"CR-031","title":"Community onboarding and collaboration documentation","state":"planned","paths":["docs/CHAT_REQUIREMENTS_TRACEABILITY.md","CONTRIBUTING.md"]},
+    {"id":"CR-031","title":"Community onboarding and collaboration documentation","state":"implemented","paths":["COMMUNITY.md","CONTRIBUTING.md","CODE_OF_CONDUCT.md","SUPPORT.md","docs/community/GETTING_STARTED.md","docs/community/CONTRIBUTOR_ONBOARDING.md","docs/community/ARCHITECTURE_TOUR.md","docs/community/TESTING_AND_EVIDENCE.md","docs/community/GLOSSARY.md"]},
     {"id":"CR-032","title":"Replacement brand and complete retired-terminology migration","state":"transition","paths":["docs/REBRAND_PLAN.md","ai/DRIFT_MITIGATION.md","AI_HANDOFF.md"]}
   ]
 }
