@@ -13,17 +13,20 @@ The human project owner has final authority over mission, product direction, bra
 For non-trivial work:
 
 1. Read `AI_HANDOFF.md`.
-2. Read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`.
-3. Inspect `ai/work-state.json`, `ai/decision-ledger.json` and `ai/assumption-ledger.json`.
-4. Use the relevant domain in `ai/context-map.json` rather than scanning unrelated trees.
-5. Read `platform/versions.json` and relevant `references/index/` entries before guessing external APIs.
-6. For broad tasks, use `tools/repo_index.py` and `tools/ai_context_pack.py` to narrow source context.
-7. Treat authoritative source, schemas, CI/runtime evidence and explicit corrections as stronger than AI summaries or generated indexes.
-8. Update planning/readiness/decision/assumption state when a change materially changes project truth.
+2. For broad, architectural or scope-affecting work, read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json`.
+3. Read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`.
+4. Inspect `ai/work-state.json`, `ai/decision-ledger.json` and `ai/assumption-ledger.json`.
+5. Use the relevant domain in `ai/context-map.json` rather than scanning unrelated trees.
+6. Read `platform/versions.json` and relevant `references/index/` entries before guessing external APIs.
+7. For broad tasks, use `tools/repo_index.py` and `tools/ai_context_pack.py` to narrow source context.
+8. Treat authoritative source, schemas, CI/runtime evidence and explicit corrections as stronger than AI summaries or generated indexes.
+9. Update planning/readiness/decision/assumption state when a change materially changes project truth.
 
 ## Source-of-truth discipline
 
 When sources conflict, follow the hierarchy in `docs/PROJECT_PLAN.md` and `AI_HANDOFF.md`. Do not resolve contradictions by silently choosing the most convenient summary.
+
+`docs/CHAT_REQUIREMENTS_TRACEABILITY.md` preserves requested project scope. A requirement may be planned or low-readiness, but it may not be silently removed or materially weakened because a normal Minecraft/loader API cannot implement it. Such a limitation changes integration depth, schedule and validation burden. Scope removal requires an explicit human-approved superseding decision.
 
 Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRES VALIDATION when useful. A capability is only as mature as its recorded R0-R6 evidence.
 
@@ -35,6 +38,7 @@ Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRE
 - `native/` owns trusted native ABI/companion code.
 - `bridges/` owns neutral sidecar/language bridge examples and protocols.
 - `ai/` owns compact navigation, handoff/work state and AI continuity controls; it must not duplicate full source truth.
+- `platform/chat-requirements.json` is the machine-readable retained-scope graph; its paths must remain valid.
 - `references/index/` is compact reference knowledge; `vault/` is exact recovery/deep-inspection storage and should not be scanned by default.
 
 ## Launcher / acquisition rules
@@ -71,6 +75,7 @@ Advanced engines are disabled by default. Every native, bytecode, instrumentatio
 - Do not attach agents to unrelated JVMs.
 - External scripts/tools do not gain world/server authority merely by connecting through a bridge.
 - Crash-prone or untrusted execution should move to process isolation when the same-process fault domain cannot safely contain it.
+- When ordinary APIs are insufficient, follow `docs/DEEP_INTEGRATION_ARCHITECTURE.md`: escalate deliberately through loader/JVM/native/bootstrap/patch/project-owned component layers with exact fingerprints, provenance, validation and rollback.
 
 ## Multiplayer/world rules
 
@@ -81,7 +86,7 @@ Advanced engines are disabled by default. Every native, bytecode, instrumentatio
 
 ## Bedrock rules
 
-Use supported Script/Add-On/Editor APIs whenever they can express the capability. Preview APIs are version-pinned and isolated. Native companions consume neutral project bridge frames behind explicit adapter boundaries. Do not make undocumented executable patching a universal product dependency or present it as stable across versions.
+Use supported Script/Add-On/Editor APIs whenever they can express the capability because they are lower-maintenance integration surfaces. Preview APIs are version-pinned and isolated. Native companions consume neutral project bridge frames behind explicit adapter boundaries. If a required Bedrock capability cannot be expressed through supported APIs, deeper additive native/bootstrap/executable integration may be researched and version-gated under `docs/DEEP_INTEGRATION_ARCHITECTURE.md`; it must not be presented as universally stable across Bedrock versions.
 
 ## Machinima / production rules
 
@@ -104,16 +109,17 @@ The replacement product brand has not yet been selected.
 
 Never commit credentials, tokens or personal data. Treat generated source, mods and imported archives as untrusted until reviewed. Sanitize archive paths before extraction. Third-party code/assets require licence/provenance review even in a private repository. Preserve upstream/template licensing separately from project licensing.
 
-## Required continuity check
+## Required continuity checks
 
 Run:
 
 ```bash
 python tools/continuity_check.py
+python tools/chat_requirements_check.py
 ```
 
-This proves only that the AI/project-control structure is internally coherent. It does not prove Minecraft/runtime compatibility.
+These prove only that the AI/project-control and retained-scope structures are internally coherent. They do not prove Minecraft/runtime compatibility.
 
 ## Definition of done
 
-A change is done only when relevant formatting/lint/build/test gates pass, evidence/readiness claims are synchronized, and the architecture remains replaceable, bounded, diagnosable, version-aware, recoverable and provenance-aware. Interface presence alone is not runtime support.
+A change is done only when relevant formatting/lint/build/test gates pass, evidence/readiness claims are synchronized, retained requirements remain accounted for, and the architecture remains replaceable, bounded, diagnosable, version-aware, recoverable and provenance-aware. Interface presence alone is not runtime support.
