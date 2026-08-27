@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "canonical": {
+    "root_brand": "Gridelyx",
+    "suite_name": "Gridelyx Studio",
+    "slug": "gridelyx",
+    "protocol_prefix": "GLYX"
+  },
+  "retired_brand_terms": [
+    "Gridelyx Studio",
+    "Gridelyx"
+  ],
+  "migration_phase": "phase_1_inventory_and_public_entrypoints",
+  "enforcement": {
+    "mode": "staged",
+    "strict_public_files": [
+      "README.md",
+      "AGENTS.md",
+      "AI_HANDOFF.md",
+      "docs/PROJECT_OVERVIEW.md",
+      "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
+      "docs/DEPENDENCIES_AND_TOOLCHAIN.md"
+    ],
+    "allowed_retired_context_markers": [
+      "retired",
+      "previous",
+      "legacy",
+      "migration",
+      "compatibility",
+      "historical",
+      "superseded"
+    ]
+  },
+  "known_legacy_technical_identifiers": [
+    {"identifier":"VFSB","class":"protocol_magic","status":"compatibility_migration_required","evidence":"docs/GRIDELYX_BRIDGE_PROTOCOL.md"},
+    {"identifier":"gridelyx_native","class":"native_library_or_symbol","status":"source_abi_migration_required","evidence":"native/cpp/include/gridelyx_native.h"},
+    {"identifier":"GridelyxNativeBridge","class":"java_source_identifier","status":"source_migration_required","evidence":"templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/nativeinterop/GridelyxNativeBridge.java"},
+    {"identifier":"GridelyxSmokeTest","class":"java_test_identifier","status":"source_migration_required","evidence":"templates/neoforge-26.2/src/test/java/com/example/examplemod/validation/GridelyxSmokeTest.java"},
+    {"identifier":"gridelyx_runtime.js","class":"bedrock_script_filename","status":"path_source_migration_required","evidence":"bedrock/gridelyx_runtime/behavior_pack/scripts/gridelyx_runtime.js"},
+    {"identifier":"gridelyx-studio-core","class":"rust_package_identifier","status":"source_package_migration_required","evidence":"studio/core/Cargo.toml"}
+  ],
+  "exit_policy": "After public/source/persisted/ABI migration completes, switch to strict whole-current-tree enforcement with only factual historical/provenance exceptions."
+}
