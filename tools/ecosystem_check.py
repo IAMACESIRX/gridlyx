@@ -11,6 +11,7 @@ def main() -> int:
     manifest = json.loads((ROOT / "platform/ecosystems.json").read_text(encoding="utf-8"))
     required = {
         "java": ROOT / "templates/neoforge-26.2/build.gradle",
+        "bedrock": ROOT / "bedrock/addon/behavior_pack/manifest.json",
         "javascript": ROOT / "scripts/procedural/example_matrix.js",
         "python": ROOT / "bridges/python/bridge_frame.py",
         "rust": ROOT / "native/rust/Cargo.toml",
@@ -29,7 +30,7 @@ def main() -> int:
         for error in errors:
             print("ERROR:", error)
         return 2
-    print("PASS: multi-language ecosystem structure")
+    print("PASS: Gridelyx multi-language and cross-edition ecosystem structure")
     return 0
 
 
