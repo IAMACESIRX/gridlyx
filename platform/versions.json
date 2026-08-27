@@ -8,6 +8,7 @@
     "language": 25,
     "distribution": "temurin",
     "exact": "25.0.4+7",
+    "setup_java_selector": "25.0.4+7.0.LTS",
     "vendor": "Eclipse Adoptium"
   },
   "quality": {

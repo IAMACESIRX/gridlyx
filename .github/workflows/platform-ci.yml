@@ -36,7 +36,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '25.0.4+7'
+          java-version: '25.0.4+7.0.LTS'
           architecture: x64
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
