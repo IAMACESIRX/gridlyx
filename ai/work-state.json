@@ -3,35 +3,58 @@
   "status": "active",
   "active_objectives": [
     {
-      "id": "AI-CONTINUITY-001",
-      "objective": "Establish durable AI organisation, handoff and drift-mitigation controls equivalent in function to the useful Project Athena patterns without copying its institutional architecture.",
+      "id": "GRIDELYX-SCOPE-001",
+      "objective": "Preserve and implement the complete Gridelyx retained development scope CR-001 through CR-033 with evidence-bound readiness and no silent scope loss.",
       "state": "implementing",
       "authoritative_files": [
-        "docs/PROJECT_PLAN.md",
-        "AI_HANDOFF.md",
-        "ai/AI_ORGANISATION.md",
-        "ai/DRIFT_MITIGATION.md"
-      ]
+        "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
+        "platform/chat-requirements.json",
+        "docs/TODO.md",
+        "docs/ROADMAP.md",
+        "docs/FEATURE_MAP.md"
+      ],
+      "issue": 25
     },
     {
-      "id": "BRAND-TRANSITION-001",
-      "objective": "Select a replacement public brand, then remove the retired Gridelyx Studio terminology coherently from the current repository tree.",
-      "state": "framed",
+      "id": "GRIDELYX-BRAND-001",
+      "objective": "Complete the staged Gridelyx/VFSB to Gridelyx public/source/path/protocol/ABI/persisted compatibility migration without breaking existing technical consumers.",
+      "state": "implementing",
+      "authoritative_files": [
+        "platform/brand.json",
+        "platform/terminology.json",
+        "docs/REBRAND_PLAN.md",
+        "tools/terminology_check.py"
+      ],
       "constraints": [
-        "Do not perform the full terminology scrub until the replacement name is selected.",
-        "Protocol/ABI identifiers require migration analysis rather than blind replacement.",
+        "Gridelyx is already selected and must be used for new project-owned naming.",
+        "Protocol/ABI/persisted identifiers require migration analysis and compatibility tests rather than blind replacement.",
         "Git-history rewriting is a separate destructive operation and is not authorized by current-tree rebranding alone."
-      ]
+      ],
+      "issue": 26
+    },
+    {
+      "id": "GRIDELYX-TOOLCHAIN-001",
+      "objective": "Make every Gridelyx compiler, runtime, library, external program and provider prerequisite explicit, reproducible and evidence-linked.",
+      "state": "implementing",
+      "authoritative_files": [
+        "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
+        "docs/CAPABILITY_DEPENDENCY_MATRIX.md",
+        "platform/toolchain-requirements.json",
+        "tools/toolchain_requirements_check.py"
+      ],
+      "issue": 27
     }
   ],
   "verification": {
-    "structural_check": "pending until continuity_check.py is committed and CI runs",
-    "runtime_effect": "none; these changes govern project continuity and documentation"
+    "structural_check": "Gridelyx continuity CI must pass continuity, requirements, toolchain and staged terminology checks on the current head.",
+    "runtime_effect": "Control-plane changes do not by themselves promote Minecraft/Bedrock/runtime feature readiness."
   },
   "handoff_requirements": [
     "Distinguish committed from uncommitted/staged work.",
     "Record commands and tests actually run.",
     "Carry forward unresolved assumptions and blockers.",
-    "Do not promote readiness without matching evidence."
+    "Do not promote readiness without matching evidence.",
+    "Identify affected CR IDs and toolchain changes.",
+    "Keep Gridelyx compatibility migration state explicit until source/protocol/ABI consumers are verified."
   ]
 }
