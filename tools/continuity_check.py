@@ -10,6 +10,13 @@ REQUIRED_PATHS = [
     "AGENTS.md",
     "AI_HANDOFF.md",
     "docs/PROJECT_PLAN.md",
+    "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
+    "platform/chat-requirements.json",
+    "tools/chat_requirements_check.py",
+    "COMMUNITY.md",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md",
+    "SUPPORT.md",
     "ai/AI_ORGANISATION.md",
     "ai/DRIFT_MITIGATION.md",
     "ai/work-state.json",
@@ -114,7 +121,7 @@ def main() -> int:
     validate_ledgers()
     validate_context_map()
     validate_handoff()
-    print("PASS: AI continuity, handoff and drift-control structure is coherent")
+    print("PASS: AI continuity, requirements, handoff and drift-control structure is coherent")
     return 0
 
 
