@@ -131,8 +131,8 @@ def main() -> int:
         print(f"REMOVED {PENDING.relative_to(ROOT)}")
     print("\nBinary vault is ready. Recommended next commands:")
     print("  python tools/vault.py verify --all")
-    print("  python tools/build_reference_indexes.py")
-    print("  git add vault references/index")
+    print("  python tools/hydrate_references.py")
+    print("  git add vault references/upstream references/index templates/neoforge-26.2/gradle/wrapper/gradle-wrapper.jar templates/neoforge-26.2/gradlew templates/neoforge-26.2/gradlew.bat")
     print('  git commit -m "Import exact supplied Minecraft reference vault"')
     print("  git push origin main")
     return 0
