@@ -1,11 +1,12 @@
 package com.example.examplemod.advanced.worldedit;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class OverlayBuffer {
     private final int subdivisions;
-    private final Map<Long, OverlayCell> cells = new ConcurrentHashMap<>();
+    private final Map<OverlayKey, OverlayCell> cells = new ConcurrentHashMap<>();
 
     public OverlayBuffer(int subdivisions) {
         if (subdivisions < 1 || subdivisions > 16) {
@@ -16,17 +17,17 @@ public final class OverlayBuffer {
 
     public void paint(int x, int y, int z, int subX, int subY, int subZ, OverlayCell cell) {
         validateSub(subX, subY, subZ);
-        cells.put(pack(x, y, z, subX, subY, subZ), cell);
+        cells.put(new OverlayKey(x, y, z, subX, subY, subZ), Objects.requireNonNull(cell));
     }
 
     public OverlayCell read(int x, int y, int z, int subX, int subY, int subZ) {
         validateSub(subX, subY, subZ);
-        return cells.get(pack(x, y, z, subX, subY, subZ));
+        return cells.get(new OverlayKey(x, y, z, subX, subY, subZ));
     }
 
     public void erase(int x, int y, int z, int subX, int subY, int subZ) {
         validateSub(subX, subY, subZ);
-        cells.remove(pack(x, y, z, subX, subY, subZ));
+        cells.remove(new OverlayKey(x, y, z, subX, subY, subZ));
     }
 
     public int size() {
@@ -39,14 +40,7 @@ public final class OverlayBuffer {
         }
     }
 
-    private static long pack(int x, int y, int z, int subX, int subY, int subZ) {
-        long hash = 1469598103934665603L;
-        int[] values = {x, y, z, subX, subY, subZ};
-        for (int value : values) {
-            hash ^= value;
-            hash *= 1099511628211L;
-        }
-        return hash;
+    public record OverlayKey(int x, int y, int z, int subX, int subY, int subZ) {
     }
 
     public record OverlayCell(int rgba, int materialId, float density) {

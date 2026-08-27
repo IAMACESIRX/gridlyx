@@ -23,13 +23,19 @@ public final class BulkEditTransaction {
 
     public synchronized CommitResult commit(WorldMutationSink sink, LightingMode lightingMode) {
         Set<SectionKey> dirty = new LinkedHashSet<>();
+
+        // Preflight every section before mutating anything. Server-side commits are serialized through
+        // ServerEditScheduler, so a failed revision check cannot leave a partially applied transaction.
         for (SectionDelta delta : deltas) {
             long actual = sink.currentRevision(delta.key());
             if (actual != delta.baseRevision()) {
-                return new CommitResult(false, transactionId, dirty, delta.key(), actual);
+                return new CommitResult(false, transactionId, Set.of(), delta.key(), actual);
             }
-            sink.applyWithoutLighting(delta);
             dirty.add(delta.key());
+        }
+
+        for (SectionDelta delta : deltas) {
+            sink.applyWithoutLighting(delta);
         }
         sink.markForSave(dirty);
         if (lightingMode == LightingMode.DEFER_AND_RECONCILE) {

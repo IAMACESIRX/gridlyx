@@ -9,13 +9,16 @@ public final class EditConsensusLog {
     private final Map<SectionKey, AtomicLong> revisions = new ConcurrentHashMap<>();
 
     public Reservation reserve(SectionKey key, long expectedBaseRevision) {
-        AtomicLong revision = revisions.computeIfAbsent(key, ignored -> new AtomicLong(expectedBaseRevision));
-        long next = expectedBaseRevision + 1L;
+        AtomicLong revision = revisions.computeIfAbsent(key, ignored -> new AtomicLong(0L));
+        long next = Math.addExact(expectedBaseRevision, 1L);
         boolean accepted = revision.compareAndSet(expectedBaseRevision, next);
         return new Reservation(accepted, accepted ? next : revision.get());
     }
 
     public void initialise(SectionKey key, long revision) {
+        if (revision < 0) {
+            throw new IllegalArgumentException("revision must be non-negative");
+        }
         revisions.compute(key, (ignored, current) -> {
             if (current == null) {
                 return new AtomicLong(revision);
