@@ -1,0 +1,14 @@
+[package]
+name = "madk_native"
+version = "0.1.0"
+edition = "2024"
+license = "LicenseRef-Project"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[profile.release]
+panic = "abort"
+lto = true
+codegen-units = 1

@@ -1,0 +1,2 @@
+namespace,path,ingredient,result,count,type
+examplemod,compressed_stone,minecraft:stone,examplemod:compressed_stone,1,minecraft:crafting_shapeless

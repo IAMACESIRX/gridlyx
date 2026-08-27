@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "ecosystems": {
+    "java": {
+      "role": "NeoForge host/runtime",
+      "gate": "Gradle + Spotless + Checkstyle + JUnit + ArchUnit"
+    },
+    "javascript": {
+      "role": "GraalJS live scripts and procedural logic",
+      "gate": "script_gatekeeper + polyglot smoke test"
+    },
+    "python": {
+      "role": "GraalPy scripts, AI sidecars and tooling",
+      "gate": "AST syntax gate + bridge conformance"
+    },
+    "rust": {
+      "role": "memory-safe native acceleration",
+      "gate": "cargo check/test"
+    },
+    "cpp": {
+      "role": "native/graphics/legacy integration",
+      "gate": "CMake compile"
+    },
+    "go": {
+      "role": "service/sidecar bridge",
+      "gate": "bridge protocol contract"
+    },
+    "csharp": {
+      "role": "tooling/sidecar bridge",
+      "gate": "bridge protocol contract"
+    }
+  }
+}
