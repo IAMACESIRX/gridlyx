@@ -34,9 +34,35 @@ python tools/workspace.py build world_lab --advanced
 
 Every `mods/<mod_id>` is an independent NeoForge project with isolated generated resources, runs and JARs while sharing the locked platform contract.
 
+## Gridelyx Studio polyloader plane
+
+The advanced runtime now includes the first loader-neutral Gridelyx Studio substrate:
+
+- Java Instrumentation prelaunch bootstrap integrated with the existing ASM transform engine;
+- runtime loader/JVM fingerprinting without compile-time Minecraft or loader API imports;
+- Unified Abstraction Layer domains for registry, event, network, resource, render, world, input and lifecycle operations;
+- exact-descriptor ASM invocation translation rules;
+- capability-negotiated mod JAR analysis and isolated sideload classloaders;
+- explicit `LIVE_SAFE`, `EMULATED`, `PRELAUNCH_REQUIRED` and `UNSUPPORTED` decisions;
+- reflection/MethodHandle structural scanning for runtime symbol discovery;
+- revisioned dynamic mesh and texture registries with a vertex override pipeline;
+- version-neutral voxel editor workspace state;
+- cooperative asynchronous script deadlines and recoverable event fault boundaries;
+- prepared forward/inverse world transactions with rollback reporting.
+
+The project deliberately does **not** claim that arbitrary Fabric/Forge/NeoForge/Quilt/Liteloader mods are universally hot-injectable. Mixins, access wideners, coremods, transformation services, frozen registries and early lifecycle hooks default to prelaunch or restart-required behaviour until an adapter proves otherwise.
+
+Run the Gridelyx structural gate with:
+
+```bash
+python tools/polyloader_check.py
+```
+
+Read `docs/POLYLOADER_ARCHITECTURE.md`, `docs/LIVE_ASSET_EDITING.md` and `docs/FAULT_TOLERANCE.md` before implementing loader-specific adapters or renderer bindings.
+
 ## Live world authoring plane
 
-The advanced template now includes a palette-indexed, server-authoritative world-edit architecture for MCEdit-style edits over already-generated chunks:
+The advanced template includes a palette-indexed, server-authoritative world-edit architecture for MCEdit-style edits over already-generated chunks:
 
 - parallel 16x16x16 section-array blitting;
 - asynchronous immutable snapshot/delta preparation;
@@ -67,6 +93,7 @@ python tools/build_lock.py --check
 python tools/script_gatekeeper.py
 python tools/ecosystem_check.py
 python tools/world_editor_check.py
+python tools/polyloader_check.py
 python tools/validate_platform.py
 python tools/diagnose.py --static
 python tools/autodoc.py --check
@@ -97,13 +124,13 @@ Restartless strategy is deliberately split:
 
 - scripts: replace GraalVM context/module;
 - data/procedural definitions: validate then atomically replace versioned runtime state;
-- assets: invalidate/generated-resource pipeline then request resource reload;
+- assets: revisioned Gridelyx registries and target-specific render upload/override paths;
 - compatible Java class changes: `Instrumentation.redefineClasses`;
 - schema-changing Java: new implementation JAR behind a stable service interface and replaceable classloader;
 - dynamic gameplay content: virtual/versioned registries;
-- frozen vanilla/NeoForge registry additions: not falsely claimed to be universally hotloadable.
+- frozen vanilla/loader registry additions: not falsely claimed to be universally hotloadable.
 
-See `docs/HOTLOAD_ARCHITECTURE.md`.
+See `docs/HOTLOAD_ARCHITECTURE.md` and `docs/POLYLOADER_ARCHITECTURE.md`.
 
 ## Construction sandbox
 
@@ -125,6 +152,9 @@ Read:
 
 - `docs/PROJECT_PLAN.md` — R0-R6 readiness model, workstreams, milestones and release gates.
 - `docs/WORLD_EDITOR_ROADMAP.md` — R0-R5 world-editor integration and validation roadmap.
+- `docs/POLYLOADER_ARCHITECTURE.md` — loader-neutral bootstrap, UAL and compatibility contract.
+- `docs/LIVE_ASSET_EDITING.md` — dynamic mesh/texture and voxel authoring pipeline.
+- `docs/FAULT_TOLERANCE.md` — script isolation and transactional recovery rules.
 - `docs/TODO.md` — implementation/validation ledger.
 - `docs/DECISIONS.md` — architecture decision records.
 - `docs/TEST_STRATEGY.md` — layered verification model.
@@ -132,7 +162,7 @@ Read:
 - `docs/AI_AUTODOC.md` — provider-independent AI documentation pipeline.
 - `SECURITY.md` and `CONTRIBUTING.md` — operational rules.
 
-The repository issue tracker is the live execution backlog. Use the `Live World Editor Work Item` issue form for world mutation, rendering, embedded IDE, AI, replication and performance work.
+The repository issue tracker is the live execution backlog. Use the world-editor and Gridelyx work items to separate framework presence from loader-specific, client-specific and production validation.
 
 ## Reference vault
 
