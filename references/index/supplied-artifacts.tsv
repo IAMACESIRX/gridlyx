@@ -1,0 +1,5 @@
+id	filename	size_bytes	sha256	storage
+mdk	MDK-26.2-ModDevGradle-main(1).zip	62033	c5fc495f5ea8e436f3a96acbc2abd9260483e8c1ff448ef6ec8ed23546fffea3	whole
+neoforge_installer	neoforge-26.2.0.67-installer(1).jar	3604211	2f3c2a454d83983e4ddbcd831810d7e57299361dc1f03f66216071cc009ec340	whole
+jdk	jdk-25.0.4.7-hotspot(1).zip	138088388	2aacfa563afce2b5e01a34eced2b6ace93b9881228abefed0845b27da4ea2c7b	chunks
+lwjgl	lwjgl-3.4.1(1).zip	493865845	03ccfcfbdcb62a98e589fffd7fb0eeb6f41615bedd04d93c17d9b8b51ea73e9b	chunks

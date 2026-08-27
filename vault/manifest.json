@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "chunk_size_bytes": 25165824,
+  "artifacts": [
+    {
+      "id": "mdk",
+      "original_filename": "MDK-26.2-ModDevGradle-main(1).zip",
+      "size_bytes": 62033,
+      "sha256": "c5fc495f5ea8e436f3a96acbc2abd9260483e8c1ff448ef6ec8ed23546fffea3",
+      "storage": "whole",
+      "path": "vault/mdk/MDK-26.2-ModDevGradle-main(1).zip"
+    },
+    {
+      "id": "neoforge_installer",
+      "original_filename": "neoforge-26.2.0.67-installer(1).jar",
+      "size_bytes": 3604211,
+      "sha256": "2f3c2a454d83983e4ddbcd831810d7e57299361dc1f03f66216071cc009ec340",
+      "storage": "whole",
+      "path": "vault/neoforge_installer/neoforge-26.2.0.67-installer(1).jar"
+    },
+    {
+      "id": "jdk",
+      "original_filename": "jdk-25.0.4.7-hotspot(1).zip",
+      "size_bytes": 138088388,
+      "sha256": "2aacfa563afce2b5e01a34eced2b6ace93b9881228abefed0845b27da4ea2c7b",
+      "storage": "chunks",
+      "parts": [
+        {"path":"vault/jdk/jdk-25.0.4.7-hotspot(1).zip.part-0000","size_bytes":25165824,"sha256":"635e021c305037b5af1c381b676762a44f7ddfb4fd7c52e808df446a2dacc582"},
+        {"path":"vault/jdk/jdk-25.0.4.7-hotspot(1).zip.part-0001","size_bytes":25165824,"sha256":"f91d38de8318319304b3d864124004cbcd499cd25a7a39de801ee08934d4f766"},
+        {"path":"vault/jdk/jdk-25.0.4.7-hotspot(1).zip.part-0002","size_bytes":25165824,"sha256":"434a63b0b3f9d6497007295d1dda524ba88a36dd897e127095559fe13d294e83"},
+        {"path":"vault/jdk/jdk-25.0.4.7-hotspot(1).zip.part-0003","size_bytes":25165824,"sha256":"0eab743f4815df281059868bf63a3fe8013b32669b90a1ef9647ec10f94281e6"},
+        {"path":"vault/jdk/jdk-25.0.4.7-hotspot(1).zip.part-0004","size_bytes":25165824,"sha256":"a5a2541fa8ed7685404b8e4762009b0a7cdf5f55942a47fdab8613e1e12e0a5c"},
+        {"path":"vault/jdk/jdk-25.0.4.7-hotspot(1).zip.part-0005","size_bytes":12259268,"sha256":"c3e11cd8447eb79805d83e5516a8e1e6b088c678e81c9988efa7c189aeb477b1"}
+      ]
+    },
+    {
+      "id": "lwjgl",
+      "original_filename": "lwjgl-3.4.1(1).zip",
+      "size_bytes": 493865845,
+      "sha256": "03ccfcfbdcb62a98e589fffd7fb0eeb6f41615bedd04d93c17d9b8b51ea73e9b",
+      "storage": "chunks",
+      "parts": [
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0000","size_bytes":25165824,"sha256":"66eaa1335d41b6484cf0772ded67d9712351af34186a72d6be20dfdbf41dc9c9"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0001","size_bytes":25165824,"sha256":"5978f9a6cc60b53f7dae911e7e24d160b77d64c1c83a8f56d05946f00893dd38"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0002","size_bytes":25165824,"sha256":"e0da5f3725e7e4c7e1d0a249b4e13ba6a08ddf509d10fa260837faf83d8a02da"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0003","size_bytes":25165824,"sha256":"d0ad64c33f59ae5312ed9faf84ae2c3f1b114ad7bbcd4117b30e7ad9fc856c73"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0004","size_bytes":25165824,"sha256":"b4f45a7ab0e53be6cbdfb65b0f21be213d785c303c3d3031d562a8cdf63f24ab"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0005","size_bytes":25165824,"sha256":"77604f1d8dd8fbc31fadb835658916c34ec3eec4ef56c5349d7a156ac66a28ad"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0006","size_bytes":25165824,"sha256":"c161f9a74a45b68e1fddb22dd6a478e85d20027fbccdee5538198f3d5ce454fd"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0007","size_bytes":25165824,"sha256":"8faaaf1585bbc8d256af5de9af6170869c0d5c34cb76cd9b1475b15d9d1043e8"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0008","size_bytes":25165824,"sha256":"a8d8ec5c783d3ad07cfbfbec988a4bc4bff489b123faecc12fd4f818725b2a39"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0009","size_bytes":25165824,"sha256":"3a05a1ba03326f4c76e53e258ab56dd8cf26551e09859bd2d3bb13ef240e0551"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0010","size_bytes":25165824,"sha256":"9c3296f8c81c1d0dedebd10954e7e86ce255afef1a23ed74a50d4bbd196abcc5"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0011","size_bytes":25165824,"sha256":"11fb099efe1578b5647ef184ef6c3f4282df242c046592a2c57184896ff2226a"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0012","size_bytes":25165824,"sha256":"351a83d058685ef77ac1074445bc3f43a409ce7bbf635b8ed61622c3bb4d7734"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0013","size_bytes":25165824,"sha256":"60052b934c34c79307803e5246b328c6c7acce5718e69ef7835a5419536d04b4"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0014","size_bytes":25165824,"sha256":"dcb3715969e967644a61725ea8e50da5bd2e13354b6cfed8c2c0ad411aeaba31"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0015","size_bytes":25165824,"sha256":"2ae317b450ad804861e1738951192f1a7dc4575bcc8ac824875883f07db4d128"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0016","size_bytes":25165824,"sha256":"a14b75ef203c6d440fd1482f6fb5a81ed1313047510c2278e4081f2f25b94fb8"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0017","size_bytes":25165824,"sha256":"c839eaa8ccabc98928f274adfa5332001654a30da4c8c90a8b498a19388dbc35"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0018","size_bytes":25165824,"sha256":"c4fa0673ec55ab3e43f1f1c4c8a3fff354aedc85365d01e0568d40597055f1bc"},
+        {"path":"vault/lwjgl/lwjgl-3.4.1(1).zip.part-0019","size_bytes":15715189,"sha256":"004b966187442c885d4f74bc87ce20ad573996b3641fdfdb1603bc32d83df43e"}
+      ]
+    }
+  ]
+}
