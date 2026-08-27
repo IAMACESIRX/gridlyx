@@ -1,10 +1,10 @@
-# Project structure
+# Gridelyx project structure
 
-The public product identity is under rebrand. This is the target repository ownership map; new implementation should converge toward these boundaries instead of creating parallel subsystems.
+This is the target ownership map for **Gridelyx / Gridelyx Studio**. New implementation should converge toward these boundaries rather than creating parallel subsystems.
 
 ```text
 /
-├─ README.md                              product entrypoint
+├─ README.md                              Gridelyx product entrypoint
 ├─ AGENTS.md                              mandatory AI/agent engineering rules
 ├─ AI_HANDOFF.md                          compact continuation state
 ├─ COMMUNITY.md                           community entrypoint
@@ -30,9 +30,12 @@ The public product identity is under rebrand. This is the target repository owne
 │  ├─ schemas/                            instance/lock/project schemas
 │  └─ production/                         capture/export/project orchestration
 ├─ platform/
+│  ├─ brand.json                          canonical Gridelyx identity + compatibility state
+│  ├─ terminology.json                    staged retired-term/source/ABI migration manifest
 │  ├─ versions.json                       locked platform versions
 │  ├─ capabilities.json                   compact capability manifest
 │  ├─ chat-requirements.json              retained conversation requirements graph
+│  ├─ toolchain-requirements.json         required/optional tool and library graph
 │  ├─ polyloader-capabilities.json        loader-neutral capability state
 │  ├─ world-editor-capabilities.json      world editor capability state
 │  ├─ bedrock-capabilities.json           Bedrock capability state
@@ -49,15 +52,20 @@ The public product identity is under rebrand. This is the target repository owne
 ├─ tools/
 │  ├─ repo_index.py                       deterministic AI file/chunk index
 │  ├─ ai_context_pack.py                  task-scoped repository retrieval
-│  ├─ continuity_check.py                 AI/project continuity validation
+│  ├─ continuity_check.py                 identity/AI/project continuity validation
 │  ├─ chat_requirements_check.py          retained-scope/evidence-path validation
+│  ├─ toolchain_requirements_check.py     dependency/tool evidence validation
+│  ├─ terminology_check.py                staged Gridelyx terminology enforcement
 │  ├─ studio_check.py                     launcher/provider architecture gate
 │  └─ build/runtime/validation utilities
 ├─ docs/
 │  ├─ PROJECT_PLAN.md                     durable program-control plan
-│  ├─ PROJECT_OVERVIEW.md                 product architecture
+│  ├─ PROJECT_OVERVIEW.md                 Gridelyx product architecture
 │  ├─ PROJECT_STRUCTURE.md                this ownership map
-│  ├─ CHAT_REQUIREMENTS_TRACEABILITY.md   complete retained conversation scope
+│  ├─ CHAT_REQUIREMENTS_TRACEABILITY.md   CR-001..CR-033 retained scope
+│  ├─ DEPENDENCIES_AND_TOOLCHAIN.md       software/runtime/program inventory
+│  ├─ CAPABILITY_DEPENDENCY_MATRIX.md     capability -> prerequisites -> validation
+│  ├─ REBRAND_PLAN.md                     Gridelyx -> Gridelyx compatibility migration
 │  ├─ ROADMAP.md                          staged delivery plan
 │  ├─ FEATURE_MAP.md                      capability/evidence matrix
 │  ├─ TODO.md                             live implementation ledger
@@ -76,43 +84,45 @@ The public product identity is under rebrand. This is the target repository owne
 ## Ownership rules
 
 ### `studio/core`
-Models Minecraft/loader/content/runtime concepts without depending on GUI frameworks. It owns deterministic instance/resolution/provenance contracts shared by desktop, CLI and AI tooling.
+Models Minecraft/loader/content/runtime concepts without GUI dependencies. It owns deterministic instance/resolution/provenance contracts shared by desktop, CLI and AI tooling.
 
 ### `studio/desktop`
-Owns UI, OS integration, authentication UX, credential-store bindings, downloads, settings, updater, process launching, patch/runtime composition and user-facing recovery.
+Owns Gridelyx Studio UI, OS integration, authentication UX, credential-store bindings, downloads, settings, updater, process launching, patch/runtime composition and user-facing recovery.
 
 ### `studio/providers`
 Contains declarative provider/loader descriptions. Network implementations remain provider-specific so terms, authentication, caching and rate-limit policy cannot bleed between providers.
 
 ### `templates/.../advanced`
-Owns Java in-game creator/runtime mechanisms: UAL, scripting, bytecode/JVM/native bridges, world/asset editing, rendering, scene/physics and live-development infrastructure. It must not become the desktop launcher.
+Owns Java in-game creator/runtime mechanisms: UAL/Polyloader, scripting, bytecode/JVM/native bridges, world/asset editing, rendering, scene/physics and live-development infrastructure. It must not become the desktop launcher.
 
 ### `bedrock`
-Owns supported Bedrock Script/Add-On/Editor assets and target adapters. Neutral project contracts should be reused where practical; target capability differences remain explicit.
+Owns supported Bedrock Script/Add-On/Editor assets and target adapters. Neutral Gridelyx operations should be reused where practical; target capability differences remain explicit.
 
 ### `native`
-Owns trusted native process/in-process code and ABI boundaries. Deep binary/runtime patching is governed by `docs/DEEP_INTEGRATION_ARCHITECTURE.md`; it must use explicit version/fingerprint/provenance/rollback records rather than undocumented one-off mutations.
+Owns trusted native process/in-process code and ABI boundaries. Deep binary/runtime patching follows `DEEP_INTEGRATION_ARCHITECTURE.md` and explicit version/fingerprint/provenance/rollback records.
+
+Legacy `gridelyx_*`/`VFSB` symbols still present are classified compatibility migration state until the versioned Gridelyx ABI/protocol transition is tested.
 
 ### `bridges`
-Owns language-neutral and sidecar communication examples/protocol implementations. A connected bridge does not gain authority automatically; capabilities and server permissions govern operations.
+Owns language-neutral/sidecar protocols and example implementations. A connected bridge has no implicit world/server authority; capabilities and permissions govern operations.
 
 ### `platform`
-Owns machine-readable project truth that multiple tools/CI lanes consume: versions, capabilities, build locks and retained requirement paths. Changes here should be reviewed as contract changes.
+Owns machine-readable project truth consumed by CI/tools: Gridelyx identity, terminology migration, versions, capabilities, build locks, retained requirements and toolchain state. Changes are contract changes.
 
 ### `ai`
-Contains compact context, navigation and project-control state rather than copied source trees. Context material points to authoritative source and never upgrades an assumption into a fact by repetition.
+Contains compact context/navigation/project-control state, not copied source trees. AI context points to authoritative files and cannot promote assumptions by repetition.
 
 ### `docs/community`
-Owns newcomer/contributor orientation. Community documentation should teach the evidence/readiness model and must not turn planned architecture into support claims.
+Owns newcomer/contributor orientation and evidence literacy. Community docs must distinguish planning/framework state from tested/target-validated support.
 
 ## Runtime data layout
 
-The final data-root name will be chosen during the rebrand. Conceptually:
+Canonical data-root target: **`Gridelyx/`**.
 
 ```text
-<product-data-root>/
+Gridelyx/
 ├─ config/
-├─ credentials/              OS credential references only
+├─ credentials/              OS credential references only; never plaintext secrets
 ├─ cache/
 │  ├─ blobs/                 content-addressed immutable artifacts
 │  ├─ metadata/              provider metadata under provider policy
@@ -143,4 +153,8 @@ The final data-root name will be chosen during the rebrand. Conceptually:
 └─ diagnostics/
 ```
 
-Downloaded immutable binaries may be hard-linked/reflinked into instances. Mutable configs, worlds and saves must be instance-owned unless the user explicitly establishes sharing. Patched/derived runtime artifacts must remain reproducible from verified base artifacts plus recorded patch/capability manifests.
+Downloaded immutable binaries may be hard-linked/reflinked into instances. Mutable configs/worlds/saves remain instance-owned unless sharing is explicit. Patched/derived runtime artifacts must be reproducible from verified base artifacts plus recorded patch/capability manifests.
+
+## Dependency ownership
+
+`docs/DEPENDENCIES_AND_TOOLCHAIN.md` and `platform/toolchain-requirements.json` own cross-project prerequisite truth. Subsystems may add narrower local manifests, but they must not introduce a hidden compiler/runtime/executable/provider that bypasses the central inventory.
