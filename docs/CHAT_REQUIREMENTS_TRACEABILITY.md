@@ -1,556 +1,160 @@
 # Whole-chat requirements traceability
 
-Status: **canonical scope ledger**
+Status: **canonical retained-scope ledger**
 
-This file preserves the project requirements requested across the development conversation. It exists so a later human or AI cannot silently lose scope because a feature was discussed in a different subsystem document or an older handoff.
+This document preserves the requirements requested throughout the project-development conversation. It is intentionally brand-neutral while the public identity is under rebrand.
 
-Presence here means **the requirement remains part of project scope** unless a later explicit decision supersedes it. It does **not** mean the capability is already implemented or validated. Implementation maturity remains governed by R0-R6 evidence, `docs/FEATURE_MAP.md`, target-specific capability manifests and CI/runtime evidence.
+A requirement appearing here is **in project scope** until an explicit human-approved decision supersedes it. Presence does not imply that the feature already works. Evidence/readiness remains R0-R6 and is tracked through implementation, tests, `FEATURE_MAP.md`, target capability manifests and CI.
 
-The public product brand is currently under rebrand. Requirements are therefore written using neutral project terminology.
+Machine-readable coverage is in `../platform/chat-requirements.json`; `../tools/chat_requirements_check.py` verifies that every CR group has a valid state and at least one existing implementation/evidence/planning path.
 
-## Requirement state vocabulary
+## State vocabulary
 
-- **implemented/validated** — source exists and relevant automated/target evidence exists.
-- **framework** — reusable implementation/contract exists but target integration or stronger evidence remains.
-- **planned** — retained as explicit development work.
-- **transition** — migration/rebrand/compatibility work is intentionally pending.
+- **implemented** — the requested repository/project artifact exists; runtime claims still depend on target evidence.
+- **framework** — reusable contracts/source exist but target integration or stronger validation remains.
+- **planned** — explicitly retained development work.
+- **mixed** — some foundations exist and substantial work remains.
+- **transition** — controlled migration work, currently the rebrand.
 
----
+## Retained requirements
 
-## CR-001 — Reproducible Minecraft R&D foundation
+### CR-001 — Reproducible Minecraft R&D foundation — mixed
 
-Retain:
+NeoForge/Minecraft/Java/Gradle locks; exact MDK/NeoForge-installer/JDK/LWJGL vault provenance; deterministic reconstruction/indexing; on-demand source/reference lookup; reference corpora isolated from runtime dependencies; independent `mods/<mod_id>` Gradle workspaces for multiple JARs side-by-side.
 
-- NeoForge/Minecraft/Java/Gradle version locks;
-- exact supplied MDK, NeoForge installer, JDK and LWJGL reference-vault provenance;
-- deterministic vault reconstruction and indexes;
-- AI-readable/on-demand JDK, LWJGL and MDK source lookup;
-- separation between reference corpora and actual Minecraft runtime dependencies;
-- independent `mods/<mod_id>` workspaces so multiple JARs can be developed side-by-side.
+### CR-002 — Quality, GitHub environment and build integrity — implemented
 
-State: **implemented/framework**. See `docs/ARCHITECTURE.md`, `docs/REFERENCE_VAULT.md`, `platform/versions.json`, `vault/manifest.json`, `tools/vault.py`, `tools/reference_lookup.py`, `tools/new_mod.py` and `tools/workspace.py`.
+Spotless, Checkstyle, CodeQL, issue/PR templates, Codespaces/devcontainer, Copilot setup/tuning, automated diagnostics, Gradle execution permissions, global ignore/editor rules, master `build.gradle` SHA-256 lock, non-Java script gatekeeper, security/licensing/provenance controls.
 
-## CR-002 — Java workspace quality, build integrity and GitHub development environment
+### CR-003 — Canonical mod template, registries and generated data/assets — mixed
 
-Retain:
+Global Gradle variables; loader manifest; main mod class; global registry controller; creative-tab anchor; automated language provider; localization/asset blueprints; deterministic datagen and generated resources; codec-driven worldgen/registry extensions; algorithmic asset/data loops; procedural matrix generation; CSV/spreadsheet-to-recipe pipelines.
 
-- Spotless;
-- Checkstyle;
-- GitHub issue templates and PR template;
-- CodeQL;
-- Codespaces/devcontainer support;
-- Copilot setup workflow and project `copilot-setup-steps.toml` tuning;
-- automated diagnostics;
-- Gradle executable/permission checks;
-- canonical master `build.gradle` SHA-256 lock;
-- script gatekeeper for non-Java executable content;
-- `.gitignore`, editor and workspace rules;
-- licensing/provenance requirements.
+### CR-004 — Advanced JVM/bytecode modification engine — framework
 
-State: **implemented/framework**. See `.github/`, `.devcontainer/`, `platform/master-build.lock.json`, `tools/build_lock.py`, `tools/script_gatekeeper.py`, `tools/diagnose.py`, `docs/ARCHITECTURE_WORKFLOW.md`, `docs/TEST_STRATEGY.md`, `CONTRIBUTING.md` and `SECURITY.md`.
+Java Instrumentation (`premain`/`agentmain`), ASM generation/transformation, dynamic Mixin/redirector architecture, bytecode diff/disassembly/decompiler analysis, MethodHandles/reflection binding, compatible class redefine/hotswap, replaceable classloaders/services for schema changes, direct Java source-string compilation, mapping/descriptor fingerprinting and fail-closed behavior.
 
-## CR-003 — Canonical mod template and data/asset generation
+### CR-005 — Multithreaded tasking, synchronization and dynamic data — framework
 
-Retain:
+Custom bounded worker pools, asynchronous computational tasking, coalescing/multithreaded syncing, versioned dynamic data, server-safe scheduling, backpressure, revisioned state and consensus mechanisms.
 
-- global Gradle variables;
-- loader manifest configuration;
-- main mod class;
-- global registry controller;
-- creative-mode tab anchor;
-- automated language provider;
-- localization and asset blueprints;
-- deterministic data generation and generated-resource source sets;
-- algorithmic asset providers and data-generation loops;
-- codec-driven world-generation extension points;
-- CSV/external spreadsheet to recipe/data conversion;
-- deterministic procedural matrices and procedural content generation.
+### CR-006 — Native/GPU/Panama/IPC/cross-language execution — framework
 
-State: **implemented/framework**. See `templates/neoforge-26.2/`, `docs/ASSET_BLUEPRINTS.md`, `tools/csv_to_recipes.py`, `scripts/`, `platform/capabilities.json` and generated-resource tooling.
+Java FFM/Project Panama, Rust and C++ native extensions, shared memory, multi-process pipelines, Python/Go/C# bridges, neutral framed protocols, Netty/IPC and local web endpoints, direct LWJGL/OpenGL vertex-buffer control, render-thread/context rules and versioned native ABI/fingerprints.
 
-## CR-004 — Advanced JVM and bytecode engine
+### CR-007 — MCP, local indexing, AI documentation and project intelligence — mixed
 
-Retain:
+MCP endpoint/tool routing, local vector indexing, deterministic repository/chunk indexes, task-scoped AI context packs, future hash-keyed incremental embeddings, AI auto-documentation, project handoff/context files, and Project-Athena-equivalent engineering continuity: AI role boundaries, work state, decision/assumption ledgers and drift mitigation without copying Athena's identity/institutional model.
 
-- Java Instrumentation agent/bootstrap;
-- ASM generation and runtime class transformation;
-- Mixin/runtime redirector infrastructure;
-- bytecode-diff/disassembly/decompiler analysis;
-- reflection and `MethodHandle` runtime discovery;
-- compatible live class redefinition;
-- isolated/reloadable classloaders for structural changes;
-- direct string-to-Java compilation;
-- exact mapping/descriptor fingerprinting and fail-closed behavior.
+### CR-008 — Autonomous testing, security, profiling and chaos — mixed
 
-State: **framework**. See `docs/ADVANCED_ENGINES.md`, `docs/POLYLOADER_ARCHITECTURE.md`, `docs/HOTLOAD_ARCHITECTURE.md`, `docs/ADVANCED_VALIDATION.md`, `templates/neoforge-26.2/src/advanced` and bytecode-analysis tools.
+JUnit/test doubles, ArchUnit, headless NeoForge GameTest, optional version-confirmed MCTester adapter, CodeQL, automated diagnostics, JFR/advanced profiling, telemetry, deterministic chaos/fault injection, packet delay/drop, worker saturation, bridge-disconnect and reload-storm validation.
 
-## CR-005 — Multithreaded computation, state synchronization and dynamic data
+### CR-009 — Full project planning/management and human/AI continuity — implemented
 
-Retain:
+Project overview, ownership structure, roadmap, feature/readiness map, detailed TODO, issues/PR workflow, decisions/assumptions/recovery state, requirements traceability, AI handoff/organization/drift controls, community onboarding and evidence-first contribution rules.
 
-- custom bounded worker pools;
-- asynchronous computational tasking;
-- coalescing/multithreaded synchronization;
-- dynamic/versioned data engines;
-- thread-safe server scheduling;
-- bounded queues and backpressure;
-- revision/consensus models where multiple editors or systems can mutate state.
+### CR-010 — Ground-up/top-down Polyloader and UAL — framework
 
-State: **framework**. See `docs/ADVANCED_ENGINES.md`, `docs/MULTIPLAYER_WORLD_EDIT.md`, advanced runtime source and validation matrices.
+Prelaunch bootstrap below loaders when needed; Instrumentation/ASM interception; Unified Abstraction Layer for registry/event/network/resource/render/world/input/lifecycle operations; Fabric, Quilt, Forge, NeoForge, vanilla and Liteloader/legacy research; loader-call translation; isolated sideload containers; `LIVE_SAFE`/emulated/prelaunch-required/unsupported negotiation; cross-loader execution such as Fabric-on-NeoForge only when real adapters prove compatibility.
 
-## CR-006 — Native, GPU, FFM/Panama and IPC execution planes
+### CR-011 — Broad Minecraft/loader version independence — planned
 
-Retain:
-
-- Java Foreign Function & Memory API / Project Panama;
-- Rust and C++ high-performance native extensions;
-- shared-memory IPC;
-- multi-process OS pipelines;
-- Python/Go/C# sidecar bridges;
-- neutral framed protocols;
-- Netty/IPC pipelines and local development web endpoints;
-- direct LWJGL/OpenGL vertex/buffer control;
-- render-thread/context safety;
-- native ABI/version/fingerprint checks.
-
-State: **framework**. See `native/`, `bridges/`, `docs/ADVANCED_ENGINES.md`, `docs/BEDROCK_ARCHITECTURE.md`, platform capability manifests and native CI.
-
-## CR-007 — MCP, local indexing and AI repository consumption
+Target historical families including approximately 1.7.10-era Java through current/latest/snapshots where maintainable; version-family bootstrap lanes; runtime fingerprinting; mappings where available; semantic/structural scanning; Reflection/MethodHandles; compatibility manifests; confidence gates; deeper additive patch layers when normal adapters are insufficient.
 
-Retain:
-
-- Model Context Protocol endpoint/tool routing;
-- local vector indexing;
-- deterministic repository/chunk indexing;
-- task-scoped context packs;
-- future incremental embeddings keyed by path/range/hash;
-- AI auto-documentation generation;
-- project-aware AI handoff/context files;
-- Project-Athena-inspired-but-not-copied AI organisation, decision/assumption ledgers and drift mitigation.
-
-State: **implemented/framework/planned**. See `platform/capabilities.json`, `docs/AI_CONTEXT_SYSTEM.md`, `docs/AI_AUTODOC.md`, `docs/AI_CONTINUITY_DESIGN.md`, `AGENTS.md`, `AI_HANDOFF.md`, `ai/`, `tools/repo_index.py`, `tools/ai_context_pack.py` and `tools/continuity_check.py`.
-
-## CR-008 — Autonomous testing, diagnostics, profiling and chaos engineering
-
-Retain:
-
-- JUnit logic tests and mocks/test doubles;
-- ArchUnit architectural constraints;
-- NeoForge GameTest/headless validation;
-- optional MCTester adapter only after version compatibility is demonstrated;
-- automated diagnostics;
-- JFR/JVM profiling;
-- telemetry streams;
-- deterministic chaos/fault-injection loops;
-- network delay/drop, worker saturation, reload-storm and bridge-disconnect campaigns;
-- CodeQL and security scanning.
-
-State: **framework/planned**. See `docs/TEST_STRATEGY.md`, `docs/ADVANCED_VALIDATION.md`, `docs/TODO.md`, platform capabilities and CI workflows.
-
-## CR-009 — Full project planning, issue tracking and development management
+### CR-012 — External hotloading and restart-minimized development — framework
 
-Retain:
-
-- project overview;
-- project structure/ownership map;
-- roadmap and milestones;
-- feature/readiness map;
-- TODO/implementation ledger;
-- GitHub issue/PR workflows;
-- decisions, assumptions, active work state and recovery points;
-- requirements-to-evidence traceability;
-- community onboarding and contribution documentation.
+NIO.2 `WatchService`; live script/data/procedural reload; dynamic asset/model/texture reload; Instrumentation redefine; schema-changing service/classloader replacement; virtual registries; last-known-good rollback; preserved IDE/editor/selection/undo context; reload scope escalation from script/service to sidecar/game-process and patched-runtime rebuild when technically necessary.
 
-State: **implemented/framework**, with this file becoming the conversation-scope anchor. See `docs/PROJECT_PLAN.md`, `docs/PROJECT_OVERVIEW.md`, `docs/PROJECT_STRUCTURE.md`, `docs/ROADMAP.md`, `docs/FEATURE_MAP.md`, `docs/TODO.md`, `ai/` and `.github/`.
+### CR-013 — Live MCEdit/Bedrock-style world editor and parallel sub-chunk blitter — framework
 
-## CR-010 — Loader-neutral Polyloader and Unified Abstraction Layer
+Live editing of already-generated worlds; palette-indexed 16×16×16 section arrays; parallel array blitting; async workers producing immutable deltas; authoritative server-thread commits; deliberate bulk bypass of per-block lighting churn followed by explicit lighting/heightmap/POI/block-entity/save/client reconciliation; undo/redo/WAL; mod APIs for live ores, structures and world modification.
 
-Retain the ground-up and top-down architecture:
-
-- a prelaunch bootstrap below ordinary loader lifecycle when needed;
-- Java Instrumentation/ASM interception;
-- Unified Abstraction Layer for registry/event/network/resource/render/world/input/lifecycle operations;
-- Fabric, Quilt, Forge, NeoForge, vanilla and Liteloader/legacy-family research;
-- source-loader operation translation into neutral operations;
-- isolated sideload containers;
-- live-safe/emulated/prelaunch-required/unsupported capability negotiation;
-- potential Fabric-on-NeoForge or equivalent cross-loader execution where compatibility adapters genuinely support it;
-- no fabricated universal compatibility claim;
-- target adapters per Minecraft/JVM generation.
+### CR-014 — Dynamic Event and Structure Matrix — framework
 
-State: **framework/planned**. See `docs/POLYLOADER_ARCHITECTURE.md`, `platform/polyloader-capabilities.json`, advanced runtime sources, `studio/providers/loader-adapters.json` and roadmap work.
+Compiled `.nbt` blueprints; slicing across chunks/sub-chunks; real-time massive block-array streaming; procedural structures/environment assets; live meteor/citadel/corruption/restoration/ore-style events; AI/mod/script triggers; transactional bounded application over generated terrain.
 
-## CR-011 — Broad Minecraft-version independence
-
-Retain the target of supporting historical families (including roughly the 1.7.10 era) through current/latest releases and snapshots where technically maintainable, using:
-
-- version-family bootstrap/runtime lanes;
-- runtime fingerprinting;
-- mappings where available;
-- structural/semantic method discovery;
-- reflection/MethodHandles;
-- compatibility manifests;
-- low-confidence fail-closed behavior;
-- deeper additive patch layers when ordinary adaptation is insufficient.
+### CR-015 — Terraria-style liquid, paint and world-transmutation systems — planned
 
-State: **planned/framework**. See `docs/POLYLOADER_ARCHITECTURE.md`, `docs/DEEP_INTEGRATION_ARCHITECTURE.md`, `studio/providers/loader-adapters.json` and compatibility planning.
+Bounded cellular-automata liquid cells, arbitrary per-block/per-face paint matrices, sub-voxel paint/material overlays, progressive/progression-locked global transmutation state machines, staged reversible transformation/rollback, persistence/replication and Java/Bedrock target adapters.
 
-## CR-012 — External hotloading and restart-minimized development
+### CR-016 — Microgeometry and non-cubic collision/rendering — planned
 
-Retain:
-
-- NIO.2 `WatchService` directory monitoring;
-- live script/data/procedural-definition reload;
-- dynamic model/texture/resource reload;
-- Java Instrumentation for compatible changes;
-- replaceable services/classloaders for schema-changing code;
-- virtual registries for restartless dynamic definitions;
-- supervised broader restart scopes when technically unavoidable;
-- preserved IDE/workspace/selection/state across restart scopes;
-- additive patch-runtime rebuild as the deepest reload scope;
-- last-known-good rollback.
+Microgrid/sub-voxel placement; circles, cylinders, curves, wedges, slopes and slanted blocks; arbitrary high-detail meshes; separate authoring/render/collision representations; dynamic `VoxelShape` synthesis where sufficient; deeper collision-engine augmentation/replacement where vanilla boxes are inadequate; physics-aware manipulation; Java/Bedrock adapters.
 
-State: **framework/planned**. See `docs/HOTLOAD_ARCHITECTURE.md`, advanced runtime source and `docs/DEEP_INTEGRATION_ARCHITECTURE.md`.
+### CR-017 — Hytale-like live asset/model/texture creator — mixed
 
-## CR-013 — Live world editor, parallel section blitting and generated-world modification
-
-Retain:
-
-- MCEdit/Bedrock-editor-like live editing of already-generated Java worlds;
-- palette-indexed 16x16x16 section arrays;
-- parallel array blitting;
-- asynchronous sub-chunk workers;
-- workers calculate immutable deltas off-thread;
-- authoritative server-thread commit scheduling;
-- deferred bulk lighting updates with explicit reconciliation;
-- heightmap/POI/block-entity/save/client-state reconciliation;
-- undo/redo and transactional rollback/WAL development path;
-- mod APIs that can place ores, structures and environment changes into existing chunks.
-
-State: **framework/planned**. See `docs/WORLD_EDIT_RUNTIME.md`, `docs/WORLD_EDITOR_ROADMAP.md`, `docs/MULTIPLAYER_WORLD_EDIT.md`, `platform/world-editor-capabilities.json` and world-edit advanced source.
+Dynamic model registry, mesh/vertex sculpting, texture painting/patching, voxel/sub-voxel editor, asset browser/properties, immediate in-world preview, dynamic GPU/resource updates, resource refresh without manual F3+T as the target workflow, and cross-edition adapters.
 
-## CR-014 — Dynamic Event and Structure Matrix
-
-Retain:
-
-- `.nbt` structure-blueprint loading;
-- slicing structures across chunk/section boundaries;
-- real-time structure streaming;
-- procedural structures and environmental assets;
-- meteor, alien citadel, corruption/restoration and similar event triggers;
-- live placement over generated terrain;
-- mod/AI/script-triggered event activation;
-- bounded transactional application.
-
-State: **framework/planned**. See `docs/WORLD_EDIT_RUNTIME.md` and world-edit/runtime source.
-
-## CR-015 — Terraria-style world systems
-
-Retain:
-
-- dynamic liquid simulation cells using bounded cellular-automata-style simulation;
-- arbitrary block-paint layer matrices;
-- sub-voxel paint/material overlays;
-- progressive/progression-locked global world transmutation states;
-- reversible staged transformation and rollback;
-- eventual Java/Bedrock capability adapters.
-
-State: **planned**, with sub-voxel overlay/transmutation foundations already present. Track in `docs/TODO.md`, `docs/ROADMAP.md` and world-system capability planning.
-
-## CR-016 — Microgeometry, curved/slanted blocks and collision representation
-
-Retain:
-
-- microgrid placement;
-- sub-voxel geometry;
-- circles, cylinders, curves, wedges/slopes and slanted surfaces;
-- custom high-detail meshes;
-- dynamic `VoxelShape`/collision synthesis or a deeper replacement collision layer when vanilla shapes are insufficient;
-- render geometry and collision geometry as separate representations where useful;
-- physics-aware manipulation of these shapes;
-- Java and Bedrock rendering/collision adapters.
-
-State: **planned/framework**. Existing custom geometry/render/collision boundaries are in `platform/capabilities.json`; full microgeometry rasterization/render/collision integration remains development work in `docs/TODO.md` and the creator-runtime roadmap.
-
-## CR-017 — Hytale-like in-game asset/model/texture creator
-
-Retain:
-
-- dynamic model registry;
-- live mesh/vertex editing;
-- texture painting and patching;
-- voxel/sub-voxel sculpting;
-- asset browser;
-- model/texture/material properties;
-- direct preview in the living game world;
-- dynamic GPU-buffer/resource updates;
-- resource reload without manual F3+T as the target workflow;
-- Java and Bedrock adapters.
-
-State: **framework/planned**. See project overview/creator workspace, dynamic asset/runtime architecture and rendering integration TODOs.
-
-## CR-018 — Garry's Mod-like sandbox physics and construction
-
-Retain:
-
-- physically manipulable entities/parts;
-- custom entity physics;
-- forces/impulses;
-- dynamic constraint graph;
-- weld, hinge, slider, spring, rope and related constraints;
-- raycast tool-gun controller;
-- selection/manipulation/undo-redo;
-- server-authoritative multiplayer physics;
-- deterministic replication/prediction budgets.
-
-State: **framework/planned**. See `platform/capabilities.json`, advanced construction source and `docs/TODO.md`.
-
-## CR-019 — Roblox-Studio-like live scene/game engine execution
-
-Retain:
-
-- live scene hierarchy;
-- hierarchical instance-property serialization;
-- transforms, parenting and properties;
-- translate/rotate/scale gizmos;
-- drag/drop manipulation;
-- runtime script execution;
-- live asset/world editing;
-- developer console/IDE;
-- AI-assisted runtime automation;
-- inspectable properties and target capability state;
-- hot-reload/restart-minimized workflow.
-
-State: **framework/planned**. See creator/runtime project overview, in-game development architecture and scene/production roadmap.
-
-## CR-020 — In-game IDE, console, compilation and AI control plane
-
-Retain:
-
-- client-side screen/menu injection pipeline;
-- embedded IDE/code console;
-- direct Java source-string compilation;
-- GraalJS/GraalPy execution;
-- hotkey/key-binding registration;
-- menu-button toggles;
-- AI development/API communication channel;
-- MCP/local-AI/sidecar passthrough;
-- autonomous client automation controller;
-- alt-tabless edit/build/test/control workflows;
-- explicit multiplayer permission boundaries.
-
-State: **framework/planned**. See `docs/INGAME_DEVELOPMENT_ENVIRONMENT.md`, advanced source, MCP bridge and creator-roadmap work.
-
-## CR-021 — Non-Java modification and external-tool SDK
-
-Retain a generic capability-gated way for external tools to modify/extend the game through:
-
-- GraalVM JavaScript and Python;
-- local/external Python;
-- Go and C# sidecars;
-- Rust/C++ native extensions;
-- MCP;
-- Netty/TCP/HTTP/WebSocket where appropriate;
-- shared memory/IPC;
-- file-system hotload;
-- Bedrock Script API/Editor integration;
-- future capability modules and patch adapters.
-
-External tools must use explicit permissions/capabilities and may not gain world authority merely by connecting.
-
-State: **framework/planned**. See `bridges/`, `native/`, `docs/ADVANCED_ENGINES.md`, `docs/INGAME_DEVELOPMENT_ENVIRONMENT.md`, `AGENTS.md` and roadmap/TODO.
-
-## CR-022 — Multiplayer live editing, synchronization, culling and consensus
-
-Retain:
-
-- live server editing while users are connected;
-- server-authoritative mutations;
-- custom Netty edit channels;
-- thread-safe server commit scheduling;
-- per-section revisions/optimistic consensus;
-- client acknowledgements;
-- network replication culling by chunk/view-distance/interest;
-- bounded transactions so huge edits do not starve ticks;
-- permissions/authentication of edit requests.
-
-State: **framework/planned**. See `docs/MULTIPLAYER_WORLD_EDIT.md` and world-editor advanced source.
-
-## CR-023 — Fault-tolerant sandbox and anti-crash architecture
-
-Retain:
-
-- script execution isolation and budgets;
-- cooperative interruption/timeouts;
-- stronger process isolation for non-cooperative or crash-prone workloads;
-- global event recovery boundaries;
-- transactional world edits and inverse deltas/WAL;
-- rollback after script/runtime errors;
-- last-known-good hotload state;
-- crash attribution/diagnostics;
-- native/JVM failure-domain separation;
-- explicit statement that same-process native corruption or fatal OOM cannot be magically guaranteed recoverable.
-
-State: **framework/planned**. See security, hotload, world-edit and operations docs/TODO.
-
-## CR-024 — Bedrock Edition first-class support and feature parity target
-
-Retain:
-
-- Bedrock behavior/resource-pack plane;
-- Bedrock Editor extension plane;
-- Dedicated Server network adapters where API scope permits;
-- Java-to-native Project Panama bridge;
-- named shared-memory/native companion;
-- neutral binary bridge frames for UAL, mesh, texture, world, telemetry and script traffic;
-- versioned native Bedrock adapter boundary;
-- target of equivalent creator/world/AI/production capabilities on Bedrock, with explicit parity gaps until validated;
-- permission to escalate to deeper additive native/executable integration where supported APIs cannot provide a required capability.
-
-State: **framework/planned**. See `docs/BEDROCK_ARCHITECTURE.md`, `bedrock/`, `native/bedrock/`, `platform/bedrock-capabilities.json` and `docs/DEEP_INTEGRATION_ARCHITECTURE.md`.
-
-## CR-025 — Launcher, runtime acquisition and dependency resolution
-
-Retain a consumer-friendly launcher/manager that can:
-
-- start without Java installed;
-- acquire the appropriate Java runtime;
-- install any Minecraft version that legitimate metadata/providers make available;
-- resolve vanilla/Fabric/Quilt/Forge/NeoForge and extensible legacy/future loader adapters;
-- install mods, resource packs, shaders, datapacks, worlds and related content;
-- obtain dependencies transitively;
-- use Mojang/official loader metadata and authorized content APIs;
-- use supported Microsoft/Minecraft login flows;
-- maintain hashes/provenance/content locks;
-- provide one-click/simple UX comparable to consumer launchers;
-- provide detailed expert controls comparable to Prism/MultiMC;
-- isolate instances and support clone/fork/diff/snapshot/import/export.
-
-State: **framework/planned**. See `studio/`, `docs/PROJECT_OVERVIEW.md`, `docs/ACQUISITION_AND_RESOLUTION.md`, `docs/ROADMAP.md` and `docs/TODO.md`.
-
-## CR-026 — Mod forking, decompilation and compatibility-analysis pipelines
-
-Retain:
-
-- authorized local mod-JAR inspection;
-- metadata/dependency classification;
-- archive extraction;
-- bytecode disassembly/diff;
-- optional user-supplied decompiler integration;
-- provenance records;
-- compatibility/fork workflows that do not assume decompiled code is redistributable.
-
-State: **framework/planned**. See bytecode/mod-fork tools, `CONTRIBUTING.md`, security/provenance rules and TODOs.
-
-## CR-027 — Machinima, recording, animation and production suite
-
-Retain:
-
-- in-game recording/replay capture;
-- deterministic event logging;
-- rational-time timeline;
-- free/first-person/third-person/target/orbit/rail/spline/crane/vehicle camera rigs;
-- actor/entity transform and animation tracks;
-- poses, IK and equipment/visibility/particle/dialogue/command cues;
-- shots, takes, sequences and time remapping;
-- real-time capture;
-- deterministic/offline rendering where target integration allows it;
-- image sequences and replaceable encoder bridge;
-- audio stems/mixing metadata;
-- render passes such as beauty/depth/normals/object IDs/motion vectors when supported;
-- Java and Bedrock production adapters.
-
-State: **framework/planned**. See `docs/MACHINIMA_PRODUCTION.md`, production schemas/source and roadmap/TODO.
-
-## CR-028 — Dynamic dimensions, teleport channels and world-generation/runtime content
-
-Retain:
-
-- dynamic dimension-management abstraction;
-- codec-driven worldgen;
-- generated ores/structures/data;
-- zero-entity teleport channels;
-- procedural events and runtime environment changes;
-- ability to escalate beyond frozen registries through virtual registries, instrumentation, patching or owned subsystems when required.
-
-State: **framework/planned**. See `platform/capabilities.json`, worldgen/datagen source and deep-integration architecture.
-
-## CR-029 — Rendering, pose/IK and engine geometry interception
-
-Retain:
-
-- real-time client rendering overrides;
-- render-event pipelines;
-- custom 3D model geometry;
-- direct vertex-buffer/LWJGL paths;
-- PoseStack/matrix interception;
-- inverse kinematics;
-- custom collision/hitbox integration;
-- volumetric preview matrices;
-- target-specific batching/culling/performance validation;
-- deeper renderer augmentation/replacement when public hooks are insufficient.
-
-State: **framework/planned**. See `docs/ADVANCED_ENGINES.md`, world-edit volumetric architecture, capability manifests and deep-integration plan.
-
-## CR-030 — Additive deep integration and patch manager
-
-Retain the explicit rule that ordinary modding APIs are not the ceiling. The project may use:
-
-- loader transforms;
-- JVM agents/instrumentation;
-- native in-process extensions;
-- external helper processes;
-- custom launch/bootstrap chains;
-- deterministic version-pinned executable/shared-library patches;
-- engine subsystem augmentation/replacement;
-- maintained project-owned runtime components/forks.
-
-Deep integration must preserve or recover a verified upstream base, track exact hashes/fingerprints and patch graphs, provide rollback, and must not be used to bypass authentication, entitlement, DRM or anti-cheat controls.
-
-State: **planned/framework**. See `docs/DEEP_INTEGRATION_ARCHITECTURE.md`, `docs/PROJECT_PLAN.md`, `docs/HOTLOAD_ARCHITECTURE.md` and decision `DEC-2026-08-28-003`.
-
-## CR-031 — Community onboarding and open collaboration
-
-Retain:
-
-- community landing/onboarding guide;
-- contributor setup path;
-- architecture tour;
-- testing/evidence guide;
-- support/security routing;
-- code of conduct;
-- issue/PR templates;
-- clear distinction between experimental framework and validated target support.
-
-State: **planned/being added**. Community files are canonical project requirements and must remain part of repository structure.
-
-## CR-032 — Rebrand and terminology scrub
-
-Retain the current transition requirement:
-
-- select a replacement brand only after collision screening;
-- freeze display name, slug, short name, protocol/package/executable/data-root identifiers;
-- inventory all retired-brand terms;
-- rename public/source/path identifiers coherently;
-- migrate persisted/protocol/ABI identifiers safely;
-- add forbidden-terminology CI;
-- regenerate indexes/docs;
-- require zero unexplained retired-brand occurrences in the current tracked tree;
-- treat Git-history rewriting as a separate destructive decision.
-
-State: **transition**. See `docs/REBRAND_PLAN.md`, `ai/DRIFT_MITIGATION.md` and AI handoff.
-
----
+### CR-018 — Garry's Mod-like sandbox physics/construction — mixed
+
+Physically manipulable parts/entities, custom physics, force/impulse integration, dynamic constraint graph, weld/hinge/slider/spring/rope constraints, raycast tool-gun, selection/manipulation/undo, server-authoritative multiplayer physics and deterministic replication/prediction budgets.
+
+### CR-019 — Roblox-Studio-like live game/scene engine — mixed
+
+Unified hierarchical scene graph, stable instance IDs, property serialization, parent/child transforms, translate/rotate/scale gizmos, drag/drop manipulation, live runtime script execution, asset/world editing, properties inspector, target capability state, hot reload and desktop/in-game creator integration.
+
+### CR-020 — Alt-tabless in-game IDE, console and AI control plane — framework
+
+Client screen/menu injection, embedded code IDE/console, direct Java compilation, GraalJS/GraalPy execution, hotkeys/menu toggles, AI API/MCP/local-sidecar passthrough, autonomous high-level client automation, live logs/diagnostics and permission-aware edit/build/test/control loops without leaving the game.
+
+### CR-021 — Generic non-Java modification/external-tool SDK — mixed
+
+Permissioned modification gateway for GraalJS/GraalPy, external Python, Go, C#, Rust/C++, MCP, Netty/TCP/HTTP/WebSocket where appropriate, shared memory/IPC, filesystem hotload, Bedrock Script/Editor and future patch/capability modules. Connection alone never grants world/server authority.
+
+### CR-022 — Multiplayer live authoring, state synchronization, culling and consensus — framework
+
+Live editing with users connected; server-authoritative mutation; custom Netty edit channels; thread-safe/tick-budgeted server scheduling; per-section revisions/optimistic consensus; ACK/retry/reconciliation; network culling by chunk/view distance/interest; permissions/authentication; relevant-only replication of creator/physics/world state.
+
+### CR-023 — Fault-tolerant sandbox and anti-crash architecture — mixed
+
+Script budgets, cooperative interruption/timeouts, process isolation for non-cooperative/untrusted/native workloads, global recovery boundaries, off-thread transactional world sandbox, inverse deltas/WAL rollback, last-known-good hotload recovery, crash attribution and supervised restart. Do not falsely promise same-process survival from fatal JVM OOM/native corruption.
+
+### CR-024 — Bedrock first-class support and parity target — mixed
+
+Stable Add-On runtime, preview Editor plane, Dedicated Server adapters where APIs permit, Java→Panama→native/shared-memory bridge, neutral bridge frames for UAL/mesh/texture/world/telemetry/script/production data, versioned native companion, and the goal of equivalent world/editor/AI/physics/geometry/production features. When supported APIs are insufficient, deeper additive native/bootstrap/executable integration is explicitly allowed under exact version/fingerprint gates.
+
+### CR-025 — User-friendly launcher/runtime/content acquisition — mixed
+
+Desktop launcher that starts without Java; legitimate Minecraft version and Java acquisition; official/authorized loader/content channels; Microsoft/Minecraft login pipeline; vanilla/Fabric/Quilt/Forge/NeoForge plus extensible legacy/future adapters; mods/resource packs/shaders/datapacks/worlds and dependencies; hashes/provenance/content locks; CurseForge-like simple UX plus Prism/MultiMC-like expert detail; isolated instances, snapshots, clone/fork/diff/import/export.
+
+### CR-026 — Mod forking, decompilation and compatibility analysis — mixed
+
+Authorized local JAR inspection/extraction, metadata/dependency/Mixin/native classification, bytecode structural diff, optional user-supplied decompiler, tool/source provenance, fork workflows and license/redistribution review before publication.
+
+### CR-027 — Recording, animation and machinima/production suite — mixed
+
+In-game recording/replay, deterministic event log, rational-time timeline, free/first-/third-person/target/orbit/rail/spline/crane/vehicle cameras, actor animation/pose/IK/equipment/visibility/particle/dialogue/command tracks, shots/takes/sequences/time remapping, real-time capture, offline deterministic rendering where target hooks permit, image sequences, encoder bridge, audio stems/mix metadata and advanced render passes with Java/Bedrock adapters.
+
+### CR-028 — Dynamic dimensions, worldgen and zero-entity teleport — mixed
+
+Dynamic dimension management, codec-driven worldgen, generated ores/structures/data, zero-entity teleport channels, procedural runtime environment changes, virtual registries and escalation into instrumentation/patch/project-owned registry systems when frozen native registries block required semantics.
+
+### CR-029 — Rendering interception, volumetrics, pose and IK — mixed
+
+Real-time client rendering overrides and render events, custom 3D geometry, direct GPU/vertex-buffer paths, PoseStack/matrix interception, inverse kinematics, dynamic hitbox integration, streamed volumetric rendering matrices, culling/batching/performance validation and deeper renderer augmentation/replacement when public hooks cannot meet requirements.
+
+### CR-030 — Additive deep integration and patch manager — planned
+
+Normal mod APIs are not the ceiling. The project may escalate through loader transforms, JVM agents, native extensions, sidecars, custom bootstrap, deterministic version-pinned executable/shared-library patch sets, engine subsystem augmentation/replacement and project-owned runtime forks/components. Preserve/recover a verified upstream base, exact hashes/fingerprints, patch graph, derived-runtime verification and rollback. Do not use this to bypass authentication, entitlement, DRM or anti-cheat controls.
+
+### CR-031 — Community onboarding and open collaboration — implemented
+
+Community landing guide, getting started, contributor onboarding, architecture tour, testing/evidence guide, support/security routing, code of conduct, glossary, issue/PR templates and explicit distinction between planned/framework/tested/target-validated capabilities.
+
+### CR-032 — Rebrand and complete retired-terminology migration — transition
+
+Select a collision-screened replacement identity; freeze display/case/slug/short/protocol/package/executable/data-root values; inventory retired terms across text/paths/source/schemas/ABI/protocol/generated artifacts; migrate project-owned terminology; use compatibility aliases only when persistent/wire consumers require them; add forbidden-term CI; regenerate indexes/docs; require zero unexplained retired-brand occurrences in the current tree; treat Git-history rewriting as a separate destructive decision.
 
 ## Coverage rule
 
-A requested capability from this development conversation must satisfy at least one of the following:
+Every capability requested in this development conversation must have one of two states:
 
-1. it has implementation/validation evidence referenced by this ledger; or
-2. it appears explicitly in this ledger and therefore remains a development requirement tracked by project planning.
+1. implementation/validation evidence; or
+2. explicit retained development planning.
 
-A future agent may not remove a requirement because it is difficult, unsupported by a normal mod API, or not yet implemented. Such constraints change the implementation layer, schedule, readiness and validation burden. Removal or material weakening requires an explicit human-approved superseding decision recorded in `ai/decision-ledger.json`.
+A later agent/contributor may not remove a requirement because it is hard, unsupported by normal modding surfaces, or not yet validated. Such constraints change the integration layer, target coverage, schedule or evidence requirement. Removal/material weakening requires an explicit human-approved superseding decision in `../ai/decision-ledger.json`.
 
-## Audit relationship
+## Synchronization rule
 
-Machine-readable coverage lives in `platform/chat-requirements.json`. `tools/chat_requirements_check.py` validates that every tracked requirement group has a state and at least one existing repository evidence/planning path. Studio/project-continuity CI runs that checker.
+When implementation or planning paths move, update both this ledger and `../platform/chat-requirements.json`. When readiness changes, update `FEATURE_MAP.md`/target manifests only after evidence exists. Broad AI work must consult this ledger through `../ai/context-map.json`.
