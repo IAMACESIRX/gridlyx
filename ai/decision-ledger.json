@@ -18,15 +18,16 @@
     },
     {
       "id": "DEC-2026-08-28-002",
-      "status": "accepted",
+      "status": "superseded",
       "scope": "brand-transition",
       "decision": "Do not perform a full old-brand scrub until a replacement brand is selected and its canonical spelling/slug/prefix are frozen.",
       "reason": "A partial rename would create more terminology drift and could corrupt protocol/ABI or persisted-data identifiers that require migration handling.",
       "evidence": [
-        "The current brand appears across documentation, workflow names, code identifiers and the VFSB/native bridge vocabulary."
+        "The previous brand appears across documentation, workflow names, code identifiers and the VFSB/native bridge vocabulary.",
+        "Superseded by DEC-2026-08-28-004 after Gridelyx was selected."
       ],
-      "review_trigger": "Human selects the replacement public brand",
-      "rollback": "Not applicable; this decision intentionally defers destructive renaming."
+      "review_trigger": "Superseded: replacement public brand selected",
+      "rollback": "Not applicable; its gating condition has been satisfied."
     },
     {
       "id": "DEC-2026-08-28-003",
@@ -41,6 +42,21 @@
       ],
       "review_trigger": "Any L5-L8 integration, upstream executable/library change, security-boundary change or discovery that a shallower stable integration can fully replace a deeper patch",
       "rollback": "Disable the affected patch/component capability, restore the verified base artifact or prior patch graph, and fall back to the last-known-good shallower integration where available."
+    },
+    {
+      "id": "DEC-2026-08-28-004",
+      "status": "accepted",
+      "scope": "brand-transition",
+      "decision": "Adopt Gridelyx as the canonical root brand and Gridelyx Studio as the integrated suite name. New project-owned identifiers and documentation use Gridelyx. Existing Gridelyx/VFSB source, ABI, protocol and persisted identifiers are treated as explicit migration debt and must change through versioned compatibility work rather than blind replacement.",
+      "reason": "The human project owner selected Gridelyx after candidate exploration. Freezing the identity now removes naming ambiguity while preserving technical compatibility during the staged migration.",
+      "evidence": [
+        "Explicit human selection: Gridelyx is the approved replacement root brand.",
+        "Ordinary web/GitHub screening found no obvious exact-name collision at selection time; this is not legal trademark clearance.",
+        "platform/brand.json schema version 2 records the canonical identity and compatibility identifiers.",
+        "docs/REBRAND_PLAN.md defines the staged migration and exit criteria."
+      ],
+      "review_trigger": "Legal/trademark conflict, human-directed rename, or discovery that a frozen technical identifier must use a different compatibility namespace",
+      "rollback": "Pause public migration, preserve compatibility aliases and update platform/brand.json plus the rebrand decision before any further source/ABI changes."
     }
   ]
 }
