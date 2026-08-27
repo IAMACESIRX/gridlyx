@@ -10,6 +10,8 @@
   "domains": {
     "project-control": [
       "docs/PROJECT_PLAN.md",
+      "docs/REBRAND_PLAN.md",
+      "docs/AI_CONTINUITY_DESIGN.md",
       "docs/ROADMAP.md",
       "docs/FEATURE_MAP.md",
       "docs/TODO.md",
@@ -64,6 +66,7 @@
     "ai": [
       "ai/AI_ORGANISATION.md",
       "ai/DRIFT_MITIGATION.md",
+      "docs/AI_CONTINUITY_DESIGN.md",
       "docs/AI_CONTEXT_SYSTEM.md",
       "docs/AI_AUTODOC.md",
       "tools/repo_index.py",
