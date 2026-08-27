@@ -1,16 +1,94 @@
 {
   "schema_version": 1,
-  "entrypoints": ["AGENTS.md", "AI_HANDOFF.md", "ai/CONTEXT.md"],
+  "entrypoints": [
+    "AGENTS.md",
+    "AI_HANDOFF.md",
+    "ai/AI_ORGANISATION.md",
+    "ai/DRIFT_MITIGATION.md",
+    "ai/CONTEXT.md"
+  ],
   "domains": {
-    "product": ["docs/PROJECT_OVERVIEW.md", "docs/PROJECT_STRUCTURE.md", "docs/ROADMAP.md", "docs/FEATURE_MAP.md"],
-    "launcher": ["studio/core/src/model.rs", "studio/core/src/provider.rs", "studio/core/src/solver.rs", "studio/providers/providers.json", "studio/providers/loader-adapters.json", "docs/ACQUISITION_AND_RESOLUTION.md"],
-    "java-runtime": ["templates/neoforge-26.2/src/advanced", "docs/POLYLOADER_ARCHITECTURE.md", "docs/HOTLOAD_ARCHITECTURE.md", "docs/INGAME_DEVELOPMENT_ENVIRONMENT.md"],
-    "world-editor": ["docs/WORLD_EDIT_RUNTIME.md", "docs/WORLD_EDITOR_ROADMAP.md", "docs/MULTIPLAYER_WORLD_EDIT.md", "tools/world_editor_check.py"],
-    "bedrock": ["docs/BEDROCK_ARCHITECTURE.md", "docs/GRIDELYX_BRIDGE_PROTOCOL.md", "bedrock/README.md", "native/bedrock", "tools/bedrock_check.py"],
-    "native": ["native/README.md", "native/cpp", "native/rust", "docs/GRIDELYX_BRIDGE_PROTOCOL.md"],
-    "production": ["docs/MACHINIMA_PRODUCTION.md", "studio/production/README.md"],
-    "ai": ["docs/AI_CONTEXT_SYSTEM.md", "docs/AI_AUTODOC.md", "tools/repo_index.py", "tools/ai_context_pack.py", "references/index"],
-    "validation": ["AGENTS.md", "docs/TEST_STRATEGY.md", "docs/TODO.md", "tools/validate_platform.py", "tools/diagnose.py", ".github/workflows"]
+    "project-control": [
+      "docs/PROJECT_PLAN.md",
+      "docs/ROADMAP.md",
+      "docs/FEATURE_MAP.md",
+      "docs/TODO.md",
+      "ai/work-state.json",
+      "ai/decision-ledger.json",
+      "ai/assumption-ledger.json",
+      "tools/continuity_check.py"
+    ],
+    "product": [
+      "docs/PROJECT_OVERVIEW.md",
+      "docs/PROJECT_STRUCTURE.md",
+      "docs/ROADMAP.md",
+      "docs/FEATURE_MAP.md"
+    ],
+    "launcher": [
+      "studio/core/src/model.rs",
+      "studio/core/src/provider.rs",
+      "studio/core/src/solver.rs",
+      "studio/providers/providers.json",
+      "studio/providers/loader-adapters.json",
+      "docs/ACQUISITION_AND_RESOLUTION.md"
+    ],
+    "java-runtime": [
+      "templates/neoforge-26.2/src/advanced",
+      "docs/POLYLOADER_ARCHITECTURE.md",
+      "docs/HOTLOAD_ARCHITECTURE.md",
+      "docs/INGAME_DEVELOPMENT_ENVIRONMENT.md"
+    ],
+    "world-editor": [
+      "docs/WORLD_EDIT_RUNTIME.md",
+      "docs/WORLD_EDITOR_ROADMAP.md",
+      "docs/MULTIPLAYER_WORLD_EDIT.md",
+      "tools/world_editor_check.py"
+    ],
+    "bedrock": [
+      "docs/BEDROCK_ARCHITECTURE.md",
+      "docs/GRIDELYX_BRIDGE_PROTOCOL.md",
+      "bedrock/README.md",
+      "native/bedrock",
+      "tools/bedrock_check.py"
+    ],
+    "native": [
+      "native/README.md",
+      "native/cpp",
+      "native/rust",
+      "docs/GRIDELYX_BRIDGE_PROTOCOL.md"
+    ],
+    "production": [
+      "docs/MACHINIMA_PRODUCTION.md",
+      "studio/production/README.md"
+    ],
+    "ai": [
+      "ai/AI_ORGANISATION.md",
+      "ai/DRIFT_MITIGATION.md",
+      "docs/AI_CONTEXT_SYSTEM.md",
+      "docs/AI_AUTODOC.md",
+      "tools/repo_index.py",
+      "tools/ai_context_pack.py",
+      "tools/continuity_check.py",
+      "references/index"
+    ],
+    "validation": [
+      "AGENTS.md",
+      "docs/TEST_STRATEGY.md",
+      "docs/TODO.md",
+      "tools/validate_platform.py",
+      "tools/diagnose.py",
+      ".github/workflows"
+    ]
   },
-  "exclude_by_default": [".git", "build", ".gradle", "vault", "references/binaries", "mods/*/run", "**/*.jar", "**/*.zip", "**/*.class"]
+  "exclude_by_default": [
+    ".git",
+    "build",
+    ".gradle",
+    "vault",
+    "references/binaries",
+    "mods/*/run",
+    "**/*.jar",
+    "**/*.zip",
+    "**/*.class"
+  ]
 }
