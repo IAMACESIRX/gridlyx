@@ -16,6 +16,7 @@
       "platform/chat-requirements.json",
       "docs/REBRAND_PLAN.md",
       "platform/brand.json",
+      "platform/terminology.json",
       "docs/AI_CONTINUITY_DESIGN.md",
       "docs/DEEP_INTEGRATION_ARCHITECTURE.md",
       "docs/ROADMAP.md",
@@ -25,16 +26,20 @@
       "ai/decision-ledger.json",
       "ai/assumption-ledger.json",
       "tools/continuity_check.py",
-      "tools/chat_requirements_check.py"
+      "tools/chat_requirements_check.py",
+      "tools/terminology_check.py"
     ],
     "brand": [
       "platform/brand.json",
+      "platform/terminology.json",
       "docs/REBRAND_PLAN.md",
+      "tools/terminology_check.py",
       "ai/DRIFT_MITIGATION.md",
       "ai/decision-ledger.json"
     ],
     "dependencies-toolchain": [
       "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
+      "docs/CAPABILITY_DEPENDENCY_MATRIX.md",
       "platform/toolchain-requirements.json",
       "platform/versions.json",
       "studio/providers/providers.json",
@@ -56,6 +61,7 @@
       "studio/providers/loader-adapters.json",
       "docs/ACQUISITION_AND_RESOLUTION.md",
       "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
+      "docs/CAPABILITY_DEPENDENCY_MATRIX.md",
       "docs/DEEP_INTEGRATION_ARCHITECTURE.md"
     ],
     "java-runtime": [
@@ -85,12 +91,14 @@
       "native/cpp",
       "native/rust",
       "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
+      "docs/CAPABILITY_DEPENDENCY_MATRIX.md",
       "docs/DEEP_INTEGRATION_ARCHITECTURE.md",
       "docs/GRIDELYX_BRIDGE_PROTOCOL.md"
     ],
     "production": [
       "docs/MACHINIMA_PRODUCTION.md",
       "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
+      "docs/CAPABILITY_DEPENDENCY_MATRIX.md",
       "studio/production/README.md"
     ],
     "community": [
@@ -98,10 +106,14 @@
       "CONTRIBUTING.md",
       "CODE_OF_CONDUCT.md",
       "SUPPORT.md",
+      "docs/community/README.md",
+      "docs/community/GRIDELYX_PROJECT_ENTRYPOINT.md",
       "docs/community/GETTING_STARTED.md",
       "docs/community/CONTRIBUTOR_ONBOARDING.md",
       "docs/community/ARCHITECTURE_TOUR.md",
       "docs/community/TESTING_AND_EVIDENCE.md",
+      "docs/community/WORKSTREAMS.md",
+      "docs/community/ISSUE_TRACKING.md",
       "docs/community/GLOSSARY.md"
     ],
     "ai": [
@@ -114,6 +126,8 @@
       "tools/ai_context_pack.py",
       "tools/continuity_check.py",
       "tools/chat_requirements_check.py",
+      "tools/toolchain_requirements_check.py",
+      "tools/terminology_check.py",
       "references/index"
     ],
     "validation": [
@@ -121,8 +135,11 @@
       "docs/TEST_STRATEGY.md",
       "docs/TODO.md",
       "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
+      "docs/CAPABILITY_DEPENDENCY_MATRIX.md",
       "platform/toolchain-requirements.json",
+      "platform/terminology.json",
       "tools/toolchain_requirements_check.py",
+      "tools/terminology_check.py",
       "tools/validate_platform.py",
       "tools/diagnose.py",
       ".github/workflows"
