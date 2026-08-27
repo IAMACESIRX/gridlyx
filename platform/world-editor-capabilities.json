@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "plane": "live-world-authoring",
+  "capabilities": {
+    "parallel_array_blitting": "implemented",
+    "async_subchunk_delta_preparation": "implemented",
+    "server_thread_commit_queue": "implemented",
+    "deferred_lighting_reconciliation": "framework",
+    "nbt_structure_blueprint_loader": "implemented",
+    "generated_chunk_overwrite_compiler": "implemented",
+    "dynamic_event_structure_matrix": "framework",
+    "subvoxel_overlay_buffers": "implemented",
+    "progressive_transmutation_state_machine": "implemented",
+    "volumetric_client_matrix_stream": "framework",
+    "embedded_ide_model": "implemented",
+    "live_java_compilation": "implemented",
+    "keybind_menu_toggle_router": "framework",
+    "ai_development_bridge": "implemented",
+    "scene_graph": "implemented",
+    "instance_property_serialization": "implemented",
+    "transform_gizmos": "implemented",
+    "netty_edit_channel": "implemented",
+    "replication_culling": "implemented",
+    "revision_consensus": "implemented",
+    "minecraft_client_screen_adapter": "requires-target-integration",
+    "minecraft_section_mutation_adapter": "requires-target-integration",
+    "minecraft_resource_render_adapter": "requires-target-integration"
+  }
+}
