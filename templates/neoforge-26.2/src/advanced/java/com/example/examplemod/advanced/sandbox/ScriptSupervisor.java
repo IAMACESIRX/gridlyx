@@ -58,17 +58,21 @@ public final class ScriptSupervisor implements AutoCloseable {
     }
 
     private <T> void timeout(long id, CompletableFuture<ExecutionResult<T>> completion) {
-        Future<?> future = active.remove(id);
+        Future<?> future = active.get(id);
         if (future == null || completion.isDone()) {
             return;
         }
-        boolean interrupted = future.cancel(true);
-        completion.complete(new ExecutionResult<>(
+        ExecutionResult<T> timedOut = new ExecutionResult<>(
                 id,
                 Status.TIMED_OUT,
                 null,
                 "Script exceeded its execution deadline",
-                interrupted));
+                true);
+        if (!completion.complete(timedOut)) {
+            return;
+        }
+        active.remove(id, future);
+        future.cancel(true);
     }
 
     public int activeTaskCount() {
