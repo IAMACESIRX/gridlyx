@@ -10,6 +10,17 @@ Build a cross-edition Minecraft launcher, instance/content manager, cross-loader
 
 This is **not constrained to conventional modding extension points**. Where required capability cannot be provided through normal APIs/loaders, the platform may escalate into JVM/runtime instrumentation, native components, external services, launch/bootstrap changes, version-pinned executable/library patching or maintained project-owned runtime components. These changes remain additive, fingerprint-gated, attributable and reversible rather than turning the base game into an unknowable mutation.
 
+## Canonical retained requirements
+
+The complete conversation-derived project scope is now preserved in two synchronized artifacts:
+
+- `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` — human-readable requirement/evidence/planning ledger;
+- `platform/chat-requirements.json` — machine-readable requirement graph.
+
+`tools/chat_requirements_check.py` validates that every retained requirement group has a valid state and at least one existing implementation/evidence/planning path. Studio/project-continuity CI runs this check.
+
+A capability may remain planned or framework-level, but a later agent must not silently remove or materially weaken it because a normal mod API, loader, Java, Bedrock or current engine surface cannot express it. Such a finding changes integration depth and validation burden. Removal requires explicit human-approved supersession recorded in the decision ledger.
+
 ## Current architecture
 
 - Java advanced runtime: loader-neutral UAL, hotload, scripting, world/asset editing, scene/physics tooling and advanced native/polyglot mechanisms under `templates/neoforge-26.2/src/advanced`.
@@ -18,7 +29,8 @@ This is **not constrained to conventional modding extension points**. Where requ
 - Native/IPC: project-owned C ABI, binary bridge framing, Panama/FFM, shared memory and language sidecars.
 - Studio/launcher core: `studio/core` defines GUI-independent instance, provider, provenance and dependency-resolution contracts.
 - Providers: `studio/providers/providers.json` and `loader-adapters.json`; official/authorized upstreams only.
-- Product/project control: `docs/PROJECT_PLAN.md`, `docs/PROJECT_OVERVIEW.md`, `docs/ROADMAP.md`, `docs/FEATURE_MAP.md`, `docs/TODO.md`.
+- Product/project control: `docs/PROJECT_PLAN.md`, `docs/PROJECT_OVERVIEW.md`, `docs/CHAT_REQUIREMENTS_TRACEABILITY.md`, `docs/ROADMAP.md`, `docs/FEATURE_MAP.md`, `docs/TODO.md`.
+- Community: `COMMUNITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SUPPORT.md` and `docs/community/` provide contributor/user onboarding.
 - AI continuity: `ai/AI_ORGANISATION.md`, `ai/DRIFT_MITIGATION.md`, `ai/work-state.json`, `ai/decision-ledger.json`, `ai/assumption-ledger.json`, `ai/context-map.json`.
 - AI retrieval/indexing: `docs/AI_CONTEXT_SYSTEM.md`, `tools/repo_index.py`, `tools/ai_context_pack.py`.
 
@@ -28,9 +40,9 @@ When information conflicts:
 
 1. explicit current human direction/corrections;
 2. implementation, schemas and reproducible runtime evidence;
-3. locked platform/version/provider manifests;
+3. locked platform/version/provider/requirements manifests;
 4. accepted architecture/decision records;
-5. project plan/roadmap/feature/TODO;
+5. project plan/requirements ledger/roadmap/feature/TODO;
 6. handoff/context/index material;
 7. generated summaries and speculative notes.
 
@@ -52,6 +64,7 @@ Never resolve a conflict by averaging incompatible summaries.
 12. Destructive migrations require an explicit recovery route.
 13. A requirement must not be rejected merely because normal Minecraft/loader/Bedrock APIs cannot express it. Use the shallowest reliable integration layer, but deeper additive engine/runtime/binary integration is allowed when justified and recoverable.
 14. Deep integration must not bypass authentication, entitlement, DRM, anti-cheat or platform security controls as a means of obtaining capability.
+15. Every retained conversation requirement must remain represented by implementation/evidence or explicit planning in `platform/chat-requirements.json`.
 
 ## Active transition: rebrand
 
@@ -68,15 +81,16 @@ After selection, follow `ai/DRIFT_MITIGATION.md` → **Rebrand protocol** and ad
 
 ## Active engineering priorities
 
-1. Preserve and validate the AI continuity/drift-control layer.
-2. Complete the whole-project requirements reconciliation tracked in GitHub issues.
+1. Preserve the whole-chat requirements ledger and keep its evidence/planning paths valid.
+2. Preserve and validate the AI continuity/drift-control layer.
 3. Implement the desktop launcher/runtime acquisition path end-to-end.
 4. Extend loader/content resolution through the supported adapter/provider model.
-5. Integrate the live creator runtime: world editing, assets/models, microgeometry, physics, scripting, AI/IDE and non-Java extensions.
-6. Validate Java/Bedrock capability parity explicitly.
+5. Integrate the live creator runtime: world editing, structures/events, liquids/paint/transmutation, assets/models, microgeometry, physics, scene tools, scripting, AI/IDE and non-Java extensions.
+6. Validate Java/Bedrock capability parity explicitly and fill target-specific creator/world/production adapters.
 7. Build the additive deep-integration/patch-management path so capabilities can escalate beyond ordinary API/loader limits without sacrificing provenance or rollback.
 8. Harden hotload, rollback and process-isolated fault containment, preserving editor state across broader supervised restart scopes.
-9. Promote replay/timeline/camera foundations into the production suite.
+9. Promote replay/timeline/camera foundations into the full recording/animation/machinima/production suite.
+10. Complete the public rebrand and retired-terminology scrub after a replacement identity is approved.
 
 ## Session start protocol
 
@@ -84,11 +98,12 @@ For non-trivial work:
 
 1. read `AGENTS.md`;
 2. read this handoff;
-3. read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`;
-4. inspect `ai/work-state.json`, decision ledger and assumption ledger;
-5. use `ai/context-map.json` to locate task-specific canonical source;
-6. inspect version/provider manifests and upstream references before guessing external APIs;
-7. check GitHub issues/TODO when task scope overlaps tracked work.
+3. for broad/scope-affecting work, read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json`;
+4. read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`;
+5. inspect `ai/work-state.json`, decision ledger and assumption ledger;
+6. use `ai/context-map.json` to locate task-specific canonical source;
+7. inspect version/provider manifests and upstream references before guessing external APIs;
+8. check GitHub issues/TODO when task scope overlaps tracked work.
 
 ## Session end protocol
 
@@ -99,6 +114,7 @@ A meaningful session should leave behind:
 - tests/commands actually run;
 - failures and validation not performed;
 - readiness changes supported by evidence;
+- retained-requirement paths updated if architecture/planning moved;
 - new/closed assumptions;
 - architecture decisions and rollback route where relevant;
 - exact next work or blocker.
@@ -125,6 +141,7 @@ Do not use “supported” without naming the edition/version/loader/evidence sc
 
 ```bash
 python tools/continuity_check.py
+python tools/chat_requirements_check.py
 python tools/studio_check.py
 python tools/repo_index.py --check
 python tools/validate_platform.py
@@ -140,6 +157,7 @@ Then run applicable Java advanced/native/Bedrock/game/runtime tests for the actu
 OBJECTIVE:
 BRANCH / COMMIT:
 SCOPE:
+RETAINED REQUIREMENTS:
 AUTHORITATIVE FILES:
 COMPLETED:
 VERIFIED:
