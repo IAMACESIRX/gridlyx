@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "unknown_versions": "explicitly_unpinned_not_guessed",
+    "runtime_rule": "only_selected_capabilities_may_require_optional_toolchains",
+    "provider_rule": "official_or_authorized_channels_only",
+    "provenance_rule": "record_local_sha256_and_verify_upstream_integrity_when_available"
+  },
+  "tools": [
+    {"id":"java","name":"Eclipse Temurin JDK","version":"25.0.4+7","state":"pinned","required_for":["java-build","advanced-runtime","panama","javap"],"acquisition":"CI setup-java / managed Java policy","evidence":["platform/versions.json","templates/neoforge-26.2/gradle.properties"]},
+    {"id":"gradle","name":"Gradle","version":"9.2.1","state":"pinned","required_for":["java-build"],"acquisition":"Gradle wrapper / CI setup","evidence":["platform/versions.json","templates/neoforge-26.2/gradle/wrapper/gradle-wrapper.properties"]},
+    {"id":"moddevgradle","name":"NeoForge ModDevGradle","version":"2.0.144","state":"pinned","required_for":["neoforge-development"],"acquisition":"Gradle plugin repositories","evidence":["platform/versions.json","templates/neoforge-26.2/build.gradle"]},
+    {"id":"neoforge","name":"NeoForge","version":"26.2.0.67","state":"pinned","required_for":["canonical-java-target"],"acquisition":"official NeoForged Maven/installer","evidence":["platform/versions.json","studio/providers/providers.json"]},
+    {"id":"minecraft-java","name":"Minecraft Java Edition target","version":"26.2","state":"pinned-template-target","required_for":["canonical-java-target"],"acquisition":"Mojang launcher metadata/runtime graph","evidence":["platform/versions.json","studio/providers/providers.json"]},
+    {"id":"python","name":"Python 3","version":null,"state":"unversioned-required-development","required_for":["repository-tools","python-bridge","ai-sidecars"],"acquisition":"developer/CI environment","evidence":["tools/validate_platform.py","bridges/python/bridge_frame.py","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"rust","name":"Rust/Cargo","version":null,"state":"unversioned-required-subsystem","required_for":["studio-core","rust-native-extensions"],"acquisition":"developer/CI Rust toolchain; edition 2024 required","evidence":["studio/Cargo.toml","native/rust/Cargo.toml","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"cmake","name":"CMake","version":null,"state":"unversioned-required-subsystem","required_for":["cpp-native","bedrock-native-companion"],"acquisition":"developer/CI environment","evidence":["native/CMakeLists.txt","native/bedrock/CMakeLists.txt","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"cpp-compiler","name":"C++ compiler","version":null,"state":"platform-matrix-unpinned","required_for":["cpp-native","bedrock-native-companion"],"acquisition":"MSVC on Windows; GCC/Clang on Linux; macOS lane pending","evidence":["native/cpp/CMakeLists.txt","native/bedrock/CMakeLists.txt","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"go","name":"Go toolchain","version":null,"state":"optional-subsystem-unpinned","required_for":["go-bridge"],"acquisition":"developer environment","evidence":["bridges/go/main.go","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"dotnet","name":".NET SDK / C# compiler","version":null,"state":"optional-subsystem-unpinned","required_for":["csharp-bridge"],"acquisition":"developer environment","evidence":["bridges/csharp/BridgeFrame.cs","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"docker","name":"Docker-compatible Dev Containers runtime","version":null,"state":"optional-development","required_for":["devcontainer"],"acquisition":"developer environment","evidence":[".devcontainer/devcontainer.json","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"ffmpeg","name":"FFmpeg or replaceable encoder","version":null,"state":"planned-external-tool","required_for":["machinima-export"],"acquisition":"external/provenance-recorded executable; not implicitly bundled","evidence":["docs/MACHINIMA_PRODUCTION.md","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"decompiler","name":"External Java decompiler","version":null,"state":"optional-user-supplied","required_for":["mod-fork-analysis"],"acquisition":"explicit user configuration with licence/provenance review","evidence":["tools/bytecode_diff.py","tools/fork_mod.py","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"bedrock-stable","name":"Minecraft Bedrock stable target","version":"1.26.40","state":"pinned-target","required_for":["bedrock-stable-validation"],"acquisition":"legitimate Minecraft Bedrock installation","evidence":["platform/versions.json","docs/BEDROCK_ARCHITECTURE.md"]},
+    {"id":"bedrock-preview","name":"Minecraft Bedrock Preview/Editor target","version":"1.26.50-preview.26","state":"pinned-target","required_for":["bedrock-preview-editor-validation"],"acquisition":"legitimate Bedrock Preview/Editor installation","evidence":["platform/versions.json","docs/BEDROCK_ARCHITECTURE.md"]},
+    {"id":"mcp","name":"Model Context Protocol contract","version":"2026-07-28","state":"pinned-protocol","required_for":["mcp-ai-integration"],"acquisition":"protocol implementation; AI provider remains replaceable","evidence":["platform/versions.json","templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/ai/McpEndpoint.java"]},
+    {"id":"reference-vault","name":"Exact supplied MDK/NeoForge/JDK/LWJGL reference vault","version":"manifest-locked","state":"remote-binary-import-pending","required_for":["deep-reference-recovery"],"acquisition":"local exact-artifact import using vault tools","evidence":["vault/manifest.json","vault/REMOTE_BINARY_IMPORT_PENDING.md","docs/REFERENCE_VAULT.md"]}
+  ],
+  "libraries": [
+    {"id":"spotless","version":"8.10.0","source":"Gradle plugin","evidence":"platform/versions.json"},
+    {"id":"google-java-format","version":"1.36.0","source":"quality configuration","evidence":"platform/versions.json"},
+    {"id":"checkstyle","version":"14.0.0","source":"Gradle/Maven","evidence":"platform/versions.json"},
+    {"id":"junit","version":"6.1.3","source":"Maven Central","evidence":"platform/versions.json"},
+    {"id":"archunit","version":"1.4.2","source":"Maven Central","evidence":"platform/versions.json"},
+    {"id":"asm","version":"9.10.1","source":"Maven Central","evidence":"platform/versions.json"},
+    {"id":"lwjgl-reference","version":"3.4.1","source":"compile-only/reference bundle","evidence":"platform/versions.json"},
+    {"id":"graalvm-polyglot","version":"25.3.4.1","source":"Maven Central/GraalVM artifacts","evidence":"platform/versions.json"}
+  ]
+}
