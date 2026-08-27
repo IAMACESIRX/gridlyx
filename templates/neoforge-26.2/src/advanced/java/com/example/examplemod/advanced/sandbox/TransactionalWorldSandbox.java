@@ -3,7 +3,6 @@ package com.example.examplemod.advanced.sandbox;
 import com.example.examplemod.advanced.worldedit.SectionDelta;
 import com.example.examplemod.advanced.worldedit.SectionKey;
 import com.example.examplemod.advanced.worldedit.WorldMutationSink;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,12 +26,10 @@ public final class TransactionalWorldSandbox {
             }
         }
 
-        List<PreparedWorldTransaction.MutationPair> applied = new ArrayList<>();
         Set<SectionKey> dirty = new LinkedHashSet<>();
         try {
             for (PreparedWorldTransaction.MutationPair mutation : transaction.mutations()) {
                 sink.applyWithoutLighting(mutation.forward());
-                applied.add(mutation);
                 dirty.add(mutation.forward().key());
             }
             sink.markForSave(dirty);
@@ -46,33 +43,40 @@ public final class TransactionalWorldSandbox {
                     null,
                     -1L,
                     null);
-        } catch (VirtualMachineError | ThreadDeath critical) {
-            throw critical;
-        } catch (Throwable failure) {
-            return rollback(sink, transaction.transactionId(), applied, reconcileLighting, failure);
+        } catch (RuntimeException | LinkageError failure) {
+            return rollback(
+                    sink,
+                    transaction.transactionId(),
+                    transaction.mutations(),
+                    reconcileLighting,
+                    failure);
         }
     }
 
     private static TransactionResult rollback(
             WorldMutationSink sink,
             long transactionId,
-            List<PreparedWorldTransaction.MutationPair> applied,
+            List<PreparedWorldTransaction.MutationPair> candidates,
             boolean reconcileLighting,
             Throwable originalFailure) {
         Set<SectionKey> rolledBack = new LinkedHashSet<>();
         boolean complete = true;
-        for (int index = applied.size() - 1; index >= 0; index--) {
-            SectionDelta rollback = applied.get(index).rollback();
-            if (sink.currentRevision(rollback.key()) != rollback.baseRevision()) {
+        for (int index = candidates.size() - 1; index >= 0; index--) {
+            PreparedWorldTransaction.MutationPair mutation = candidates.get(index);
+            SectionDelta forward = mutation.forward();
+            SectionDelta rollback = mutation.rollback();
+            long actual = sink.currentRevision(rollback.key());
+            if (actual == forward.baseRevision()) {
+                continue;
+            }
+            if (actual != rollback.baseRevision()) {
                 complete = false;
                 continue;
             }
             try {
                 sink.applyWithoutLighting(rollback);
                 rolledBack.add(rollback.key());
-            } catch (VirtualMachineError | ThreadDeath critical) {
-                throw critical;
-            } catch (Throwable rollbackFailure) {
+            } catch (RuntimeException | LinkageError rollbackFailure) {
                 complete = false;
             }
         }
@@ -81,9 +85,7 @@ public final class TransactionalWorldSandbox {
             if (reconcileLighting && !rolledBack.isEmpty()) {
                 sink.reconcileLighting(rolledBack);
             }
-        } catch (VirtualMachineError | ThreadDeath critical) {
-            throw critical;
-        } catch (Throwable reconciliationFailure) {
+        } catch (RuntimeException | LinkageError reconciliationFailure) {
             complete = false;
         }
         return new TransactionResult(

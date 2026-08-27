@@ -50,9 +50,7 @@ public final class ScriptSupervisor implements AutoCloseable {
         try {
             T value = task.call();
             completion.complete(new ExecutionResult<>(id, Status.SUCCESS, value, null, false));
-        } catch (VirtualMachineError | ThreadDeath critical) {
-            throw critical;
-        } catch (Throwable failure) {
+        } catch (Exception | LinkageError failure) {
             completion.complete(new ExecutionResult<>(id, Status.FAILED, null, failure.toString(), false));
         } finally {
             active.remove(id);

@@ -34,10 +34,13 @@ public final class RuntimeEnvironmentScanner {
         if (containsClass(loaded, "org.quiltmc.loader.api.QuiltLoader") || classPath.contains("quilt-loader")) {
             result.add(LoaderFamily.QUILT);
         }
-        if (containsPrefix(loaded, "net.neoforged.fml") || classPath.contains("neoforge")) {
+        boolean neoForge = containsPrefix(loaded, "net.neoforged.fml") || classPath.contains("neoforge");
+        if (neoForge) {
             result.add(LoaderFamily.NEOFORGE);
         }
-        if (containsPrefix(loaded, "net.minecraftforge.fml") || classPath.contains("forge")) {
+        boolean forge = containsPrefix(loaded, "net.minecraftforge.fml")
+                || classPath.contains("forge") && !classPath.contains("neoforge");
+        if (forge) {
             result.add(LoaderFamily.FORGE);
         }
         if (containsPrefix(loaded, "com.mumfrey.liteloader") || classPath.contains("liteloader")) {

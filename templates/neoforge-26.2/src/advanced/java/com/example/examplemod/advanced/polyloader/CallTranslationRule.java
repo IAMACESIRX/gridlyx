@@ -24,7 +24,11 @@ public record CallTranslationRule(
         }
     }
 
-    public boolean matches(int candidateOpcode, String candidateOwner, String candidateName, String candidateDescriptor) {
+    public boolean matches(
+            int candidateOpcode,
+            String candidateOwner,
+            String candidateName,
+            String candidateDescriptor) {
         return opcode == candidateOpcode
                 && owner.equals(candidateOwner)
                 && name.equals(candidateName)

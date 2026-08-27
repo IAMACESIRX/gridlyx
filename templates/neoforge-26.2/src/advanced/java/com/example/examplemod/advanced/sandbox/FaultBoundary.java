@@ -7,9 +7,7 @@ public final class FaultBoundary {
     public <T> Outcome<T> run(String boundaryName, Callable<T> action, Consumer<Throwable> recoveryHook) {
         try {
             return new Outcome<>(true, action.call(), null, boundaryName);
-        } catch (VirtualMachineError | ThreadDeath critical) {
-            throw critical;
-        } catch (Throwable failure) {
+        } catch (Exception | LinkageError failure) {
             recoveryHook.accept(failure);
             return new Outcome<>(false, null, failure.toString(), boundaryName);
         }
