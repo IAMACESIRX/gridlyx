@@ -1,6 +1,6 @@
 # Minecraft Advanced Mod Development Kit
 
-Private R&D platform for **AI-assisted Minecraft/NeoForge engineering, live scripting, runtime experimentation, multi-language extensions and in-game construction systems**. The stable mod template stays reproducible while advanced bytecode/native/polyglot/render/network systems remain isolated and opt-in.
+Private R&D platform for **AI-assisted Minecraft/NeoForge engineering, live scripting, runtime experimentation, multi-language extensions and in-game construction systems**. The stable mod template stays reproducible while advanced bytecode/native/polyglot/render/network/world-edit systems remain isolated and opt-in.
 
 ## Canonical toolchain
 
@@ -34,12 +34,39 @@ python tools/workspace.py build world_lab --advanced
 
 Every `mods/<mod_id>` is an independent NeoForge project with isolated generated resources, runs and JARs while sharing the locked platform contract.
 
+## Live world authoring plane
+
+The advanced template now includes a palette-indexed, server-authoritative world-edit architecture for MCEdit-style edits over already-generated chunks:
+
+- parallel 16x16x16 section-array blitting;
+- asynchronous immutable snapshot/delta preparation;
+- server-thread-only commit scheduling;
+- deferred bulk lighting with explicit reconciliation;
+- compressed/uncompressed `.nbt` structure blueprint decoding;
+- blueprint slicing across existing chunk/section boundaries;
+- dynamic event/structure matrices for triggered procedural events;
+- sparse sub-voxel paint/overlay buffers;
+- progressive world transmutation state machine;
+- real-time volumetric density/material frame streaming;
+- hierarchical scene graph, typed property serialization and transform gizmos;
+- embedded IDE/console models, live Java compilation, key/menu action routing and AI passthrough;
+- Netty edit framing, section revision consensus, ACK state and near-player replication culling.
+
+Run the structural gate with:
+
+```bash
+python tools/world_editor_check.py
+```
+
+Read `docs/WORLD_EDIT_RUNTIME.md`, `docs/INGAME_DEVELOPMENT_ENVIRONMENT.md`, `docs/MULTIPLAYER_WORLD_EDIT.md` and `docs/WORLD_EDITOR_ROADMAP.md` before wiring target-specific Minecraft adapters.
+
 ## Quality, tests and automation
 
 ```bash
 python tools/build_lock.py --check
 python tools/script_gatekeeper.py
 python tools/ecosystem_check.py
+python tools/world_editor_check.py
 python tools/validate_platform.py
 python tools/diagnose.py --static
 python tools/autodoc.py --check
@@ -80,9 +107,9 @@ See `docs/HOTLOAD_ARCHITECTURE.md`.
 
 ## Construction sandbox
 
-The advanced construction plane now contains a deterministic physics world, constraint graph, raycast tool-gun controller, procedural matrix engine, algorithmic asset provider, dynamic collision-shape model, Minecraft `VoxelShape` composer, zero-entity teleport channels, dynamic dimension lifecycle manager, custom geometry provider and prioritised client render-event/override pipelines.
+The construction plane contains a deterministic physics world, constraint graph, raycast tool-gun controller, procedural matrix engine, algorithmic asset provider, dynamic collision-shape model, Minecraft `VoxelShape` composer, zero-entity teleport channels, dynamic dimension lifecycle manager, custom geometry provider and prioritised client render-event/override pipelines.
 
-These are the structural runtime frameworks for a live-scripted sandbox. Exact client/server NeoForge hooks, multiplayer authority/replication, undo/redo and renderer performance validation remain explicit integration milestones rather than hidden assumptions.
+The live world editor extends this into section-array world manipulation, event-driven structure placement, volumetric previews, scene graph editing and multiplayer replication infrastructure.
 
 ## Profiling and chaos engineering
 
@@ -97,12 +124,15 @@ The telemetry plane includes bounded real-time event storage, deterministic opt-
 Read:
 
 - `docs/PROJECT_PLAN.md` — R0-R6 readiness model, workstreams, milestones and release gates.
+- `docs/WORLD_EDITOR_ROADMAP.md` — R0-R5 world-editor integration and validation roadmap.
 - `docs/TODO.md` — implementation/validation ledger.
 - `docs/DECISIONS.md` — architecture decision records.
 - `docs/TEST_STRATEGY.md` — layered verification model.
 - `docs/AUTO_CAPABILITIES.md` — generated capability status.
 - `docs/AI_AUTODOC.md` — provider-independent AI documentation pipeline.
 - `SECURITY.md` and `CONTRIBUTING.md` — operational rules.
+
+The repository issue tracker is the live execution backlog. Use the `Live World Editor Work Item` issue form for world mutation, rendering, embedded IDE, AI, replication and performance work.
 
 ## Reference vault
 
