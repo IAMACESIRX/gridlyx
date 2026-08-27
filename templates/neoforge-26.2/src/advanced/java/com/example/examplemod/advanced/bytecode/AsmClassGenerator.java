@@ -22,7 +22,12 @@ public final class AsmClassGenerator {
         constructor.visitMaxs(0, 0);
         constructor.visitEnd();
 
-        MethodVisitor ping = writer.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "ping", "()Ljava/lang/String;", null, null);
+        MethodVisitor ping = writer.visitMethod(
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC,
+                "ping",
+                "()Ljava/lang/String;",
+                null,
+                null);
         ping.visitCode();
         ping.visitLdcInsn("ok");
         ping.visitInsn(Opcodes.ARETURN);
