@@ -12,6 +12,7 @@
       "docs/PROJECT_PLAN.md",
       "docs/REBRAND_PLAN.md",
       "docs/AI_CONTINUITY_DESIGN.md",
+      "docs/DEEP_INTEGRATION_ARCHITECTURE.md",
       "docs/ROADMAP.md",
       "docs/FEATURE_MAP.md",
       "docs/TODO.md",
@@ -23,6 +24,7 @@
     "product": [
       "docs/PROJECT_OVERVIEW.md",
       "docs/PROJECT_STRUCTURE.md",
+      "docs/DEEP_INTEGRATION_ARCHITECTURE.md",
       "docs/ROADMAP.md",
       "docs/FEATURE_MAP.md"
     ],
@@ -32,12 +34,14 @@
       "studio/core/src/solver.rs",
       "studio/providers/providers.json",
       "studio/providers/loader-adapters.json",
-      "docs/ACQUISITION_AND_RESOLUTION.md"
+      "docs/ACQUISITION_AND_RESOLUTION.md",
+      "docs/DEEP_INTEGRATION_ARCHITECTURE.md"
     ],
     "java-runtime": [
       "templates/neoforge-26.2/src/advanced",
       "docs/POLYLOADER_ARCHITECTURE.md",
       "docs/HOTLOAD_ARCHITECTURE.md",
+      "docs/DEEP_INTEGRATION_ARCHITECTURE.md",
       "docs/INGAME_DEVELOPMENT_ENVIRONMENT.md"
     ],
     "world-editor": [
@@ -49,6 +53,7 @@
     "bedrock": [
       "docs/BEDROCK_ARCHITECTURE.md",
       "docs/GRIDELYX_BRIDGE_PROTOCOL.md",
+      "docs/DEEP_INTEGRATION_ARCHITECTURE.md",
       "bedrock/README.md",
       "native/bedrock",
       "tools/bedrock_check.py"
@@ -57,6 +62,7 @@
       "native/README.md",
       "native/cpp",
       "native/rust",
+      "docs/DEEP_INTEGRATION_ARCHITECTURE.md",
       "docs/GRIDELYX_BRIDGE_PROTOCOL.md"
     ],
     "production": [
