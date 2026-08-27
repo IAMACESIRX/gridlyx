@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "minecraft": "26.2",
+  "neoforge": "26.2.0.67",
+  "moddevgradle": "2.0.144",
+  "gradle": "9.2.1",
+  "java": {
+    "language": 25,
+    "distribution": "temurin",
+    "exact": "25.0.4+7",
+    "vendor": "Eclipse Adoptium"
+  },
+  "lwjgl_reference": "3.4.1",
+  "template": "templates/neoforge-26.2"
+}
