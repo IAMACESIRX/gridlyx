@@ -4,6 +4,7 @@
     "AGENTS.md",
     "AI_HANDOFF.md",
     "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
+    "platform/brand.json",
     "ai/AI_ORGANISATION.md",
     "ai/DRIFT_MITIGATION.md",
     "ai/CONTEXT.md"
@@ -14,6 +15,7 @@
       "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
       "platform/chat-requirements.json",
       "docs/REBRAND_PLAN.md",
+      "platform/brand.json",
       "docs/AI_CONTINUITY_DESIGN.md",
       "docs/DEEP_INTEGRATION_ARCHITECTURE.md",
       "docs/ROADMAP.md",
@@ -25,13 +27,18 @@
       "tools/continuity_check.py",
       "tools/chat_requirements_check.py"
     ],
-    "requirements": [
-      "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
-      "platform/chat-requirements.json",
-      "docs/PROJECT_PLAN.md",
-      "docs/FEATURE_MAP.md",
-      "docs/TODO.md",
-      "tools/chat_requirements_check.py"
+    "brand": [
+      "platform/brand.json",
+      "docs/REBRAND_PLAN.md",
+      "ai/DRIFT_MITIGATION.md",
+      "ai/decision-ledger.json"
+    ],
+    "dependencies-toolchain": [
+      "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
+      "platform/toolchain-requirements.json",
+      "platform/versions.json",
+      "studio/providers/providers.json",
+      "tools/toolchain_requirements_check.py"
     ],
     "product": [
       "docs/PROJECT_OVERVIEW.md",
@@ -48,6 +55,7 @@
       "studio/providers/providers.json",
       "studio/providers/loader-adapters.json",
       "docs/ACQUISITION_AND_RESOLUTION.md",
+      "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
       "docs/DEEP_INTEGRATION_ARCHITECTURE.md"
     ],
     "java-runtime": [
@@ -76,11 +84,13 @@
       "native/README.md",
       "native/cpp",
       "native/rust",
+      "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
       "docs/DEEP_INTEGRATION_ARCHITECTURE.md",
       "docs/GRIDELYX_BRIDGE_PROTOCOL.md"
     ],
     "production": [
       "docs/MACHINIMA_PRODUCTION.md",
+      "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
       "studio/production/README.md"
     ],
     "community": [
@@ -88,7 +98,6 @@
       "CONTRIBUTING.md",
       "CODE_OF_CONDUCT.md",
       "SUPPORT.md",
-      "SECURITY.md",
       "docs/community/GETTING_STARTED.md",
       "docs/community/CONTRIBUTOR_ONBOARDING.md",
       "docs/community/ARCHITECTURE_TOUR.md",
@@ -101,7 +110,6 @@
       "docs/AI_CONTINUITY_DESIGN.md",
       "docs/AI_CONTEXT_SYSTEM.md",
       "docs/AI_AUTODOC.md",
-      "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
       "tools/repo_index.py",
       "tools/ai_context_pack.py",
       "tools/continuity_check.py",
@@ -112,8 +120,9 @@
       "AGENTS.md",
       "docs/TEST_STRATEGY.md",
       "docs/TODO.md",
-      "platform/chat-requirements.json",
-      "tools/chat_requirements_check.py",
+      "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
+      "platform/toolchain-requirements.json",
+      "tools/toolchain_requirements_check.py",
       "tools/validate_platform.py",
       "tools/diagnose.py",
       ".github/workflows"
