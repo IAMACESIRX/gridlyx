@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "scope": "All project requirements requested across the development conversation, preserved as implementation evidence or explicit development scope.",
+  "scope": "All project requirements requested across the Gridelyx development conversation, preserved as implementation evidence or explicit development scope.",
   "states": ["implemented", "framework", "planned", "mixed", "transition"],
   "requirements": [
-    {"id":"CR-001","title":"Reproducible Minecraft R&D foundation and reference vault","state":"mixed","paths":["docs/ARCHITECTURE.md","docs/REFERENCE_VAULT.md","platform/versions.json","vault/manifest.json"]},
-    {"id":"CR-002","title":"Quality gates, GitHub development environment and build integrity","state":"implemented","paths":["docs/ARCHITECTURE_WORKFLOW.md","docs/TEST_STRATEGY.md",".github/PULL_REQUEST_TEMPLATE.md","platform/master-build.lock.json"]},
+    {"id":"CR-001","title":"Reproducible Minecraft R&D foundation and reference vault","state":"mixed","paths":["docs/ARCHITECTURE.md","docs/REFERENCE_VAULT.md","platform/versions.json","vault/manifest.json","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"CR-002","title":"Quality gates, GitHub development environment and build integrity","state":"implemented","paths":["docs/ARCHITECTURE_WORKFLOW.md","docs/TEST_STRATEGY.md",".github/PULL_REQUEST_TEMPLATE.md","platform/master-build.lock.json","platform/toolchain-requirements.json"]},
     {"id":"CR-003","title":"Canonical mod template, localization, asset and data generation","state":"mixed","paths":["docs/ASSET_BLUEPRINTS.md","templates/neoforge-26.2","platform/capabilities.json"]},
     {"id":"CR-004","title":"Instrumentation, ASM, Mixins, MethodHandles and live compilation","state":"framework","paths":["docs/ADVANCED_ENGINES.md","docs/POLYLOADER_ARCHITECTURE.md","docs/HOTLOAD_ARCHITECTURE.md"]},
     {"id":"CR-005","title":"Multithreaded workers, syncing, consensus and dynamic data","state":"framework","paths":["docs/ADVANCED_ENGINES.md","docs/MULTIPLAYER_WORLD_EDIT.md","docs/ADVANCED_VALIDATION.md"]},
@@ -19,21 +19,22 @@
     {"id":"CR-014","title":"Dynamic Event and Structure Matrix with NBT/runtime structures","state":"framework","paths":["docs/WORLD_EDIT_RUNTIME.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
     {"id":"CR-015","title":"Terraria-style liquids, paint layers and progression transmutation","state":"planned","paths":["docs/TODO.md","docs/PROJECT_PLAN.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
     {"id":"CR-016","title":"Microgeometry, curves, cylinders, slopes and dynamic collision","state":"planned","paths":["platform/capabilities.json","docs/TODO.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
-    {"id":"CR-017","title":"Hytale-like live asset, model, voxel and texture editor","state":"mixed","paths":["docs/PROJECT_OVERVIEW.md","docs/ROADMAP.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
+    {"id":"CR-017","title":"Hytale-like live asset, model, voxel and texture editor","state":"mixed","paths":["docs/PROJECT_OVERVIEW.md","docs/LIVE_ASSET_EDITING.md","docs/ROADMAP.md"]},
     {"id":"CR-018","title":"Garry's Mod-like sandbox physics, constraints and tool-gun","state":"mixed","paths":["platform/capabilities.json","docs/TODO.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
     {"id":"CR-019","title":"Roblox-Studio-like scene graph, properties, gizmos and live execution","state":"mixed","paths":["docs/PROJECT_OVERVIEW.md","docs/INGAME_DEVELOPMENT_ENVIRONMENT.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
     {"id":"CR-020","title":"Alt-tabless in-game IDE, console, compilation and AI control","state":"framework","paths":["docs/INGAME_DEVELOPMENT_ENVIRONMENT.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
-    {"id":"CR-021","title":"Non-Java modification and external-tool SDK","state":"mixed","paths":["bridges","native","docs/ADVANCED_ENGINES.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
+    {"id":"CR-021","title":"Non-Java modification and external-tool SDK","state":"mixed","paths":["bridges","native","docs/POLYGLOT_AND_BRIDGES.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
     {"id":"CR-022","title":"Multiplayer live editing, Netty replication, culling and consensus","state":"framework","paths":["docs/MULTIPLAYER_WORLD_EDIT.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
-    {"id":"CR-023","title":"Fault-tolerant sandbox, anti-crash and rollback architecture","state":"mixed","paths":["SECURITY.md","docs/HOTLOAD_ARCHITECTURE.md","docs/WORLD_EDIT_RUNTIME.md","docs/TODO.md"]},
+    {"id":"CR-023","title":"Fault-tolerant sandbox, anti-crash and rollback architecture","state":"mixed","paths":["SECURITY.md","docs/FAULT_TOLERANCE.md","docs/HOTLOAD_ARCHITECTURE.md","docs/TODO.md"]},
     {"id":"CR-024","title":"Bedrock first-class support and cross-edition parity target","state":"mixed","paths":["docs/BEDROCK_ARCHITECTURE.md","platform/bedrock-capabilities.json","bedrock","native/bedrock"]},
-    {"id":"CR-025","title":"User-friendly launcher, legitimate acquisition and dependency resolution","state":"mixed","paths":["docs/PROJECT_OVERVIEW.md","docs/ACQUISITION_AND_RESOLUTION.md","studio","docs/TODO.md"]},
-    {"id":"CR-026","title":"Mod forking, decompilation and compatibility-analysis pipelines","state":"mixed","paths":["CONTRIBUTING.md","docs/TEST_STRATEGY.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
+    {"id":"CR-025","title":"User-friendly launcher, legitimate acquisition and dependency resolution","state":"mixed","paths":["docs/PROJECT_OVERVIEW.md","docs/ACQUISITION_AND_RESOLUTION.md","studio","docs/TODO.md","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"CR-026","title":"Mod forking, decompilation and compatibility-analysis pipelines","state":"mixed","paths":["CONTRIBUTING.md","tools/fork_mod.py","tools/bytecode_diff.py","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
     {"id":"CR-027","title":"Machinima, recording, animation, replay and production suite","state":"mixed","paths":["docs/MACHINIMA_PRODUCTION.md","docs/ROADMAP.md","docs/TODO.md"]},
     {"id":"CR-028","title":"Dynamic dimensions, zero-entity teleport and runtime worldgen","state":"mixed","paths":["platform/capabilities.json","docs/PROJECT_PLAN.md","docs/CHAT_REQUIREMENTS_TRACEABILITY.md"]},
     {"id":"CR-029","title":"Rendering overrides, custom geometry, volumetrics, pose and IK","state":"mixed","paths":["docs/ADVANCED_ENGINES.md","docs/WORLD_EDIT_RUNTIME.md","platform/capabilities.json"]},
     {"id":"CR-030","title":"Additive deep integration, patch manager and engine augmentation","state":"planned","paths":["docs/DEEP_INTEGRATION_ARCHITECTURE.md","docs/PROJECT_PLAN.md","ai/decision-ledger.json"]},
-    {"id":"CR-031","title":"Community onboarding and collaboration documentation","state":"implemented","paths":["COMMUNITY.md","CONTRIBUTING.md","CODE_OF_CONDUCT.md","SUPPORT.md","docs/community/GETTING_STARTED.md","docs/community/CONTRIBUTOR_ONBOARDING.md","docs/community/ARCHITECTURE_TOUR.md","docs/community/TESTING_AND_EVIDENCE.md","docs/community/GLOSSARY.md"]},
-    {"id":"CR-032","title":"Replacement brand and complete retired-terminology migration","state":"transition","paths":["docs/REBRAND_PLAN.md","ai/DRIFT_MITIGATION.md","AI_HANDOFF.md"]}
+    {"id":"CR-031","title":"Community onboarding and collaboration documentation","state":"implemented","paths":["COMMUNITY.md","CONTRIBUTING.md","CODE_OF_CONDUCT.md","SUPPORT.md","docs/community"]},
+    {"id":"CR-032","title":"Gridelyx identity and complete retired-terminology migration","state":"transition","paths":["platform/brand.json","docs/REBRAND_PLAN.md","ai/DRIFT_MITIGATION.md","AI_HANDOFF.md"]},
+    {"id":"CR-033","title":"Complete dependency, prerequisite, tool and external-program inventory","state":"mixed","paths":["docs/DEPENDENCIES_AND_TOOLCHAIN.md","platform/toolchain-requirements.json","tools/toolchain_requirements_check.py","studio/providers/providers.json"]}
   ]
 }
