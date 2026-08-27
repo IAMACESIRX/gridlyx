@@ -1,236 +1,264 @@
-# Gridelyx Studio
+# Gridelyx
 
-**Gridelyx Studio** is a cross-edition Minecraft launcher, instance/content manager, creator/development toolkit and machinima/virtual-production suite.
+**Gridelyx** is the root brand for an experimental cross-edition Minecraft launcher, development environment, creator/sandbox engine, world editor, modding interoperability layer and machinima/production suite. The integrated product is **Gridelyx Studio**.
 
-The product direction is deliberately two-layered:
+This repository is deliberately broader than a normal mod. It contains the launcher/resolver control plane, canonical Java mod-development template, advanced runtime frameworks, Bedrock targets, native bridges, cross-language adapters, AI/project-intelligence tooling, production foundations and the project-management/evidence system required to develop them coherently.
 
-- **simple enough for ordinary players** — create an instance, install a modpack/mod, let Gridelyx choose compatible Java/loader/dependencies, press Play;
-- **deep enough for power users and developers** — inspect exact Minecraft/loader/Java versions, libraries, mods, dependency graph, hashes, provenance, launch arguments, toolkit modules, runtime capabilities and validation state.
-
-Gridelyx targets Minecraft Java Edition and Minecraft Bedrock Edition through neutral product/authoring/production contracts while keeping engine-specific adapters isolated.
+> **Evidence rule:** source or an interface existing does not mean a capability is production-ready. Gridelyx uses R0-R6 readiness and target-specific validation. See `docs/FEATURE_MAP.md` and `docs/CHAT_REQUIREMENTS_TRACEABILITY.md`.
 
 ## Start here
 
-- `docs/PROJECT_OVERVIEW.md` — full product architecture and goals
-- `docs/PROJECT_STRUCTURE.md` — repository/runtime ownership map
-- `docs/ROADMAP.md` — staged implementation plan
-- `docs/FEATURE_MAP.md` — current capability/readiness matrix
-- `docs/TODO.md` — live implementation ledger
-- `docs/ACQUISITION_AND_RESOLUTION.md` — legitimate downloads, Java/loaders/mods, dependency solving and provenance
-- `docs/MACHINIMA_PRODUCTION.md` — replay, animation, camera, recording and production architecture
-- `AI_HANDOFF.md` / `ai/context-map.json` — compact AI continuation/navigation state
+For humans:
 
-## Product architecture
+1. `COMMUNITY.md` — community entrypoint.
+2. `docs/community/GETTING_STARTED.md` — setup and first validation.
+3. `CONTRIBUTING.md` — contribution workflow.
+4. `docs/community/ARCHITECTURE_TOUR.md` — subsystem map.
+5. `docs/community/TESTING_AND_EVIDENCE.md` — what counts as evidence.
+6. `docs/DEPENDENCIES_AND_TOOLCHAIN.md` — required/optional tools and programs.
 
-```text
-                         Gridelyx Studio
-                               |
-         +---------------------+----------------------+
-         |                     |                      |
-   Desktop launcher      Creator Studio       Production Studio
-         |                     |                      |
-   instance/runtime      UAL + authoring       replay/timeline
-   content resolver      world/assets/AI       camera/animation
-         |                     |                capture/export
-         +---------------------+----------------------+
-                               |
-                    neutral contracts / VFSB
-                         /              \
-                        /                \
-               Java Edition            Bedrock
-             loader adapters      Add-On / Editor
-             advanced runtime      native companion
-```
+For AI/agent work:
 
-## Launcher and instance manager
+1. `AGENTS.md`
+2. `AI_HANDOFF.md`
+3. `docs/CHAT_REQUIREMENTS_TRACEABILITY.md`
+4. `platform/chat-requirements.json`
+5. `platform/toolchain-requirements.json`
+6. `ai/context-map.json`
+7. `ai/work-state.json`, decision ledger and assumption ledger
 
-Gridelyx is being structured so the **desktop application can start without Java installed**. Java is a managed dependency of Java Edition instances rather than a launcher prerequisite.
+## Canonical identity
 
-The Studio core under `studio/core` defines GUI-independent:
+- Root brand: **Gridelyx**
+- Integrated suite: **Gridelyx Studio**
+- Product slug target: `gridelyx`
+- Protocol prefix target: `GLYX`
+- Executable target: `gridelyx`
 
-- Minecraft/edition/version models;
-- loader/runtime/content models;
-- provider contracts;
-- provenance policy;
-- required/optional/incompatible/embedded dependency semantics;
-- deterministic dependency install ordering;
-- instance validation.
+Machine-readable identity: `platform/brand.json`.
 
-The desktop layer will consume the same core for Simple and Advanced modes.
+The previous Gridelyx branding is retired. Existing `VFSB`, `gridelyx_*` and `Gridelyx*` technical identifiers are temporary compatibility/migration debt and are governed by `docs/REBRAND_PLAN.md`. They are not the current product identity.
 
-## Minecraft and Java acquisition
+## What Gridelyx is intended to provide
 
-Gridelyx is a resolver/client, not an unofficial file mirror.
+### Launcher and instance platform
 
-The acquisition policy is:
+Gridelyx Studio is designed to start without requiring Java merely to open the desktop application. For Java Edition instances it will resolve/acquire the appropriate Java runtime, Minecraft version, loader, libraries, assets and content graph through legitimate/authorized channels.
 
-- Minecraft versions/libraries/assets/runtime metadata from Mojang launcher metadata;
-- Mojang-managed Java where authoritative version metadata provides it;
-- compatible local Java when selected;
-- managed Adoptium/Temurin fallback;
-- Fabric loader metadata from Fabric Meta;
-- Quilt loader metadata from Quilt Meta;
-- Forge from official Forge distribution/Maven channels;
-- NeoForge from official NeoForged Maven/installer channels;
-- Modrinth through its supported API;
-- CurseForge only through its supported third-party API with an approved key and author distribution controls respected;
-- local/legacy files through explicit import with hashes/provenance.
-
-Every downloaded artifact receives a local SHA-256 and upstream hashes/signatures are verified when available. Unknown network sources are not a fallback for a failed official provider.
-
-See `studio/providers/` and `docs/ACQUISITION_AND_RESOLUTION.md`.
-
-## Any version / loader / mod model
-
-Gridelyx does not implement “any loader” by hard-coding every historical loader forever. It uses a loader-adapter contract.
-
-Built-in adapter targets:
+Target loader/content support includes:
 
 - vanilla;
 - Fabric;
 - Quilt;
 - Forge;
-- NeoForge.
+- NeoForge;
+- extensible legacy/future loader adapters;
+- Modrinth;
+- authorized CurseForge access;
+- resource packs, shader packs, datapacks, worlds and related content;
+- deterministic dependency resolution, hashes, provenance and content locks;
+- isolated instances, snapshots, clone/fork/diff/import/export;
+- simple consumer UX with an expert graph/detail mode.
 
-Legacy/future loaders can be added through the same adapter contract or imported from an explicit existing launcher profile. Unknown coordinates/arguments are never invented.
+Provider policy is in `studio/providers/providers.json` and `docs/ACQUISITION_AND_RESOLUTION.md`.
 
-Content resolution produces an explainable graph and lockfile instead of silently choosing arbitrary “latest” files.
+### Java creator/runtime plane
 
-## Instances and modpacks
+The current NeoForge 26.2 template is the canonical validated construction target, while the architecture is designed to become version/loader-neutral through Polyloader/UAL adapters.
 
-Planned instance interchange includes:
+Advanced frameworks include:
 
-- Modrinth `.mrpack`;
-- CurseForge packs where provider/distribution rules permit;
-- Prism Launcher instances;
-- MultiMC-compatible instances;
-- vanilla launcher/raw `.minecraft` imports;
-- Gridelyx portable bundles.
+- Java Instrumentation agents and compatible HotSwap;
+- ASM runtime bytecode generation/transformation;
+- dynamic Mixin/redirector infrastructure;
+- Reflection/MethodHandle runtime discovery;
+- direct Java source-string compilation;
+- NIO.2 external hotload monitoring;
+- replaceable classloader/service implementations;
+- bounded worker pools and state synchronization;
+- GraalVM JavaScript/Python embedding;
+- MCP and local vector indexing;
+- Netty development/edit channels and web endpoints;
+- shared-memory IPC and FFM/Panama;
+- Rust/C++ native extensions;
+- Python/Go/C# sidecar protocols;
+- direct LWJGL/GPU buffer frameworks;
+- profiling, telemetry and chaos-engineering foundations.
 
-Immutable downloaded artifacts are intended to live in a content-addressed cache. Writable configs, saves, screenshots, recordings and user edits remain instance-owned unless sharing is explicitly configured.
+### Polyloader / UAL
 
-Schemas are under `studio/schemas/`.
+Gridelyx aims to sit both **below and above** ordinary Java loader APIs:
 
-## Java creator / polyloader plane
+- prelaunch bootstrap/instrumentation when required;
+- neutral Unified Abstraction Layer operations;
+- loader-family adapters and bytecode-call translation;
+- runtime environment/fingerprint scanning;
+- isolated sideload containers;
+- virtual/indirected runtime definitions;
+- explicit `LIVE_SAFE`, emulated, prelaunch-required and unsupported capability states.
 
-The existing advanced runtime includes or scaffolds:
+Cross-loader execution is a target, not an automatic compatibility claim. See `docs/POLYLOADER_ARCHITECTURE.md`.
 
-- Java Instrumentation + ASM bootstrap;
-- loader/JVM fingerprinting;
-- Unified Abstraction Layer domains for registry/event/network/resource/render/world/input/lifecycle operations;
-- capability-negotiated mod analysis;
-- dynamic mesh/texture registries;
-- voxel/world editor state;
-- live scripting and polyglot execution;
-- transactional world editing/rollback;
-- scene hierarchy/property systems;
-- construction/physics experiments;
-- in-game IDE/console/AI passthrough;
-- hotload classification and recovery.
+### Live world editing and procedural events
 
-Gridelyx does **not** claim arbitrary mods can all be injected live. Mixins, coremods, access wideners, early lifecycle hooks and frozen registries remain restart/prelaunch sensitive unless a version-specific adapter proves otherwise.
+Frameworks exist for:
 
-Read `docs/POLYLOADER_ARCHITECTURE.md`, `docs/WORLD_EDIT_RUNTIME.md`, `docs/LIVE_ASSET_EDITING.md`, `docs/HOTLOAD_ARCHITECTURE.md` and `docs/FAULT_TOLERANCE.md`.
+- parallel section-array blitting;
+- asynchronous sub-chunk computation;
+- authoritative server-thread commits;
+- controlled bulk-lighting reconciliation;
+- `.nbt` structure-blueprint loading;
+- Dynamic Event and Structure Matrix triggers;
+- editing already-generated terrain;
+- transactional edit/rollback foundations;
+- multiplayer revisions, consensus and replication culling;
+- volumetric client-preview streams.
 
-## Bedrock plane
+Planned extensions explicitly include Terraria-style liquid cells, arbitrary paint/overlay matrices and progression-locked world-transmutation states.
 
-Bedrock is a first-class target rather than a second copy of the Java feature stack.
+### Creator, geometry and sandbox systems
 
-- `bedrock/addon` — stable Script API behavior/resource-pack runtime;
-- `bedrock/editor-extension` — isolated preview Editor extension;
-- `native/bedrock` — VFSB native companion behind a versioned adapter interface;
-- `docs/BEDROCK_ARCHITECTURE.md` — capability split;
-- `docs/GRIDELYX_BRIDGE_PROTOCOL.md` — transport protocol.
+The retained creator target combines ideas associated with live game editors/sandboxes:
 
-Java 25 FFM/Panama binds Gridelyx's own native ABI. Portable VFSB frames carry control, UAL, mesh, texture, world delta, telemetry and script-result messages. The core does not depend on hard-coded Bedrock executable addresses.
+- dynamic model/texture registries;
+- live mesh, voxel and texture editing;
+- microgrid/sub-voxel placement;
+- circles, cylinders, curves, slopes and slanted blocks;
+- custom rendering and dynamic collision/hitbox composition;
+- deeper collision/renderer augmentation when ordinary Minecraft hooks are insufficient;
+- scene graph, hierarchical properties and transform gizmos;
+- physically manipulable entities/parts;
+- custom physics and constraint graphs;
+- weld/hinge/slider/spring/rope construction;
+- raycast tool-gun controls;
+- in-game IDE/console, keybind/menu toggles and AI automation.
 
-## Machinima / animation / recording / production
+### Non-Java modification gateway
 
-Gridelyx Production Studio is designed to turn Minecraft into a virtual production stage.
+Other tools are intended to modify/extend the game through permissioned Gridelyx capability surfaces rather than needing to become ordinary Java mods. Supported/framework planes include:
 
-Planned/started systems include:
+- embedded JavaScript/Python via GraalVM;
+- external Python;
+- Go;
+- C#/.NET;
+- Rust/C++;
+- MCP;
+- Netty/TCP/HTTP endpoints where appropriate;
+- shared-memory IPC;
+- native FFM/Panama bridges;
+- filesystem hotload;
+- Bedrock Script/Editor adapters;
+- future versioned patch modules.
 
-- versioned replay/event capture tied to exact instance/content locks;
-- rational-time production timeline;
-- free/target/orbit/rail/spline cameras;
-- camera keyframes for position/rotation/FOV/focus and later exposure metadata;
-- actor/entity transform, pose, equipment and animation tracks;
-- particles/commands/dialogue/world cues;
-- shots, takes, markers and nested sequences;
-- slow motion/time remapping/pause staging;
-- real-time frame capture;
-- deterministic offline frame capture where renderer stepping is available;
-- image sequences and replaceable encoder bridge;
-- audio-routing/stem support when target hooks permit;
-- optional render passes such as depth/normals/object IDs/motion vectors only after target validation.
+A connected external tool does not automatically gain world/server authority.
 
-A neutral rational-time/camera track implementation and smoke test now live under `templates/neoforge-26.2/src/advanced/java/.../production`.
+### Anti-crash / fault containment
 
-Read `docs/MACHINIMA_PRODUCTION.md`.
+Gridelyx uses layered containment rather than claiming impossible crash immunity:
 
-## AI-readable repository
+- bounded asynchronous execution;
+- script budgets/timeouts;
+- deny-by-default scripting capabilities;
+- process isolation for crash-prone/untrusted/native workloads;
+- global recovery boundaries;
+- transactional world edits and rollback/WAL development;
+- last-known-good hotload state;
+- crash attribution and supervised restart.
 
-Gridelyx is designed for long-lived human + AI development without forcing every agent to ingest the entire repository.
+Fatal same-process native corruption or JVM OOM cannot be guaranteed recoverable; those failure modes require process isolation/recovery design.
 
-AI entry order:
+### Bedrock plane
 
-1. `AGENTS.md`
-2. `AI_HANDOFF.md`
-3. `ai/CONTEXT.md`
-4. `ai/context-map.json`
-5. task-specific source/docs
+The repository includes:
 
-Generate a deterministic file/chunk index:
+- Bedrock behavior/resource pack targets;
+- Preview Editor extension target;
+- Bedrock capability manifest;
+- Java FFM/Panama bridge classes;
+- native companion code;
+- shared-memory/framed bridge foundations.
+
+Gridelyx targets feature parity where technically achievable while recording real parity gaps. Unsupported Bedrock API surfaces may require deeper version/fingerprint-gated integration; no undocumented technique is advertised as universally stable.
+
+### Recording, animation and production
+
+Gridelyx Production retains:
+
+- deterministic replay/event logging;
+- rational-time timelines;
+- camera tracks and multiple camera-rig modes;
+- actor transform/animation/pose/IK tracks;
+- shots, takes, sequences and cues;
+- real-time capture;
+- offline deterministic rendering where target stepping permits it;
+- image-sequence output;
+- replaceable FFmpeg/encoder bridge;
+- audio stems/mix metadata;
+- advanced render-pass research.
+
+See `docs/MACHINIMA_PRODUCTION.md`.
+
+## Project control and whole-chat scope
+
+The complete retained conversation scope is not left in chat history. It is recorded in:
+
+- `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` — human-readable CR-001…CR-033 ledger;
+- `platform/chat-requirements.json` — machine-readable requirements/evidence paths;
+- `tools/chat_requirements_check.py` — CI validation;
+- `docs/TODO.md` — live implementation ledger;
+- `docs/ROADMAP.md` — staged sequencing;
+- `docs/FEATURE_MAP.md` — evidence/readiness state;
+- `docs/PROJECT_PLAN.md` — governance/program plan.
+
+A future contributor/AI may not silently remove a requested capability merely because it is difficult or not supported by a normal mod API. The integration level and validation burden change; the requirement remains until explicitly superseded.
+
+## Dependencies and tools
+
+Canonical dependency documentation: `docs/DEPENDENCIES_AND_TOOLCHAIN.md`.
+
+Current locked Java lane:
+
+- Minecraft `26.2` template target;
+- NeoForge `26.2.0.67`;
+- ModDevGradle `2.0.144`;
+- Gradle `9.2.1`;
+- Eclipse Temurin Java `25.0.4+7` / language 25;
+- Spotless `8.10.0`;
+- Checkstyle `14.0.0`;
+- JUnit `6.1.3`;
+- ArchUnit `1.4.2`;
+- ASM `9.10.1`;
+- LWJGL reference `3.4.1`;
+- GraalVM Polyglot `25.3.4.1`.
+
+Additional subsystem tools include Python, Rust/Cargo, CMake/C++ compiler, optional Go/.NET bridge toolchains, optional Dev Containers, external encoder/decompiler adapters and Bedrock target runtimes. Their exact pin/support state is machine-readable in `platform/toolchain-requirements.json`.
+
+## Reference-vault status
+
+The repository tracks exact manifests/hashes for the supplied MDK, NeoForge installer, JDK and LWJGL reference artifacts. The large binary bytes are **not yet fully present on remote GitHub** while `vault/REMOTE_BINARY_IMPORT_PENDING.md` exists. This is intentional and visible; use the documented vault import/hydration path to complete it.
+
+## Core validation commands
 
 ```bash
-python tools/repo_index.py
-```
-
-Get a small task-oriented context pack:
-
-```bash
-python tools/ai_context_pack.py "launcher Java Fabric dependency resolution"
-python tools/ai_context_pack.py "machinima camera offline render"
-```
-
-The generated index records path, SHA-256, area, headings, chunks and lexical terms. Future semantic/vector retrieval can key embeddings to commit/path/range/hash so unchanged chunks are reused efficiently.
-
-Read `docs/AI_CONTEXT_SYSTEM.md`.
-
-## Quality gates
-
-Core platform checks include:
-
-```bash
-python tools/build_lock.py --check
-python tools/script_gatekeeper.py
-python tools/ecosystem_check.py
-python tools/world_editor_check.py
-python tools/polyloader_check.py
-python tools/bedrock_check.py
+python tools/continuity_check.py
+python tools/chat_requirements_check.py
+python tools/toolchain_requirements_check.py
 python tools/studio_check.py
-python tools/repo_index.py --check
 python tools/validate_platform.py
 python tools/diagnose.py --static
+python tools/repo_index.py --check
 cargo test --manifest-path studio/Cargo.toml --all-targets
 ```
 
-CI remains split by responsibility so failure domains stay visible: Java platform, advanced runtime, Bedrock, native, Studio core/context and security analysis.
+Then run subsystem-specific Java, native, Bedrock, GameTest and interactive validation required by the files changed.
 
-## Evidence model
+## Community and security
 
-Gridelyx uses readiness levels R0-R6:
+- `COMMUNITY.md`
+- `CONTRIBUTING.md`
+- `CODE_OF_CONDUCT.md`
+- `SUPPORT.md`
+- `SECURITY.md`
+- `docs/LICENSING_REQUIREMENTS.md`
 
-- R0 idea;
-- R1 contract/schema;
-- R2 compile/static validation;
-- R3 automated tests;
-- R4 headless target integration;
-- R5 interactive validation;
-- R6 release candidate with packaging/migration/rollback evidence.
-
-A feature name never implies a higher readiness level than the available evidence. See `docs/FEATURE_MAP.md`.
-
-## Reference vault
-
-`references/index/` is the compact lookup layer. `vault/` is exact large recovery/deep-inspection storage and is intentionally excluded from default AI/repository indexing.
+Gridelyx is not affiliated with or endorsed by Mojang/Microsoft, NeoForged, Fabric, Quilt, Forge, Modrinth, CurseForge, Hytale, Garry's Mod/Facepunch or Roblox. Those names are used only to describe comparison targets or external ecosystems.
