@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "platform/toolchain-requirements.json"
 DOC = ROOT / "docs/DEPENDENCIES_AND_TOOLCHAIN.md"
+MATRIX = ROOT / "docs/CAPABILITY_DEPENDENCY_MATRIX.md"
 
 
 def fail(message: str) -> None:
@@ -77,14 +78,22 @@ def main() -> int:
 
     try:
         doc = DOC.read_text(encoding="utf-8")
+        matrix = MATRIX.read_text(encoding="utf-8")
     except OSError as exc:
-        fail(f"docs/DEPENDENCIES_AND_TOOLCHAIN.md: {exc}")
+        fail(str(exc))
 
     for marker in ("Gridelyx", "Java", "Rust", "CMake", "Bedrock", "reference vault"):
         if marker.lower() not in doc.lower():
             fail(f"dependency documentation missing marker: {marker}")
 
-    print(f"PASS: {len(tools)} tool/program requirements and {len(libraries)} locked libraries are documented")
+    for marker in ("Gridelyx", "CR-001", "CR-015", "CR-021", "CR-024", "CR-030", "CR-033", "No hidden dependencies rule"):
+        if marker.lower() not in matrix.lower():
+            fail(f"capability dependency matrix missing marker: {marker}")
+
+    print(
+        f"PASS: {len(tools)} tool/program requirements, {len(libraries)} locked libraries, "
+        "and the Gridelyx capability dependency matrix are documented"
+    )
     return 0
 
 
