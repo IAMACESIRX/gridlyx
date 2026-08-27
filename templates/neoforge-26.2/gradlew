@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+# Remote bootstrap shim. The complete prepared vault carries the official Gradle wrapper JAR.
+# CI installs the exact locked Gradle version before invoking this project.
+set -eu
+if command -v gradle >/dev/null 2>&1; then
+  exec gradle "$@"
+fi
+echo "Gradle 9.2.1 is required. Install Gradle or import the complete supplied MDK wrapper binary." >&2
+exit 127
