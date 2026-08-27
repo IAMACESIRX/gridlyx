@@ -1,0 +1,10 @@
+* text=auto eol=lf
+*.bat text eol=crlf
+*.jar binary
+*.zip binary
+*.part binary
+*.bin binary
+*.dll binary
+*.exe binary
+*.so binary
+*.dylib binary

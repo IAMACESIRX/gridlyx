@@ -1,0 +1,24 @@
+# Generated/build state
+**/.gradle/
+**/build/
+**/run/
+**/runs/
+**/out/
+**/.idea/
+**/*.iml
+
+# Local reference reconstruction/cache
+.reference-cache/
+reference-cache/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# Local secrets/config
+.env
+.env.*
+!.env.example
+secrets/

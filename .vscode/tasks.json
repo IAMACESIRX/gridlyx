@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Validate platform",
+      "type": "shell",
+      "command": "python tools/validate_platform.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build all mods",
+      "type": "shell",
+      "command": "python tools/build_all.py --include-template",
+      "problemMatcher": ["$javac"]
+    }
+  ]
+}
