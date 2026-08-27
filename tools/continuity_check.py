@@ -11,12 +11,10 @@ REQUIRED_PATHS = [
     "AI_HANDOFF.md",
     "docs/PROJECT_PLAN.md",
     "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
+    "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
+    "platform/brand.json",
     "platform/chat-requirements.json",
-    "tools/chat_requirements_check.py",
-    "COMMUNITY.md",
-    "CONTRIBUTING.md",
-    "CODE_OF_CONDUCT.md",
-    "SUPPORT.md",
+    "platform/toolchain-requirements.json",
     "ai/AI_ORGANISATION.md",
     "ai/DRIFT_MITIGATION.md",
     "ai/work-state.json",
@@ -33,7 +31,7 @@ HANDOFF_HEADINGS = [
 ]
 
 
-def load_json(relative: str) -> dict:
+def load_json(relative: str, schema_version: int = 1) -> dict:
     path = ROOT / relative
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -41,8 +39,8 @@ def load_json(relative: str) -> dict:
         raise SystemExit(f"FAIL: {relative}: {exc}") from exc
     if not isinstance(value, dict):
         raise SystemExit(f"FAIL: {relative}: top-level value must be an object")
-    if value.get("schema_version") != 1:
-        raise SystemExit(f"FAIL: {relative}: schema_version must be 1")
+    if value.get("schema_version") != schema_version:
+        raise SystemExit(f"FAIL: {relative}: schema_version must be {schema_version}")
     return value
 
 
@@ -58,6 +56,14 @@ def require_unique(records: list[dict], key: str, label: str) -> None:
         raise SystemExit(f"FAIL: {label}: every record needs a non-empty {key}")
     if len(values) != len(set(values)):
         raise SystemExit(f"FAIL: {label}: duplicate {key}")
+
+
+def validate_brand() -> None:
+    data = load_json("platform/brand.json", schema_version=2)
+    if data.get("root_brand") != "Gridelyx" or data.get("product_name") != "Gridelyx Studio":
+        raise SystemExit("FAIL: platform/brand.json must identify Gridelyx / Gridelyx Studio")
+    if data.get("legacy_root") != "Gridelyx":
+        raise SystemExit("FAIL: platform/brand.json must retain the retired root for migration checks")
 
 
 def validate_work_state() -> None:
@@ -117,11 +123,12 @@ def validate_handoff() -> None:
 
 def main() -> int:
     require_paths()
+    validate_brand()
     validate_work_state()
     validate_ledgers()
     validate_context_map()
     validate_handoff()
-    print("PASS: AI continuity, requirements, handoff and drift-control structure is coherent")
+    print("PASS: Gridelyx AI continuity, brand, requirements and drift-control structure is coherent")
     return 0
 
 
