@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "platform/chat-requirements.json"
 LEDGER = ROOT / "docs/CHAT_REQUIREMENTS_TRACEABILITY.md"
 VALID_STATES = {"implemented", "framework", "planned", "mixed", "transition"}
-MIN_REQUIREMENTS = 32
+MIN_REQUIREMENTS = 33
 
 
 def fail(message: str) -> None:
@@ -62,14 +62,14 @@ def main() -> int:
     except OSError as exc:
         fail(f"docs/CHAT_REQUIREMENTS_TRACEABILITY.md: {exc}")
 
-    for marker in ("CR-001", "CR-032", "## Coverage rule"):
+    for marker in ("Gridelyx", "CR-001", "CR-032", "CR-033", "## Coverage rule"):
         if marker not in ledger:
             fail(f"traceability ledger missing marker: {marker}")
     for requirement_id in ids:
         if requirement_id not in ledger:
             fail(f"traceability ledger does not mention {requirement_id}")
 
-    print(f"PASS: {len(requirements)} conversation requirement groups retain repository evidence or planning paths")
+    print(f"PASS: {len(requirements)} Gridelyx conversation requirement groups retain repository evidence or planning paths")
     return 0
 
 
