@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "network_default": "deny_unknown_hosts",
+    "download_rule": "official_or_authorized_provider_only",
+    "hash_rule": "verify_upstream_hash_when_available_and_always_record_local_sha256",
+    "secrets": "never_commit_api_keys_or_tokens"
+  },
+  "providers": [
+    {
+      "id": "mojang",
+      "role": ["minecraft_versions", "version_metadata", "libraries", "assets", "managed_java_when_declared"],
+      "base": "https://piston-meta.mojang.com",
+      "manifest": "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
+      "auth": "none_for_metadata",
+      "redistribution": "download_from_upstream; do not mirror Minecraft binaries"
+    },
+    {
+      "id": "fabric-meta",
+      "role": ["loader_versions", "launcher_profiles", "server_profiles"],
+      "base": "https://meta.fabricmc.net",
+      "auth": "none"
+    },
+    {
+      "id": "quilt-meta",
+      "role": ["loader_versions", "launcher_profiles", "server_profiles"],
+      "base": "https://meta.quiltmc.org",
+      "auth": "none",
+      "notes": "send a descriptive User-Agent and track API-version sunset"
+    },
+    {
+      "id": "forge-official",
+      "role": ["loader_versions", "installer"],
+      "base": "https://files.minecraftforge.net",
+      "maven": "https://maven.minecraftforge.net",
+      "auth": "none"
+    },
+    {
+      "id": "neoforge-maven",
+      "role": ["loader_versions", "installer", "checksums"],
+      "base": "https://maven.neoforged.net/releases",
+      "auth": "none"
+    },
+    {
+      "id": "modrinth",
+      "role": ["search", "mods", "modpacks", "resource_packs", "shader_packs", "versions", "dependencies"],
+      "base": "https://api.modrinth.com",
+      "auth": "most_read_requests_are_public; OAuth/PAT only when required",
+      "redistribution": "respect project/version metadata and upstream terms"
+    },
+    {
+      "id": "curseforge",
+      "role": ["search", "mods", "modpacks", "files", "dependencies"],
+      "base": "https://api.curseforge.com",
+      "auth": "approved third-party API key required",
+      "redistribution": "never bypass author distribution opt-out; obey current CurseForge API terms"
+    },
+    {
+      "id": "adoptium",
+      "role": ["managed_java_fallback"],
+      "base": "https://api.adoptium.net",
+      "auth": "none",
+      "notes": "fallback when a Mojang-managed runtime is unavailable or user explicitly chooses Temurin"
+    },
+    {
+      "id": "local-import",
+      "role": ["user_supplied_mod", "user_supplied_loader", "legacy_pack", "offline_import"],
+      "base": null,
+      "auth": "local_user_action",
+      "redistribution": "never upload or redistribute without explicit licence/provenance"
+    }
+  ]
+}

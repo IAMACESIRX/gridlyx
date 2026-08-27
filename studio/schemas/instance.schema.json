@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gridelyx.local/schemas/instance.schema.json",
+  "title": "Gridelyx Studio Instance",
+  "type": "object",
+  "required": ["schemaVersion", "id", "name", "edition", "gameVersion", "memoryMiB", "toolkit"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "edition": {"enum": ["java", "bedrock"]},
+    "gameVersion": {"type": "string", "minLength": 1},
+    "loader": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": {"type": "string"},
+        "version": {"type": "string"},
+        "adapter": {"type": "string"}
+      },
+      "required": ["id", "version", "adapter"],
+      "additionalProperties": false
+    },
+    "java": {
+      "type": ["object", "null"],
+      "properties": {
+        "major": {"type": "integer", "minimum": 8},
+        "vendor": {"type": "string"},
+        "managed": {"type": "boolean"},
+        "runtimeId": {"type": ["string", "null"]}
+      },
+      "required": ["major", "vendor", "managed"],
+      "additionalProperties": false
+    },
+    "memoryMiB": {
+      "type": "object",
+      "required": ["min", "max"],
+      "properties": {
+        "min": {"type": "integer", "minimum": 256},
+        "max": {"type": "integer", "minimum": 256}
+      },
+      "additionalProperties": false
+    },
+    "jvmArgs": {"type": "array", "items": {"type": "string"}},
+    "gameArgs": {"type": "array", "items": {"type": "string"}},
+    "toolkit": {
+      "type": "object",
+      "required": ["enabled", "modules"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "modules": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

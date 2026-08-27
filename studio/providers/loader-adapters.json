@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "contract": "A loader is supported by an adapter that can discover compatible versions, materialize a launcher profile/libraries, declare Java constraints, and produce a deterministic launch plan. Unsupported legacy loaders may be imported through an explicit user-provided launcher-profile adapter rather than guessed.",
+  "adapters": [
+    {"id":"vanilla","status":"builtin","source":"mojang","strategy":"mojang_version_json"},
+    {"id":"fabric","status":"builtin","source":"fabric-meta","strategy":"official_profile_json"},
+    {"id":"quilt","status":"builtin","source":"quilt-meta","strategy":"official_profile_json"},
+    {"id":"forge","status":"builtin","source":"forge-official","strategy":"official_installer_or_profile_materialization"},
+    {"id":"neoforge","status":"builtin","source":"neoforge-maven","strategy":"official_installer_or_profile_materialization"},
+    {"id":"legacy-launcher-profile","status":"extensible","source":"local-import","strategy":"user_supplied_profile_with_hash_and_provenance"},
+    {"id":"external-adapter","status":"plugin-contract","source":"provider-defined","strategy":"signed_adapter_manifest"}
+  ]
+}

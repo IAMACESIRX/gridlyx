@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gridelyx.local/schemas/content-lock.schema.json",
+  "title": "Gridelyx Studio Content Lock",
+  "type": "object",
+  "required": ["schemaVersion", "instanceId", "game", "artifacts", "dependencies", "resolver"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "instanceId": {"type": "string", "minLength": 1},
+    "game": {
+      "type": "object",
+      "required": ["edition", "version"],
+      "properties": {
+        "edition": {"enum": ["java", "bedrock"]},
+        "version": {"type": "string"},
+        "loader": {"type": ["object", "null"]},
+        "java": {"type": ["object", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "version", "kind", "provider", "sha256"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "version": {"type": "string"},
+          "kind": {"type": "string"},
+          "provider": {"type": "string"},
+          "providerFileId": {"type": ["string", "integer", "null"]},
+          "canonicalUri": {"type": ["string", "null"]},
+          "sha256": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+          "license": {"type": ["string", "null"]},
+          "userPinned": {"type": "boolean", "default": false}
+        },
+        "additionalProperties": true
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "kind"],
+        "properties": {
+          "from": {"type": "string"},
+          "to": {"type": "string"},
+          "kind": {"enum": ["required", "optional", "incompatible", "embedded"]},
+          "reason": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "resolver": {
+      "type": "object",
+      "required": ["version"],
+      "properties": {
+        "version": {"type": "string"},
+        "resolvedAtUtc": {"type": ["string", "null"], "format": "date-time"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

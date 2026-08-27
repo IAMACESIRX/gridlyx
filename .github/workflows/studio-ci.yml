@@ -1,0 +1,52 @@
+name: Gridelyx Studio CI
+
+on:
+  push:
+    paths:
+      - 'studio/**'
+      - 'ai/**'
+      - 'AI_HANDOFF.md'
+      - 'AGENTS.md'
+      - 'docs/PROJECT_OVERVIEW.md'
+      - 'docs/PROJECT_STRUCTURE.md'
+      - 'docs/ROADMAP.md'
+      - 'docs/FEATURE_MAP.md'
+      - 'docs/ACQUISITION_AND_RESOLUTION.md'
+      - 'docs/MACHINIMA_PRODUCTION.md'
+      - 'docs/AI_CONTEXT_SYSTEM.md'
+      - 'tools/repo_index.py'
+      - 'tools/ai_context_pack.py'
+      - 'tools/studio_check.py'
+      - '.github/workflows/studio-ci.yml'
+  pull_request:
+    paths:
+      - 'studio/**'
+      - 'ai/**'
+      - 'AI_HANDOFF.md'
+      - 'AGENTS.md'
+      - 'docs/**'
+      - 'tools/repo_index.py'
+      - 'tools/ai_context_pack.py'
+      - 'tools/studio_check.py'
+      - '.github/workflows/studio-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  studio-core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate Studio architecture and provider policy
+        run: python tools/studio_check.py
+      - name: Validate AI repository index contract
+        run: python tools/repo_index.py --check
+      - name: Build deterministic AI repository index
+        run: python tools/repo_index.py
+      - name: Smoke task-scoped AI context retrieval
+        run: python tools/ai_context_pack.py "launcher Java dependency resolution" --limit 5
+      - name: Test Studio core
+        run: cargo test --manifest-path studio/Cargo.toml --all-targets

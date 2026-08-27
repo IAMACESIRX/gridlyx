@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gridelyx.local/schemas/production-project.schema.json",
+  "title": "Gridelyx Studio Production Project",
+  "type": "object",
+  "required": ["schemaVersion", "id", "name", "source", "frameRate", "scenes"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "source": {
+      "type": "object",
+      "required": ["instanceId", "contentLockSha256"],
+      "properties": {
+        "instanceId": {"type": "string"},
+        "contentLockSha256": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+        "worldId": {"type": ["string", "null"]},
+        "replayId": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "frameRate": {
+      "type": "object",
+      "required": ["numerator", "denominator"],
+      "properties": {
+        "numerator": {"type": "integer", "minimum": 1},
+        "denominator": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "sequences"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "sequences": {"type": "array", "items": {"type": "object"}}
+        },
+        "additionalProperties": true
+      }
+    },
+    "renderPresets": {"type": "array", "items": {"type": "object"}},
+    "metadata": {"type": "object"}
+  },
+  "additionalProperties": true
+}
