@@ -1,0 +1,47 @@
+name: Live World Editor Work Item
+description: Track world-edit, rendering, console, AI, replication or hotload integration work.
+title: "[World Editor]: "
+body:
+  - type: dropdown
+    id: plane
+    attributes:
+      label: Plane
+      options:
+        - World mutation / blitting
+        - NBT / structures / procedural events
+        - Lighting / heightmaps / persistence
+        - Volumetric rendering / overlays
+        - Embedded IDE / keybinds / menus
+        - AI development channel
+        - Scene graph / gizmos
+        - Multiplayer replication / consensus
+        - Performance / GameTest validation
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: State the measurable result and integration boundary.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation
+      description: List compile, unit, GameTest, client and multiplayer checks required before completion.
+    validations:
+      required: true
+  - type: checkboxes
+    id: invariants
+    attributes:
+      label: Required invariants
+      options:
+        - label: No asynchronous mutation of live Minecraft chunks.
+          required: true
+        - label: Multiplayer edits remain server-authoritative.
+          required: true
+        - label: Deferred lighting has an explicit reconciliation path.
+          required: true
+        - label: Large edits are bounded/partitioned to avoid tick starvation.
+          required: true
