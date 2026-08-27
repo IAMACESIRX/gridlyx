@@ -49,12 +49,16 @@ jobs:
         run: python tools/build_lock.py --check
       - name: Gate non-Java scripts
         run: python tools/script_gatekeeper.py
+      - name: Validate multi-language ecosystem
+        run: python tools/ecosystem_check.py
       - name: Validate repository invariants
         run: python tools/validate_platform.py
       - name: Automated diagnostics
         run: python tools/diagnose.py --static
       - name: Validate generated documentation
         run: python tools/autodoc.py --check
+      - name: Validate AI documentation context
+        run: python tools/ai_autodoc.py --self-test
       - name: Validate bytecode analysis tooling
         run: python tools/bytecode_diff.py --self-test
       - name: Validate CSV recipe conversion

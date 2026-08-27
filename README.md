@@ -1,6 +1,6 @@
 # Minecraft Advanced Mod Development Kit
 
-Private R&D platform for **AI-assisted, non-MCreator Minecraft mod engineering**. It combines a reproducible NeoForge build/test environment with an on-demand reference vault and isolated advanced-engine research surfaces.
+Private R&D platform for **AI-assisted Minecraft/NeoForge engineering, live scripting, runtime experimentation, multi-language extensions and in-game construction systems**. The stable mod template stays reproducible while advanced bytecode/native/polyglot/render/network systems remain isolated and opt-in.
 
 ## Canonical toolchain
 
@@ -13,61 +13,97 @@ Private R&D platform for **AI-assisted, non-MCreator Minecraft mod engineering**
 | Java | Temurin 25.0.4+7 |
 | Spotless | 8.10.0 |
 | Checkstyle | 14.0.0 |
+| JUnit | 6.1.3 |
+| ArchUnit | 1.4.2 |
 | ASM | 9.10.1 |
 | LWJGL reference | 3.4.1 |
+| GraalVM Polyglot | 25.3.4.1 |
+| MCP target | 2026-07-28 |
 
-## Workspaces: multiple mods, multiple JARs
+The canonical `templates/neoforge-26.2/build.gradle` is protected by `platform/master-build.lock.json`; generated mod workspaces must match it byte-for-byte unless the lock is deliberately refreshed.
+
+## Multi-mod workspaces
 
 ```bash
 python tools/new_mod.py spectral_tools "Spectral Tools" com.iamacesirx.mods.spectraltools
 python tools/new_mod.py world_lab "World Lab" com.iamacesirx.mods.worldlab
 python tools/workspace.py list
 python tools/workspace.py build spectral_tools
-python tools/workspace.py build world_lab
+python tools/workspace.py build world_lab --advanced
 ```
 
-Every `mods/<mod_id>` directory is an independent NeoForge project. Dependency graphs, generated resources, run directories and JARs remain isolated so multiple mods can be constructed and validated side by side.
+Every `mods/<mod_id>` is an independent NeoForge project with isolated generated resources, runs and JARs while sharing the locked platform contract.
 
-## Quality, data and diagnostics
+## Quality, tests and automation
 
 ```bash
+python tools/build_lock.py --check
+python tools/script_gatekeeper.py
+python tools/ecosystem_check.py
 python tools/validate_platform.py
 python tools/diagnose.py --static
-python tools/workspace.py quality spectral_tools
-python tools/workspace.py datagen spectral_tools
+python tools/autodoc.py --check
+python tools/ai_autodoc.py --self-test
+python tools/bytecode_diff.py --self-test
+python tools/csv_recipe_pipeline.py --self-test
 ```
 
-Inside a workspace, `./gradlew spotlessApply` formats Java and `./gradlew spotlessCheck check build` runs the normal quality/build gate. The template includes a modular main mod class, global registry controller, creative-tab anchor, automated `LanguageProvider`, generated-resource configuration, loader manifest template, localisation/asset blueprints and codec/worldgen bootstrap helper.
+The platform uses Spotless, Checkstyle, JUnit, ArchUnit, CodeQL, deterministic diagnostics, headless NeoForge GameTest orchestration, bytecode diffing and independent native/advanced CI lanes. MCTester is treated as an optional adapter until exact target-version compatibility is verified; the native NeoForge GameTest API is the locked baseline.
 
-## Advanced engines
+## AI, MCP and local context
 
-Advanced bytecode/native/render/network systems live in `src/advanced` and are disabled by default:
+The advanced AI plane includes a stateless MCP 2026-07-28 endpoint contract and a local cosine vector index with replaceable embedding providers. `tools/ai_autodoc.py` can hand a provenance-aware documentation request to a local model or sidecar without hard-wiring a cloud vendor/API key.
 
-```bash
-python tools/workspace.py build spectral_tools --advanced
-```
+## Polyglot, native and cross-process execution
 
-An advanced build can produce the normal mod JAR, a full `-advanced.jar`, and a Java instrumentation `-agent.jar`. The current foundation includes bounded worker pools, multi-threaded state syncing, dynamic data snapshots, ASM generation, Instrumentation/hotswap, trusted dynamic Mixin config registration, Panama memory, shared-memory IPC, Netty pipeline injection, LWJGL GPU buffers, PoseStack interception and two-bone IK.
+- GraalJS and GraalPy contexts are replaceable and deny host access by default.
+- Java 25 FFM/Panama binds versioned native C ABIs.
+- Rust and C++ native examples compile in their own CI lane.
+- Python, Go and C# share the same bounded big-endian bridge-frame protocol.
+- Existing shared-memory IPC and Netty injection are extended by a loopback-first development HTTP endpoint.
 
-See `docs/CAPABILITY_MATRIX.md`: target-specific Mixin redirects, bytecode patches, render hooks and worldgen entries still require exact mapping/API validation rather than being guessed.
+## External hotloading core
 
-## AI / cloud development
+`ExternalHotloadCore` uses NIO.2 `WatchService` to recursively monitor approved development roots and publish debounced typed reload events for scripts, data, assets and bytecode.
 
-- `AGENTS.md` defines repository rules for AI coding agents.
-- `.github/workflows/copilot-setup-steps.yml` is GitHub's recognised Copilot cloud-agent setup workflow.
-- `.github/copilot-setup-steps.toml` is the platform's additional agent-tuning manifest.
-- `.devcontainer/devcontainer.json` provides the Codespaces/devcontainer environment.
-- CodeQL, issue forms and PR templates are under `.github/`.
+Restartless strategy is deliberately split:
+
+- scripts: replace GraalVM context/module;
+- data/procedural definitions: validate then atomically replace versioned runtime state;
+- assets: invalidate/generated-resource pipeline then request resource reload;
+- compatible Java class changes: `Instrumentation.redefineClasses`;
+- schema-changing Java: new implementation JAR behind a stable service interface and replaceable classloader;
+- dynamic gameplay content: virtual/versioned registries;
+- frozen vanilla/NeoForge registry additions: not falsely claimed to be universally hotloadable.
+
+See `docs/HOTLOAD_ARCHITECTURE.md`.
+
+## Construction sandbox
+
+The advanced construction plane now contains a deterministic physics world, constraint graph, raycast tool-gun controller, procedural matrix engine, algorithmic asset provider, dynamic collision-shape model, Minecraft `VoxelShape` composer, zero-entity teleport channels, dynamic dimension lifecycle manager, custom geometry provider and prioritised client render-event/override pipelines.
+
+These are the structural runtime frameworks for a live-scripted sandbox. Exact client/server NeoForge hooks, multiplayer authority/replication, undo/redo and renderer performance validation remain explicit integration milestones rather than hidden assumptions.
+
+## Profiling and chaos engineering
+
+The telemetry plane includes bounded real-time event storage, deterministic opt-in fault injection and JDK Flight Recorder control. Chaos mode is development/test-only and must not silently activate in release builds.
+
+## Mod import/fork analysis
+
+`tools/fork_mod.py` safely extracts an authorised JAR, records its SHA-256/provenance, creates `javap` disassembly and can invoke an explicitly supplied local decompiler. Nothing is downloaded or executed automatically merely because a JAR was imported.
+
+## Project management
+
+Read:
+
+- `docs/PROJECT_PLAN.md` — R0-R6 readiness model, workstreams, milestones and release gates.
+- `docs/TODO.md` — implementation/validation ledger.
+- `docs/DECISIONS.md` — architecture decision records.
+- `docs/TEST_STRATEGY.md` — layered verification model.
+- `docs/AUTO_CAPABILITIES.md` — generated capability status.
+- `docs/AI_AUTODOC.md` — provider-independent AI documentation pipeline.
+- `SECURITY.md` and `CONTRIBUTING.md` — operational rules.
 
 ## Reference vault
 
-`references/index/` is the fast lookup layer; `vault/` is exact recovery/deep-inspection storage. The large supplied binary payload remains represented by exact checksums/chunk manifests until its deterministic local import is pushed. While `vault/REMOTE_BINARY_IMPORT_PENDING.md` exists, do not assume those remote binary bytes are hydrated.
-
-```bash
-python tools/vault.py verify --all
-python tools/reference_lookup.py search GLFW
-```
-
-## Architecture
-
-Read `docs/ARCHITECTURE_WORKFLOW.md`, `docs/SECURITY_MODEL.md`, `docs/ADVANCED_ENGINES.md`, `docs/DATAGEN_AND_ASSETS.md`, and `docs/LICENSING_REQUIREMENTS.md` before changing cross-cutting platform behaviour.
+`references/index/` is the fast lookup layer; `vault/` is exact recovery/deep-inspection storage. Large supplied binary payloads remain represented by exact checksums/chunk manifests until their deterministic local import is pushed. Do not treat pending remote binary payloads as hydrated merely because their manifests exist.
