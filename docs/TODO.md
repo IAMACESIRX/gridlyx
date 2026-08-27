@@ -11,7 +11,7 @@ This is the live implementation ledger. Capability maturity is summarized in `FE
 - [x] Add deterministic repository index and task-context tooling.
 - [x] Add AI handoff/context map and full product/roadmap/feature/structure docs.
 - [x] Compile Rust/C++ native examples on Windows and Linux.
-- [ ] Add `studio-ci.yml` and require Studio core tests + `studio_check.py` + `repo_index.py --check`.
+- [x] Add `studio-ci.yml` requiring Studio core tests + `studio_check.py` + `repo_index.py --check` + context retrieval smoke.
 - [ ] Add first NeoForge 26.2 GameTest fixture and require it in nightly CI.
 - [ ] Add client-side rendering smoke-world capture/benchmark.
 - [ ] Add SBOM and dependency/licence/provenance report.
@@ -74,7 +74,8 @@ This is the live implementation ledger. Capability maturity is summarized in `FE
 
 ## Instances and packs
 
-- [ ] Per-instance `instance.json` and `content.lock.json` schemas/implementation.
+- [x] Add first `instance.json` and `content.lock.json` schemas.
+- [ ] Implement instance/lock persistence and migrations against those schemas.
 - [ ] Isolated writable overlays and shared immutable blobs.
 - [ ] Instance clone/fork/diff.
 - [ ] Snapshot/restore of configs/saves/content locks.
@@ -111,8 +112,9 @@ This is the live implementation ledger. Capability maturity is summarized in `FE
 ## Production / machinima
 
 - [x] Define neutral rational-time camera/timeline foundation.
-- [x] Add production camera interpolation smoke test to advanced runtime.
-- [ ] Production project JSON schemas: project/scenes/shots/takes/timeline/replay/render preset.
+- [x] Add production camera interpolation smoke test to advanced runtime and pass Advanced CI.
+- [x] Add first production-project schema with exact source-lock linkage, rational frame rate, scenes and render presets.
+- [ ] Expand production schemas for typed shots/takes/tracks/replays/render jobs.
 - [ ] Free/target/orbit/rail/spline camera rigs.
 - [ ] Camera curve interpolation/easing and baked deterministic sampling.
 - [ ] Entity/actor transform and pose/animation tracks.
@@ -142,11 +144,12 @@ This is the live implementation ledger. Capability maturity is summarized in `FE
 - [x] Keep compact human/AI canonical context instead of conversation dumps.
 - [x] Generate deterministic file/chunk hashes and lexical terms.
 - [x] Add task-scoped lexical context pack tool.
+- [x] Run repository-index and context-pack smoke validation in dedicated Studio CI.
 - [ ] Feed deterministic chunk IDs into local semantic/vector index.
 - [ ] Incremental embedding reuse keyed by commit/path/range/SHA-256.
 - [ ] Generate feature/readiness evidence map from tests/manifests where possible.
 - [ ] ADR template + machine-readable decision index.
-- [ ] CI guard for broken `ai/context-map.json` targets.
+- [ ] CI guard that verifies every `ai/context-map.json` target exists.
 
 ## Operations / release
 

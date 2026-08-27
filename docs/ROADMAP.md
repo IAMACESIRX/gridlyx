@@ -20,11 +20,11 @@
 - [x] Studio core crate and provider/dependency contracts.
 - [x] Human project overview, structure, roadmap and feature map.
 - [x] AI handoff/context/index design.
-- [ ] Make repository-index/context-pack generation mandatory in CI.
+- [x] Make repository-index/context-pack generation mandatory in dedicated Studio CI.
 - [ ] Add architecture decision record template and decision index generation.
 - [ ] Add machine-readable capability/readiness evidence ledger.
 
-**Exit:** R2 repository intelligence and architecture gate.
+**Current evidence:** Studio architecture/provider checks, deterministic repository indexing, task-context retrieval and Rust core tests pass in CI. Phase 0 has reached its R3 foundation even though ADR/evidence automation remains ongoing.
 
 ## Phase 1 — launcher and instance foundation
 
@@ -35,7 +35,8 @@
 - [ ] Managed Java runtime resolver/download/cache.
 - [ ] Vanilla instance creation and launch-plan generation.
 - [ ] Content-addressed download cache with resumable transfers and SHA-256.
-- [ ] Per-instance lockfile, overlay directories and diagnostics.
+- [x] Initial instance/content-lock schemas.
+- [ ] Per-instance persistence, overlay directories and diagnostics.
 - [ ] Simple/advanced UI modes.
 
 **Exit:** create and launch a clean vanilla instance on Windows/Linux/macOS at R5.
@@ -46,10 +47,11 @@
 - [ ] Quilt adapter using Quilt Meta profiles.
 - [ ] Forge adapter using official installer/Maven data.
 - [ ] NeoForge adapter using official Maven/installer data.
-- [ ] Generic external/legacy loader adapter contract.
+- [x] Generic external/legacy loader adapter contract.
 - [ ] Modrinth search/version/download/dependency provider.
 - [ ] CurseForge provider behind user/developer API-key configuration and current API terms.
-- [ ] Required/optional/incompatible dependency solver with explanation graph.
+- [x] Core required/incompatible dependency graph and deterministic install ordering.
+- [ ] Full transitive/range/side-aware dependency solver with explanation graph.
 - [ ] Mod enable/disable, update, pin, replace and conflict repair.
 - [ ] Resource pack, shader, datapack and world content categories.
 
@@ -82,7 +84,9 @@
 ## Phase 5 — animation, replay and machinima
 
 - [x] Neutral production architecture defined.
-- [ ] Production timeline data model and deterministic sampling tests.
+- [x] Rational-time camera keyframe foundation and deterministic interpolation smoke test.
+- [x] Initial production-project schema linked to exact source instance/content lock.
+- [ ] Generic typed production track/timeline model.
 - [ ] Camera director with free/orbit/target/rail/spline modes.
 - [ ] Entity/actor animation and pose tracks.
 - [ ] Replay/event recording with tick anchors and compatibility metadata.
