@@ -1,0 +1,28 @@
+name: Native Extension CI
+
+on:
+  push:
+    paths:
+      - 'native/**'
+      - '.github/workflows/native-ci.yml'
+  pull_request:
+    paths:
+      - 'native/**'
+      - '.github/workflows/native-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - name: Rust ABI check
+        run: cargo check --manifest-path native/rust/Cargo.toml
+      - name: Configure C++ ABI
+        run: cmake -S native/cpp -B build/native-cpp -DCMAKE_BUILD_TYPE=Release
+      - name: Build C++ ABI
+        run: cmake --build build/native-cpp --config Release

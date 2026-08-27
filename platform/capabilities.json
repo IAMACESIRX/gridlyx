@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "categories": {
+    "AI and context": [
+      {
+        "name": "MCP endpoint",
+        "status": "framework",
+        "detail": "Stateless MCP 2026-07-28 routing for tools, resources, discovery and local integrations."
+      },
+      {
+        "name": "Local vector index",
+        "status": "framework",
+        "detail": "In-process cosine-similarity index with replaceable embedding providers and deterministic persistence boundaries."
+      },
+      {
+        "name": "AI auto-documentation",
+        "status": "wired",
+        "detail": "Capability-manifest driven documentation generation checked by CI."
+      }
+    ],
+    "Verification and security": [
+      {
+        "name": "ArchUnit and JUnit",
+        "status": "wired",
+        "detail": "Architecture rules and logic-test foundation on JUnit 6.1.3 and ArchUnit 1.4.2."
+      },
+      {
+        "name": "Headless GameTest",
+        "status": "wired",
+        "detail": "NeoForge GameTestServer orchestration; MCTester remains an optional external adapter."
+      },
+      {
+        "name": "Bytecode diff analysis",
+        "status": "wired",
+        "detail": "javap-based class/JAR disassembly diff with optional external decompiler handoff."
+      },
+      {
+        "name": "Script gatekeeper",
+        "status": "wired",
+        "detail": "CI syntax/provenance gate for non-Java executable scripts."
+      },
+      {
+        "name": "Master Gradle lock",
+        "status": "wired",
+        "detail": "SHA-256 lock prevents generated workspace build.gradle drift."
+      },
+      {
+        "name": "CodeQL",
+        "status": "wired",
+        "detail": "GitHub code scanning workflow for Java/Kotlin-compatible source."
+      }
+    ],
+    "Runtime and interop": [
+      {
+        "name": "External hotload core",
+        "status": "framework",
+        "detail": "NIO.2 WatchService reload bus plus instrumentation-compatible redefine and versioned service replacement."
+      },
+      {
+        "name": "GraalVM polyglot",
+        "status": "framework",
+        "detail": "Sandboxed JavaScript and Python embedding with explicit host capability exposure."
+      },
+      {
+        "name": "Native extensions",
+        "status": "framework",
+        "detail": "Rust/C++ ABI examples with Java FFM/Panama bindings."
+      },
+      {
+        "name": "Cross-process bridges",
+        "status": "framework",
+        "detail": "Language-neutral framed protocol for Python AI, Go and C# sidecars over IPC or TCP."
+      },
+      {
+        "name": "Telemetry and chaos loop",
+        "status": "framework",
+        "detail": "Bounded telemetry streams, deterministic fault injectors and development-only chaos gates."
+      },
+      {
+        "name": "JFR profiling",
+        "status": "framework",
+        "detail": "Programmatic JDK Flight Recorder capture hooks for advanced JVM profiling."
+      },
+      {
+        "name": "Netty development endpoints",
+        "status": "framework",
+        "detail": "Loopback-first HTTP endpoints for telemetry, MCP adapters and development control."
+      }
+    ],
+    "Gameplay construction": [
+      {
+        "name": "Procedural content matrix",
+        "status": "framework",
+        "detail": "Seeded procedural matrix scripts and algorithmic data/asset generation loops."
+      },
+      {
+        "name": "CSV recipe conversion",
+        "status": "wired",
+        "detail": "External spreadsheet/CSV rows converted into deterministic recipe JSON resources."
+      },
+      {
+        "name": "Constraint and tool-gun engine",
+        "status": "framework",
+        "detail": "Raycast-driven selection, dynamic constraints and runtime construction actions."
+      },
+      {
+        "name": "Custom entity physics",
+        "status": "framework",
+        "detail": "Deterministic bodies, impulses and constraint integration independent of vanilla entity markers."
+      },
+      {
+        "name": "Dynamic dimensions",
+        "status": "framework",
+        "detail": "Lifecycle-managed virtual dimension definitions with explicit frozen-registry boundaries."
+      },
+      {
+        "name": "Rendering overrides",
+        "status": "framework",
+        "detail": "Prioritised client render interception and custom geometry provider pipeline."
+      },
+      {
+        "name": "Dynamic collision shapes",
+        "status": "framework",
+        "detail": "Runtime complex hitbox composition with a dedicated VoxelShape adapter boundary."
+      },
+      {
+        "name": "Zero-entity teleport channels",
+        "status": "framework",
+        "detail": "State-only teleport links with no marker/helper entity requirement."
+      }
+    ],
+    "Workspace and management": [
+      {
+        "name": "Multi-mod workspace",
+        "status": "validated",
+        "detail": "Independent mods/<mod_id> Gradle roots can be generated, built and tested side-by-side."
+      },
+      {
+        "name": "Project planning",
+        "status": "wired",
+        "detail": "Roadmap, workstreams, readiness levels, TODOs, validation gates and release criteria."
+      }
+    ]
+  }
+}

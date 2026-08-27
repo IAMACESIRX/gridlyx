@@ -45,15 +45,25 @@ jobs:
           cache-provider: basic
       - name: Check Gradle execution privilege
         run: test -x templates/neoforge-26.2/gradlew
+      - name: Validate master Gradle lock
+        run: python tools/build_lock.py --check
+      - name: Gate non-Java scripts
+        run: python tools/script_gatekeeper.py
       - name: Validate repository invariants
         run: python tools/validate_platform.py
       - name: Automated diagnostics
         run: python tools/diagnose.py --static
+      - name: Validate generated documentation
+        run: python tools/autodoc.py --check
+      - name: Validate bytecode analysis tooling
+        run: python tools/bytecode_diff.py --self-test
+      - name: Validate CSV recipe conversion
+        run: python tools/csv_recipe_pipeline.py --self-test
       - name: Build template and all mod workspaces
         run: python tools/build_all.py --include-template ${{ inputs.advanced && '--advanced' || '' }}
-      - name: Run opted-in GameTests
+      - name: Run opted-in headless GameTests
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_gametests }}
-        run: python tools/build_all.py --gametest ${{ inputs.advanced && '--advanced' || '' }}
+        run: python tools/headless_validate.py ${{ inputs.advanced && '--advanced' || '' }}
       - name: Upload compiled mod JARs and reports
         if: always()
         uses: actions/upload-artifact@v5

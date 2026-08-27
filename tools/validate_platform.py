@@ -3,12 +3,14 @@ from __future__ import annotations
 
 from pathlib import Path
 import argparse
+import hashlib
 import json
 import os
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCK = json.loads((ROOT / "platform/versions.json").read_text(encoding="utf-8"))
+BUILD_LOCK = json.loads((ROOT / "platform/master-build.lock.json").read_text(encoding="utf-8"))
 REQUIRED = {
     "build.gradle",
     "gradle.properties",
@@ -37,6 +39,10 @@ def properties(path: Path) -> dict[str, str]:
     return result
 
 
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]) -> None:
     label = str(project.relative_to(ROOT))
     for relative in REQUIRED:
@@ -58,8 +64,12 @@ def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]
         "neo_version": LOCK["neoforge"],
         "checkstyle_version": LOCK["quality"]["checkstyle"],
         "google_java_format_version": LOCK["quality"]["google_java_format"],
+        "junit_version": LOCK["quality"]["junit"],
+        "archunit_version": LOCK["quality"]["archunit"],
         "asm_version": LOCK["advanced"]["asm"],
         "lwjgl_version": LOCK["advanced"]["lwjgl_reference"],
+        "graalvm_version": LOCK["advanced"]["graalvm_polyglot"],
+        "mcp_protocol_version": LOCK["protocols"]["mcp"],
     }
     for key, expected in locks.items():
         if props.get(key) != expected:
@@ -67,7 +77,10 @@ def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]
     if not props.get("mod_license"):
         error(errors, f"{label}: mod_license is empty")
 
-    build = (project / "build.gradle").read_text(encoding="utf-8", errors="replace")
+    build_path = project / "build.gradle"
+    build = build_path.read_text(encoding="utf-8", errors="replace")
+    if sha256(build_path) != BUILD_LOCK["sha256"]:
+        error(errors, f"{label}: build.gradle differs from the locked master build")
     required_build_tokens = [
         f"net.neoforged.moddev' version '{LOCK['moddevgradle']}'",
         "id 'checkstyle'",
@@ -76,6 +89,10 @@ def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]
         "src/generated/resources",
         "advancedJar",
         "agentJar",
+        "junit-jupiter",
+        "com.tngtech.archunit:archunit",
+        "org.graalvm.polyglot:polyglot",
+        "polyglotSmokeTest",
     ]
     for token in required_build_tokens:
         if token not in build:
@@ -104,6 +121,26 @@ def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]
         error(errors, f"{label}: codec/worldgen blueprint missing")
 
 
+def validate_platform_files(errors: list[str]) -> None:
+    required = [
+        "platform/master-build.lock.json",
+        "platform/capabilities.json",
+        "tools/build_lock.py",
+        "tools/script_gatekeeper.py",
+        "tools/autodoc.py",
+        "tools/bytecode_diff.py",
+        "tools/csv_recipe_pipeline.py",
+        "tools/headless_validate.py",
+        "docs/AUTO_CAPABILITIES.md",
+        "docs/PROJECT_PLAN.md",
+        "docs/HOTLOAD_ARCHITECTURE.md",
+        "docs/POLYGLOT_AND_BRIDGES.md",
+    ]
+    for relative in required:
+        if not (ROOT / relative).exists():
+            error(errors, f"platform: missing {relative}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--mod")
@@ -116,6 +153,7 @@ def main() -> int:
             raise SystemExit(f"No mod workspace: {project}")
         validate_project(project, errors, seen_ids)
     else:
+        validate_platform_files(errors)
         validate_project(ROOT / LOCK["template"], errors, seen_ids)
         for project in sorted((ROOT / "mods").glob("*")):
             if project.is_dir() and (project / "build.gradle").exists():
