@@ -17,3 +17,9 @@ Remote access requires a separate authenticated transport configuration. Telemet
 
 ## ADR-006 — Physics authority is server-side
 Client physics/render prediction may improve responsiveness, but construction constraints and authoritative object state belong to the server simulation for multiplayer consistency and abuse resistance.
+
+## ADR-007 — Gridelyx is the canonical root brand
+The root brand is **Gridelyx** and the integrated product suite is **Gridelyx Studio**. New public/project-owned terminology uses Gridelyx. Retired Gridelyx/VFSB source, wire, ABI and persisted identifiers are treated as versioned migration boundaries rather than being blindly search/replaced. `platform/brand.json` is the machine-readable identity source and `docs/REBRAND_PLAN.md` governs the migration.
+
+## ADR-008 — Requirements and toolchains are separate controlled ledgers
+`platform/chat-requirements.json` proves that every retained conversation requirement has implementation or planning evidence. `platform/toolchain-requirements.json` independently records the programs/libraries needed to build or exercise those capabilities. A feature is not considered runtime-validated merely because its dependency is installed, and an optional dependency is not considered universally required merely because one subsystem uses it.
