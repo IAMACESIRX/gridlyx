@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.FileObject;
 import javax.tools.ForwardingJavaFileManager;
@@ -25,7 +24,8 @@ public final class DirectJavaCompiler {
             return new CompilationResult(false, Map.of(), List.of("JDK compiler is unavailable"));
         }
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-        try (StandardJavaFileManager standard = compiler.getStandardFileManager(diagnostics, null, StandardCharsets.UTF_8);
+        try (StandardJavaFileManager standard = compiler.getStandardFileManager(
+                        diagnostics, null, StandardCharsets.UTF_8);
                 MemoryFileManager files = new MemoryFileManager(standard)) {
             JavaFileObject sourceFile = new SourceFile(className, source);
             JavaCompiler.CompilationTask task = compiler.getTask(
