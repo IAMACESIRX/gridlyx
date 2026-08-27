@@ -1,5 +1,6 @@
 package com.example.examplemod.advanced.bytecode;
 
+import com.example.examplemod.advanced.polyloader.PolyloaderBootstrap;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
 
@@ -21,11 +22,20 @@ public final class AgentBootstrap {
         if (instrumentation == null) {
             instrumentation = inst;
             inst.addTransformer(ENGINE, inst.isRetransformClassesSupported());
+            PolyloaderBootstrap.install(inst, ENGINE);
         }
     }
 
     public static BytecodeTransformEngine engine() {
         return ENGINE;
+    }
+
+    public static Instrumentation instrumentation() {
+        Instrumentation inst = instrumentation;
+        if (inst == null) {
+            throw new IllegalStateException("Instrumentation agent is not installed");
+        }
+        return inst;
     }
 
     public static boolean isInstalled() {
