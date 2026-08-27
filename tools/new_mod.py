@@ -32,7 +32,7 @@ def main() -> int:
     args = parser.parse_args()
     if not re.fullmatch(r"[a-z][a-z0-9_]{1,63}", args.mod_id):
         raise SystemExit("Invalid NeoForge mod_id")
-    if not re.fullmatch(r"[A-Za-z_$][\\w$]*(?:\\.[A-Za-z_$][\\w$]*)+", args.group):
+    if not re.fullmatch(r"[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)+", args.group):
         raise SystemExit("Use a Java package/group such as com.example.mod")
     dest = ROOT / "mods" / args.mod_id
     if dest.exists():

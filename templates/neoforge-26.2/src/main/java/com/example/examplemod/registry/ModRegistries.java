@@ -25,7 +25,8 @@ public final class ModRegistries {
             BLOCKS.registerSimpleBlock("example_block", properties -> properties.mapColor(MapColor.STONE));
     public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM =
             ITEMS.registerSimpleBlockItem("example_block", EXAMPLE_BLOCK);
-    public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item");
+    public static final DeferredItem<Item> EXAMPLE_ITEM =
+            ITEMS.registerSimpleItem("example_item", properties -> properties);
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = CREATIVE_TABS.register(
             "main",
