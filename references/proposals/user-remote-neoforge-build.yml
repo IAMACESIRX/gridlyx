@@ -1,0 +1,35 @@
+name: Remote NeoForge Mod Build
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # Installs the exact Eclipse Adoptium JDK 25 architecture required for MC 26.2
+    - name: Set up JDK 25 (Adoptium)
+      uses: actions/setup-java@v4
+      with:
+        java-version: '25.0.4+7' # Matches jdk-25.0.4.7
+        distribution: 'temurin'  # Temurin is Eclipse Adoptium
+        cache: 'gradle'
+
+    - name: Grant Execute Permission for Gradle
+      run: chmod +x gradlew
+
+    # Compiles the mod remotely on GitHub's servers
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    # Uploads your finished compiled .jar mod file so you can download it
+    - name: Upload Mod Jar Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Compiled-NeoForge-Mod
+        path: build/libs/*.jar

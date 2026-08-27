@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'net.neoforged.moddev' version '2.0.0-beta' 
+}
+
+version = '1.0.0'
+group = 'com.yourname.examplemod'
+base.archivesName = 'examplemod'
+
+// Binds the workspace strictly to your Adoptium JDK 25 environment
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+        vendor = JvmVendorSpec.ADOPTIUM
+    }
+}
+
+neoForm {
+    version = "26.2" // Targets the 26.2 (Chaos Cubed) Mojang mapping set
+}
+
+dependencies {
+    // Hooks into NeoForge build 26.2.0.67
+    implementation "net.neoforged:neoforge:26.2.0.67"
+
+    // Targets LWJGL 3.4.1 for core client render hooks
+    implementation "org.lwjgl:lwjgl:3.4.1"
+    implementation "org.lwjgl:lwjgl-glfw:3.4.1"
+    implementation "org.lwjgl:lwjgl-opengl:3.4.1"
+    
+    // Include this hook if you are debugging the 26.2 Vulkan graphics implementation
+    implementation "org.lwjgl:lwjgl-vulkan:3.4.1" 
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    // Optional: Enables compiler optimizations supported by HotSpot 25
+    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+}

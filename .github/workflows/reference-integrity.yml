@@ -1,0 +1,32 @@
+name: Reference Vault Integrity
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'vault/**'
+      - 'tools/vault.py'
+      - 'platform/versions.json'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check binary-vault import state
+        id: vault_state
+        shell: bash
+        run: |
+          if [ -f vault/REMOTE_BINARY_IMPORT_PENDING.md ]; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'Exact binary vault import is still pending; manifest remains authoritative.'
+          else
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Verify every supplied artifact/chunk by SHA-256
+        if: steps.vault_state.outputs.ready == 'true'
+        run: python tools/vault.py verify --all
