@@ -27,6 +27,20 @@
       ],
       "review_trigger": "Human selects the replacement public brand",
       "rollback": "Not applicable; this decision intentionally defers destructive renaming."
+    },
+    {
+      "id": "DEC-2026-08-28-003",
+      "status": "accepted",
+      "scope": "runtime-integration",
+      "decision": "The platform is not limited to conventional mod-loader extension points. Requirements may escalate through loader transforms, JVM instrumentation, native components, sidecars, launch/bootstrap changes, deterministic executable/library patches or project-owned runtime components when shallower integration cannot provide the required capability. Deep changes remain additive, version/fingerprint gated, attributable and reversible.",
+      "reason": "The product goal is a creator/development platform rather than a conventional mod. Treating frozen registries, non-public engine behavior, executable boundaries or loader APIs as absolute product limits would incorrectly weaken requirements. The safer engineering model is to preserve a verified upstream base and layer project-owned capability through explicit patch/overlay/component graphs with rollback.",
+      "evidence": [
+        "Explicit human direction allows patching the game/executable or adding components when required, provided changes are additive.",
+        "Existing architecture already includes JVM agents, bytecode transformation, native/IPC components, sidecars, virtual registries and process isolation.",
+        "docs/DEEP_INTEGRATION_ARCHITECTURE.md defines the escalation ladder, immutable-base rule, patch manager and drift policy."
+      ],
+      "review_trigger": "Any L5-L8 integration, upstream executable/library change, security-boundary change or discovery that a shallower stable integration can fully replace a deeper patch",
+      "rollback": "Disable the affected patch/component capability, restore the verified base artifact or prior patch graph, and fall back to the last-known-good shallower integration where available."
     }
   ]
 }
