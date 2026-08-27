@@ -5,17 +5,26 @@ on:
     paths:
       - 'studio/**'
       - 'ai/**'
+      - 'platform/chat-requirements.json'
       - 'AI_HANDOFF.md'
       - 'AGENTS.md'
+      - 'COMMUNITY.md'
+      - 'CONTRIBUTING.md'
+      - 'CODE_OF_CONDUCT.md'
+      - 'SUPPORT.md'
       - 'docs/PROJECT_PLAN.md'
       - 'docs/PROJECT_OVERVIEW.md'
       - 'docs/PROJECT_STRUCTURE.md'
+      - 'docs/CHAT_REQUIREMENTS_TRACEABILITY.md'
+      - 'docs/community/**'
       - 'docs/ROADMAP.md'
       - 'docs/FEATURE_MAP.md'
+      - 'docs/TODO.md'
       - 'docs/ACQUISITION_AND_RESOLUTION.md'
       - 'docs/MACHINIMA_PRODUCTION.md'
       - 'docs/AI_CONTEXT_SYSTEM.md'
       - 'tools/continuity_check.py'
+      - 'tools/chat_requirements_check.py'
       - 'tools/repo_index.py'
       - 'tools/ai_context_pack.py'
       - 'tools/studio_check.py'
@@ -24,10 +33,16 @@ on:
     paths:
       - 'studio/**'
       - 'ai/**'
+      - 'platform/chat-requirements.json'
       - 'AI_HANDOFF.md'
       - 'AGENTS.md'
+      - 'COMMUNITY.md'
+      - 'CONTRIBUTING.md'
+      - 'CODE_OF_CONDUCT.md'
+      - 'SUPPORT.md'
       - 'docs/**'
       - 'tools/continuity_check.py'
+      - 'tools/chat_requirements_check.py'
       - 'tools/repo_index.py'
       - 'tools/ai_context_pack.py'
       - 'tools/studio_check.py'
@@ -45,6 +60,8 @@ jobs:
       - uses: actions/checkout@v7
       - name: Validate AI continuity and drift-control structure
         run: python tools/continuity_check.py
+      - name: Validate whole-chat requirements traceability
+        run: python tools/chat_requirements_check.py
       - name: Validate Studio architecture and provider policy
         run: python tools/studio_check.py
       - name: Validate AI repository index contract
