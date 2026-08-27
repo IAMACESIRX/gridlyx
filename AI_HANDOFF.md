@@ -1,38 +1,63 @@
-# Repository AI handoff
+# Gridelyx AI handoff
 
 ## Current identity state
 
-This repository is the Minecraft Advanced Mod Development Platform project. The previous public product branding is **in transition** and must not be propagated into new architecture or naming decisions. A replacement brand will be selected before the full terminology migration is performed.
+The canonical root brand is **Gridelyx** and the integrated suite is **Gridelyx Studio**. `platform/brand.json` is authoritative. Gridelyx/VFSB technical identifiers that still exist are migration compatibility state only; consult `docs/REBRAND_PLAN.md` before renaming source, ABI, wire or persisted identifiers.
 
 ## Mission
 
-Build a cross-edition Minecraft launcher, instance/content manager, cross-loader development environment, live creator/sandbox runtime and machinima/production suite with strong fault containment, provenance, hotload and AI-assisted engineering.
+Build a cross-edition Minecraft launcher, instance/content manager, cross-loader development environment, live creator/sandbox runtime, world editor and machinima/production suite with strong fault containment, provenance, hotload and AI-assisted engineering.
 
-This is **not constrained to conventional modding extension points**. Where required capability cannot be provided through normal APIs/loaders, the platform may escalate into JVM/runtime instrumentation, native components, external services, launch/bootstrap changes, version-pinned executable/library patching or maintained project-owned runtime components. These changes remain additive, fingerprint-gated, attributable and reversible rather than turning the base game into an unknowable mutation.
+The project is **not constrained to conventional modding extension points**. Requirements may escalate into JVM/runtime instrumentation, native components, external services, launch/bootstrap changes, deterministic executable/library patching or project-owned runtime components when shallower layers cannot provide the capability. Deeper changes remain additive, fingerprint-gated, attributable and reversible.
 
-## Canonical retained requirements
+## Canonical retained scope
 
-The complete conversation-derived project scope is now preserved in two synchronized artifacts:
+Read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json` before broad design work. They preserve CR-001 through CR-033, including:
 
-- `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` — human-readable requirement/evidence/planning ledger;
-- `platform/chat-requirements.json` — machine-readable requirement graph.
+- reproducible Java/NeoForge R&D and multi-JAR workspaces;
+- quality/CI/Codespaces/Copilot/CodeQL/build locks;
+- registries/datagen/assets/localization;
+- ASM/Instrumentation/Mixins/MethodHandles/live compilation;
+- worker pools/state synchronization;
+- Panama/native/GPU/shared-memory/bridges;
+- MCP/vector indexing/AI autodoc;
+- autonomous tests/profiling/chaos;
+- project planning/issues/handoff/community docs;
+- Polyloader/UAL and broad version/loader adaptation;
+- restart-minimized external hotload;
+- live world editing/async section blitting/NBT events;
+- Terraria liquid/paint/transmutation systems;
+- microgeometry/curves/slopes/collision;
+- Hytale-like live asset editing;
+- Garry's Mod-like physics/construction;
+- Roblox-Studio-like scene/properties/gizmos/live execution;
+- in-game IDE/AI control;
+- non-Java modification SDK;
+- multiplayer Netty/culling/consensus;
+- anti-crash/fault containment;
+- Bedrock parity/native bridge;
+- launcher/acquisition/dependency resolution;
+- mod forking/decompilation;
+- replay/animation/machinima;
+- dynamic dimensions/teleport/worldgen;
+- rendering/volumetrics/PoseStack/IK;
+- additive deep integration/patch manager;
+- Gridelyx rebrand migration;
+- complete dependency/toolchain inventory.
 
-`tools/chat_requirements_check.py` validates that every retained requirement group has a valid state and at least one existing implementation/evidence/planning path. Studio/project-continuity CI runs this check.
-
-A capability may remain planned or framework-level, but a later agent must not silently remove or materially weaken it because a normal mod API, loader, Java, Bedrock or current engine surface cannot express it. Such a finding changes integration depth and validation burden. Removal requires explicit human-approved supersession recorded in the decision ledger.
+Never silently drop one of these because it is difficult or outside normal mod APIs.
 
 ## Current architecture
 
-- Java advanced runtime: loader-neutral UAL, hotload, scripting, world/asset editing, scene/physics tooling and advanced native/polyglot mechanisms under `templates/neoforge-26.2/src/advanced`.
-- Deep integration: `docs/DEEP_INTEGRATION_ARCHITECTURE.md` defines L0-L8 escalation from supported APIs through deterministic binary/runtime patching and project-owned components, with immutable-base, provenance and rollback rules.
-- Bedrock: stable Add-On runtime, preview Editor extension and native companion under `bedrock/` and `native/bedrock/`.
-- Native/IPC: project-owned C ABI, binary bridge framing, Panama/FFM, shared memory and language sidecars.
-- Studio/launcher core: `studio/core` defines GUI-independent instance, provider, provenance and dependency-resolution contracts.
-- Providers: `studio/providers/providers.json` and `loader-adapters.json`; official/authorized upstreams only.
-- Product/project control: `docs/PROJECT_PLAN.md`, `docs/PROJECT_OVERVIEW.md`, `docs/CHAT_REQUIREMENTS_TRACEABILITY.md`, `docs/ROADMAP.md`, `docs/FEATURE_MAP.md`, `docs/TODO.md`.
-- Community: `COMMUNITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SUPPORT.md` and `docs/community/` provide contributor/user onboarding.
-- AI continuity: `ai/AI_ORGANISATION.md`, `ai/DRIFT_MITIGATION.md`, `ai/work-state.json`, `ai/decision-ledger.json`, `ai/assumption-ledger.json`, `ai/context-map.json`.
-- AI retrieval/indexing: `docs/AI_CONTEXT_SYSTEM.md`, `tools/repo_index.py`, `tools/ai_context_pack.py`.
+- **Java advanced runtime:** `templates/neoforge-26.2/src/advanced` — UAL/Polyloader, hotload, bytecode, scripting, MCP/indexing, world editing, assets, scene/physics tooling, rendering, native/IPC and production foundations.
+- **Deep integration:** `docs/DEEP_INTEGRATION_ARCHITECTURE.md` — L0-L8 escalation from supported APIs through additive patch/runtime ownership.
+- **Bedrock:** `bedrock/` + `native/bedrock/` + `platform/bedrock-capabilities.json`.
+- **Native/IPC:** `native/`, `bridges/`, FFM/Panama/shared-memory framing.
+- **Studio/launcher core:** `studio/core` plus provider/loader manifests and schemas.
+- **Project control:** `docs/PROJECT_PLAN.md`, `ROADMAP.md`, `FEATURE_MAP.md`, `TODO.md`, requirements ledger.
+- **AI continuity:** `ai/AI_ORGANISATION.md`, drift controls, work/decision/assumption ledgers, context map.
+- **Dependencies/toolchain:** `docs/DEPENDENCIES_AND_TOOLCHAIN.md`, `platform/toolchain-requirements.json`.
+- **Community:** `COMMUNITY.md`, `CONTRIBUTING.md`, `SUPPORT.md`, `CODE_OF_CONDUCT.md`, `docs/community/`.
 
 ## Source-of-truth order
 
@@ -40,57 +65,48 @@ When information conflicts:
 
 1. explicit current human direction/corrections;
 2. implementation, schemas and reproducible runtime evidence;
-3. locked platform/version/provider/requirements manifests;
+3. locked platform/version/brand/provider/toolchain manifests;
 4. accepted architecture/decision records;
-5. project plan/requirements ledger/roadmap/feature/TODO;
+5. requirements ledger, project plan, roadmap, feature map and TODO;
 6. handoff/context/index material;
 7. generated summaries and speculative notes.
 
-Never resolve a conflict by averaging incompatible summaries.
+Never resolve contradictions by averaging incompatible summaries.
 
 ## Non-negotiable invariants
 
-1. The desktop application must be able to start without Java installed; Java is resolved per Java Edition instance.
-2. “Any loader” means an extensible loader-adapter contract. Never fabricate unknown loader metadata, coordinates or launch arguments.
-3. Downloads use official/authorized channels and retain provenance/hashes.
-4. Writable instance state is isolated; immutable cached artifacts may be deduplicated deliberately.
-5. Simple and expert UX use the same resolver/lockfile truth.
-6. Java and Bedrock share neutral capability contracts where useful but target adapters must report real differences.
-7. Native/bytecode/preview/instrumentation/patch paths are version-gated and fail closed on drift.
-8. Multiplayer live world mutation remains server-authoritative.
-9. External scripts/tools do not gain authority merely because they connect through IPC, MCP, web, native or polyglot bridges.
-10. A feature claim cannot exceed its R0-R6 evidence.
-11. AI summaries/indexes point to authoritative source and never supersede it.
-12. Destructive migrations require an explicit recovery route.
-13. A requirement must not be rejected merely because normal Minecraft/loader/Bedrock APIs cannot express it. Use the shallowest reliable integration layer, but deeper additive engine/runtime/binary integration is allowed when justified and recoverable.
-14. Deep integration must not bypass authentication, entitlement, DRM, anti-cheat or platform security controls as a means of obtaining capability.
-15. Every retained conversation requirement must remain represented by implementation/evidence or explicit planning in `platform/chat-requirements.json`.
-
-## Active transition: rebrand
-
-The old public brand is scheduled for complete current-tree removal after a replacement name is selected.
-
-Until then:
-
-- use neutral project terminology in newly created control-plane documentation;
-- do not invent replacement protocol prefixes or package names;
-- do not perform piecemeal renames that create mixed terminology;
-- treat Git-history rewriting as a separate destructive operation requiring explicit approval.
-
-After selection, follow `ai/DRIFT_MITIGATION.md` → **Rebrand protocol** and add a CI terminology ban for retired terms.
+1. Gridelyx is the canonical root brand; compatibility identifiers do not restore retired branding.
+2. The desktop application must start without Java installed; Java is resolved per Java Edition instance.
+3. “Any loader/version” means extensible versioned adapters and evidence, not fabricated universal compatibility.
+4. Downloads use official/authorized channels and retain hashes/provenance.
+5. Writable instance state is isolated; immutable cached artifacts may be deliberately deduplicated.
+6. Simple and expert UX use the same resolver/lockfile truth.
+7. Java and Bedrock share neutral contracts where useful but target adapters must expose real parity gaps.
+8. Native/bytecode/preview/instrumentation/patch paths are version/fingerprint gated and fail closed on drift.
+9. Multiplayer live world mutation remains server-authoritative.
+10. External tools do not gain authority merely because they connect through IPC/MCP/web/native/polyglot channels.
+11. A feature claim cannot exceed its R0-R6 evidence.
+12. AI summaries/indexes never supersede authoritative source.
+13. Destructive migrations require an explicit recovery route.
+14. A requirement cannot be rejected merely because public APIs cannot express it; use the shallowest reliable layer and escalate when justified.
+15. Deep integration must not bypass authentication, entitlement, DRM, anti-cheat or platform security controls.
+16. Tool installation is not runtime validation; dependency state and feature state remain separate.
+17. Do not claim the exact remote reference-vault binary payload is complete while `vault/REMOTE_BINARY_IMPORT_PENDING.md` exists.
 
 ## Active engineering priorities
 
-1. Preserve the whole-chat requirements ledger and keep its evidence/planning paths valid.
-2. Preserve and validate the AI continuity/drift-control layer.
+1. Preserve the Gridelyx identity/requirements/toolchain continuity gates.
+2. Complete safe Gridelyx→Gridelyx public/source/protocol/ABI migration in staged phases.
 3. Implement the desktop launcher/runtime acquisition path end-to-end.
-4. Extend loader/content resolution through the supported adapter/provider model.
-5. Integrate the live creator runtime: world editing, structures/events, liquids/paint/transmutation, assets/models, microgeometry, physics, scene tools, scripting, AI/IDE and non-Java extensions.
-6. Validate Java/Bedrock capability parity explicitly and fill target-specific creator/world/production adapters.
-7. Build the additive deep-integration/patch-management path so capabilities can escalate beyond ordinary API/loader limits without sacrificing provenance or rollback.
-8. Harden hotload, rollback and process-isolated fault containment, preserving editor state across broader supervised restart scopes.
-9. Promote replay/timeline/camera foundations into the full recording/animation/machinima/production suite.
-10. Complete the public rebrand and retired-terminology scrub after a replacement identity is approved.
+4. Extend loader/content resolution through the provider/adapter model.
+5. Integrate live creator runtime: world editing, assets/models, microgeometry, physics, scripting, AI/IDE and non-Java extensions.
+6. Implement/validate dynamic liquids, paint layers and progression transmutation.
+7. Validate Java/Bedrock parity explicitly.
+8. Build the managed deep-integration/patch path with immutable base/provenance/rollback.
+9. Harden hotload, rollback and process-isolated fault containment.
+10. Promote replay/timeline/camera foundations into the complete production suite.
+11. Pin presently-unpinned Python/Rust/CMake/compiler/Go/.NET release toolchain policies.
+12. Complete exact remote reference-vault import if the repository is intended to contain those large supplied bytes.
 
 ## Session start protocol
 
@@ -98,32 +114,33 @@ For non-trivial work:
 
 1. read `AGENTS.md`;
 2. read this handoff;
-3. for broad/scope-affecting work, read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json`;
+3. read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md`;
 4. read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`;
-5. inspect `ai/work-state.json`, decision ledger and assumption ledger;
-6. use `ai/context-map.json` to locate task-specific canonical source;
-7. inspect version/provider manifests and upstream references before guessing external APIs;
-8. check GitHub issues/TODO when task scope overlaps tracked work.
+5. inspect `platform/brand.json`, `platform/chat-requirements.json` and `platform/toolchain-requirements.json`;
+6. inspect work-state, decision and assumption ledgers;
+7. use `ai/context-map.json` for task-specific canonical source;
+8. inspect versions/providers/upstream references before guessing external APIs;
+9. check GitHub issues/TODO for overlapping tracked work.
 
 ## Session end protocol
 
-A meaningful session should leave behind:
+A meaningful session leaves:
 
 - exact changes made;
-- committed versus uncommitted/staged status;
+- committed versus uncommitted/staged state;
 - tests/commands actually run;
 - failures and validation not performed;
 - readiness changes supported by evidence;
-- retained-requirement paths updated if architecture/planning moved;
 - new/closed assumptions;
-- architecture decisions and rollback route where relevant;
+- architecture/brand/protocol decisions and rollback routes;
+- dependency/toolchain changes;
 - exact next work or blocker.
 
-Update `ai/work-state.json` when the task crosses sessions or agents. Update `ai/decision-ledger.json` or `ai/assumption-ledger.json` when project truth changes.
+Update work-state when a task crosses sessions/agents. Update decision/assumption ledgers when project truth changes. Update both requirements ledgers when scope/evidence paths move.
 
 ## Capability-state vocabulary
 
-Use both the evidence level and a plain state when helpful:
+Use both R0-R6 and a plain state where useful:
 
 - planned;
 - specified;
@@ -135,13 +152,14 @@ Use both the evidence level and a plain state when helpful:
 - regressed;
 - superseded.
 
-Do not use “supported” without naming the edition/version/loader/evidence scope when that distinction matters.
+Do not use “supported” without target/version/loader/evidence scope when that distinction matters.
 
 ## Validation baseline
 
 ```bash
 python tools/continuity_check.py
 python tools/chat_requirements_check.py
+python tools/toolchain_requirements_check.py
 python tools/studio_check.py
 python tools/repo_index.py --check
 python tools/validate_platform.py
@@ -149,24 +167,24 @@ python tools/diagnose.py --static
 cargo test --manifest-path studio/Cargo.toml --all-targets
 ```
 
-Then run applicable Java advanced/native/Bedrock/game/runtime tests for the actual subsystem changed. L5-L8 changes additionally require target fingerprints, derived-artifact/overlay verification and an explicit rollback check.
+Then run applicable Java advanced/native/Bedrock/GameTest/client tests. L5-L8 changes additionally require exact target fingerprints, derived artifact/overlay verification and rollback checks.
 
 ## Compact handoff template
 
 ```text
 OBJECTIVE:
 BRANCH / COMMIT:
-SCOPE:
-RETAINED REQUIREMENTS:
+SCOPE / CR IDS:
 AUTHORITATIVE FILES:
 COMPLETED:
 VERIFIED:
 NOT VERIFIED:
 DECISIONS:
 OPEN ASSUMPTIONS:
+DEPENDENCIES / TOOLCHAIN CHANGES:
 BLOCKERS:
 RECOVERY POINT:
 NEXT ACTIONS:
 ```
 
-A handoff is incomplete if another agent cannot distinguish what exists from what merely remains intended.
+A handoff is incomplete if another agent cannot distinguish what exists from what remains intended.
