@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "decisions": [
+    {
+      "id": "DEC-2026-08-28-001",
+      "status": "accepted",
+      "scope": "ai-project-control",
+      "decision": "Use a lightweight engineering continuity control plane: project control plan, AI organisation model, handoff, work state, decision ledger, assumption ledger and drift checks.",
+      "reason": "The repository already has strong technical documentation but needs durable cross-session state and explicit drift controls. Project Athena demonstrates useful structural patterns for this problem, but its identity/institutional model is not appropriate to copy into a Minecraft development platform.",
+      "evidence": [
+        "Project Athena AI-PORTAL.md separates source-of-truth layers, capability state and cross-agent context.",
+        "Project Athena agents/agent-registry.yml uses explicit roles, authority and capabilities.",
+        "Project Athena audit/decision-framework.md records evidence, falsification and rollback.",
+        "This repository already uses R0-R6 readiness and evidence-aware AI instructions."
+      ],
+      "review_trigger": "Major repository architecture change or replacement of the AI continuity system",
+      "rollback": "Remove the added control files and restore the prior AGENTS/AI_HANDOFF/context-map references if the model proves burdensome or contradictory."
+    },
+    {
+      "id": "DEC-2026-08-28-002",
+      "status": "accepted",
+      "scope": "brand-transition",
+      "decision": "Do not perform a full old-brand scrub until a replacement brand is selected and its canonical spelling/slug/prefix are frozen.",
+      "reason": "A partial rename would create more terminology drift and could corrupt protocol/ABI or persisted-data identifiers that require migration handling.",
+      "evidence": [
+        "The current brand appears across documentation, workflow names, code identifiers and the VFSB/native bridge vocabulary."
+      ],
+      "review_trigger": "Human selects the replacement public brand",
+      "rollback": "Not applicable; this decision intentionally defers destructive renaming."
+    }
+  ]
+}
