@@ -17,12 +17,17 @@
 - Capability-to-prerequisite matrix: `docs/CAPABILITY_DEPENDENCY_MATRIX.md`
 - Contribution rules: `CONTRIBUTING.md`
 - Support routing: `SUPPORT.md`
-- Security reporting: `SECURITY.md`
-- Conduct expectations: `CODE_OF_CONDUCT.md`
+- Engineering/operational safety: `SAFETY.md`
+- Security and vulnerability reporting: `SECURITY.md`
+- Conduct expectations and moderation: `CODE_OF_CONDUCT.md`
 
 ## Evidence-first rule
 
 A feature appearing in architecture or source does not automatically mean it is release-ready. Gridelyx uses R0-R6 readiness and target-specific validation. Community-facing claims should link to concrete evidence and distinguish planned, framework, tested and target-validated states.
+
+## Safety and security rule
+
+Powerful integration is not treated as inherently safe merely because Gridelyx supports it. Privileged work involving world mutation, Java instrumentation, bytecode transformation, native/FFM memory, IPC, custom networking, generated code, GPU resources or deep Bedrock/runtime integration must follow `SAFETY.md` and `SECURITY.md`, including bounded execution, explicit authority, appropriate isolation, target validation and recovery/rollback planning.
 
 ## Feature decision rule
 
