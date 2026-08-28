@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "platform/chat-requirements.json"
 LEDGER = ROOT / "docs/CHAT_REQUIREMENTS_TRACEABILITY.md"
 VALID_STATES = {"implemented", "framework", "planned", "mixed", "transition"}
-MIN_REQUIREMENTS = 34
+MIN_REQUIREMENTS = 35
 
 
 def fail(message: str) -> None:
@@ -57,7 +57,7 @@ def main() -> int:
     if missing_paths:
         fail("missing requirement evidence/planning paths: " + ", ".join(sorted(missing_paths)))
 
-    expected_ids = {f"CR-{number:03d}" for number in range(1, 35)}
+    expected_ids = {f"CR-{number:03d}" for number in range(1, 36)}
     missing_ids = sorted(expected_ids.difference(ids))
     if missing_ids:
         fail("missing canonical retained requirement ids: " + ", ".join(missing_ids))
@@ -67,7 +67,7 @@ def main() -> int:
     except OSError as exc:
         fail(f"docs/CHAT_REQUIREMENTS_TRACEABILITY.md: {exc}")
 
-    for marker in ("Gridelyx", "CR-001", "CR-032", "CR-033", "CR-034", "## Coverage rule"):
+    for marker in ("Gridelyx", "CR-001", "CR-032", "CR-033", "CR-034", "CR-035", "## Coverage rule"):
         if marker not in ledger:
             fail(f"traceability ledger missing marker: {marker}")
     for requirement_id in ids:
