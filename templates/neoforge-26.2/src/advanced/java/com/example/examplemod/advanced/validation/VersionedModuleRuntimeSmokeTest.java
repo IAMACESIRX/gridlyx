@@ -28,14 +28,18 @@ public final class VersionedModuleRuntimeSmokeTest {
         Path jar = root.resolve("module.jar");
         try {
             createServiceJar(jar);
-            try (VersionedModuleRuntime runtime =
-                    new VersionedModuleRuntime(VersionedModuleRuntimeSmokeTest.class.getClassLoader())) {
+            try (VersionedModuleRuntime runtime = new VersionedModuleRuntime(
+                    VersionedModuleRuntimeSmokeTest.class.getClassLoader())) {
                 ActivationStrategy loaded = runtime.reload(jar);
-                require(loaded == ActivationStrategy.CLASSLOADER_EPOCH, "H3 module did not use classloader epoch");
+                require(
+                        loaded == ActivationStrategy.CLASSLOADER_EPOCH,
+                        "H3 module did not use classloader epoch");
                 require(runtime.activeModuleCount() == 1, "H3 module did not become active");
 
                 ActivationStrategy removed = runtime.remove(jar);
-                require(removed == ActivationStrategy.CLASSLOADER_EPOCH, "H3 module removal changed strategy");
+                require(
+                        removed == ActivationStrategy.CLASSLOADER_EPOCH,
+                        "H3 module removal changed strategy");
                 require(runtime.activeModuleCount() == 0, "H3 module was not retired");
             }
             System.out.println("PASS: Gridelyx H3 versioned module runtime smoke test");
@@ -74,28 +78,45 @@ public final class VersionedModuleRuntimeSmokeTest {
                 "java/lang/Object",
                 new String[] {contract});
 
-        MethodVisitor constructor = writer.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+        MethodVisitor constructor =
+                writer.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
         constructor.visitCode();
         constructor.visitVarInsn(Opcodes.ALOAD, 0);
-        constructor.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        constructor.visitMethodInsn(
+                Opcodes.INVOKESPECIAL,
+                "java/lang/Object",
+                "<init>",
+                "()V",
+                false);
         constructor.visitInsn(Opcodes.RETURN);
         constructor.visitMaxs(1, 1);
         constructor.visitEnd();
 
-        MethodVisitor moduleId = writer.visitMethod(Opcodes.ACC_PUBLIC, "moduleId", "()Ljava/lang/String;", null, null);
+        MethodVisitor moduleId = writer.visitMethod(
+                Opcodes.ACC_PUBLIC,
+                "moduleId",
+                "()Ljava/lang/String;",
+                null,
+                null);
         moduleId.visitCode();
         moduleId.visitLdcInsn("gridelyx:smoke-module");
         moduleId.visitInsn(Opcodes.ARETURN);
         moduleId.visitMaxs(1, 1);
         moduleId.visitEnd();
 
-        MethodVisitor prepare = writer.visitMethod(Opcodes.ACC_PUBLIC, "prepare", "(" + scope + ")V", null, null);
+        MethodVisitor prepare = writer.visitMethod(
+                Opcodes.ACC_PUBLIC,
+                "prepare",
+                "(" + scope + ")V",
+                null,
+                null);
         prepare.visitCode();
         prepare.visitInsn(Opcodes.RETURN);
         prepare.visitMaxs(0, 2);
         prepare.visitEnd();
 
-        MethodVisitor activate = writer.visitMethod(Opcodes.ACC_PUBLIC, "activate", "()V", null, null);
+        MethodVisitor activate =
+                writer.visitMethod(Opcodes.ACC_PUBLIC, "activate", "()V", null, null);
         activate.visitCode();
         activate.visitInsn(Opcodes.RETURN);
         activate.visitMaxs(0, 1);
