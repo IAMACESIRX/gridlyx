@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Gridelyx Studio platform concept map</title>
+  <desc id="desc">A version-controlled concept graphic showing Gridelyx Studio connecting launcher, Polyloader, creator, world, AI, Java, Bedrock and production planes.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#090d18"/><stop offset="1" stop-color="#151d33"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6ae6ff"/><stop offset="1" stop-color="#8e7cff"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <style>
+      .t{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#eef4ff}.muted{fill:#9fb0ca}.box{fill:#111a2c;stroke:#314567;stroke-width:2}.line{stroke:#5675a8;stroke-width:3;fill:none}.small{font-size:24px}.label{font-size:30px;font-weight:700}.tiny{font-size:20px}.chip{fill:#18243c;stroke:#405a87;stroke-width:1.5}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <g opacity=".18" stroke="#83a6d8" stroke-width="1">
+    <path d="M0 150H1600M0 300H1600M0 450H1600M0 600H1600M0 750H1600"/><path d="M200 0V900M400 0V900M600 0V900M800 0V900M1000 0V900M1200 0V900M1400 0V900"/>
+  </g>
+  <text class="t" x="80" y="95" font-size="58" font-weight="800">GRIDELYX STUDIO</text>
+  <text class="t muted" x="82" y="138" font-size="25">Cross-edition Minecraft launcher • creator • runtime • world editor • AI development • production</text>
+
+  <g class="line">
+    <path d="M800 445L390 260M800 445L390 445M800 445L390 630M800 445L1210 260M800 445L1210 445M800 445L1210 630M800 445L800 730M800 445L800 190"/>
+  </g>
+
+  <g transform="translate(615 315)" filter="url(#glow)">
+    <polygon points="185,0 340,85 185,170 30,85" fill="url(#core)" opacity=".95"/>
+    <polygon points="30,85 185,170 185,330 30,245" fill="#4f82c9"/>
+    <polygon points="340,85 185,170 185,330 340,245" fill="#6d5fd0"/>
+    <text class="t" x="185" y="206" font-size="34" font-weight="800" text-anchor="middle">GRIDELYX</text>
+    <text class="t" x="185" y="244" font-size="24" text-anchor="middle">UAL + Capability Core</text>
+  </g>
+
+  <g transform="translate(120 195)"><rect class="box" width="360" height="130" rx="22"/><text class="t label" x="28" y="48">Launcher + Resolver</text><text class="t muted tiny" x="28" y="82">Instances • Java • loaders • mods</text><text class="t muted tiny" x="28" y="108">provenance • locks • rollback</text></g>
+  <g transform="translate(120 380)"><rect class="box" width="360" height="130" rx="22"/><text class="t label" x="28" y="48">Polyloader + Runtime</text><text class="t muted tiny" x="28" y="82">Fabric • Quilt • Forge • NeoForge</text><text class="t muted tiny" x="28" y="108">Instrumentation • hotload • scripts</text></g>
+  <g transform="translate(120 565)"><rect class="box" width="360" height="130" rx="22"/><text class="t label" x="28" y="48">Creator + Sandbox</text><text class="t muted tiny" x="28" y="82">models • microgrid • physics • scene</text><text class="t muted tiny" x="28" y="108">gizmos • in-game IDE • assets</text></g>
+
+  <g transform="translate(1120 195)"><rect class="box" width="360" height="130" rx="22"/><text class="t label" x="28" y="48">Java Edition</text><text class="t muted tiny" x="28" y="82">NeoForge canonical lane</text><text class="t muted tiny" x="28" y="108">JVM • Netty • LWJGL • GameTest</text></g>
+  <g transform="translate(1120 380)"><rect class="box" width="360" height="130" rx="22"/><text class="t label" x="28" y="48">Bedrock Edition</text><text class="t muted tiny" x="28" y="82">Add-On • Editor • native companion</text><text class="t muted tiny" x="28" y="108">shared memory • capability parity</text></g>
+  <g transform="translate(1120 565)"><rect class="box" width="360" height="130" rx="22"/><text class="t label" x="28" y="48">World + Multiplayer</text><text class="t muted tiny" x="28" y="82">live editing • events • transactions</text><text class="t muted tiny" x="28" y="108">consensus • culling • rollback</text></g>
+
+  <g transform="translate(620 115)"><rect class="box" width="360" height="105" rx="22"/><text class="t label" x="180" y="45" text-anchor="middle">AI + MCP</text><text class="t muted tiny" x="180" y="78" text-anchor="middle">context • automation • testing • docs</text></g>
+  <g transform="translate(620 720)"><rect class="box" width="360" height="105" rx="22"/><text class="t label" x="180" y="45" text-anchor="middle">Production</text><text class="t muted tiny" x="180" y="78" text-anchor="middle">replay • animation • cameras • render</text></g>
+
+  <g transform="translate(80 820)"><rect class="chip" width="1440" height="50" rx="18"/><text class="t small" x="720" y="33" text-anchor="middle">Evidence-first • capability-gated • reversible • cross-edition • AI-readable • community-operable</text></g>
+</svg>
