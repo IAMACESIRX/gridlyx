@@ -1,6 +1,6 @@
 # Gridelyx project control plan
 
-This document is the durable program-control layer for **Gridelyx / Gridelyx Studio**. Architecture, requirements, evidence, dependencies and migration state must remain reconstructable without relying on chat history.
+This document is the durable program-control layer for **Gridelyx / Gridelyx Studio**. Architecture, requirements, evidence, dependencies, feature decisions and migration state must remain reconstructable without relying on chat history.
 
 ## Mission
 
@@ -17,7 +17,8 @@ Build one coherent cross-edition Minecraft platform that combines:
 - replay, animation, camera, capture and virtual-production tooling;
 - AI-assisted development with auditable, drift-resistant project continuity;
 - community onboarding and an evidence-first contribution model;
-- explicit dependency/toolchain governance so no required program remains tribal knowledge.
+- explicit dependency/toolchain governance so no required program remains tribal knowledge;
+- explicit feature-analysis/decision governance so complex work is decomposed, risk-assessed and sequenced without losing retained scope.
 
 Consumer simplicity and expert transparency must use the same resolver, lockfiles, capability model and evidence state.
 
@@ -30,7 +31,7 @@ Every retained capability must remain represented by either:
 1. implementation/evidence; or
 2. explicit development planning.
 
-A requirement does not disappear because it is difficult, version-fragile or unsupported by a conventional Minecraft/mod-loader API. Such findings may change integration level, schedule, readiness, target coverage or validation burden. Material removal/weakening requires an explicit human-approved superseding decision in `ai/decision-ledger.json`.
+A requirement does not disappear because it is difficult, expensive, version-fragile or unsupported by a conventional Minecraft/mod-loader API. Such findings may change integration level, schedule, readiness, target coverage or validation burden. Material removal/weakening requires an explicit human-approved superseding decision in `ai/decision-ledger.json`.
 
 `tools/chat_requirements_check.py` and Gridelyx continuity CI structurally enforce this contract.
 
@@ -50,9 +51,30 @@ Rules:
 
 `tools/toolchain_requirements_check.py` enforces structural consistency.
 
+## Feature analysis and decision contract
+
+CR-034 is governed by `docs/FEATURE_DECISION_FRAMEWORK.md`, `docs/PROJECT_VALUES.md`, `docs/DEVELOPMENT_MAP.md`, `docs/BENCHMARKING_MATRIX.md`, `docs/templates/FEATURE_EVALUATION_TEMPLATE.md` and `platform/feature-analysis.schema.json`.
+
+For substantial features/architecture, analysis is proportionate to risk and reversibility and includes:
+
+- W5x5x5 repeated positive/inverse Who/What/When/Where/How/Why interrogation;
+- task decomposition and project-values alignment;
+- time/money/energy/support/compatibility cost diagnostics;
+- 10m/10h/10d/10mo/1y/5y/10y horizons and opportunity cost;
+- regret minimisation and reversible-vs-difficult-to-reverse classification;
+- risk register, inversion, pre-mortem and second-order effects;
+- Eisenhower, Venn/overlap and structured brainstorming;
+- first-principles modelling and current benchmark verification;
+- Feynman explanation, MVP and 30/60-minute research timeboxes;
+- asymmetric-risk assessment and working backward;
+- Pareto/80-20, Critical Path Method, Cynefin and Kanban;
+- evidence, rollback/migration and decision triggers.
+
+Cost/priority diagnosis informs sequencing. It does not silently erase retained scope. `tools/feature_planning_check.py` enforces the structural planning contract.
+
 ## Gridelyx identity and migration
 
-`platform/brand.json` is the canonical identity source. Root brand: **Gridelyx**. Integrated suite: **Gridelyx Studio**.
+`platform/brand.json` is the canonical product identity source. Root brand: **Gridelyx**. Integrated suite: **Gridelyx Studio**. `platform/repository-metadata.json` separately records the explicitly requested GitHub repository slug `gridlyx` and desired combined description.
 
 Gridelyx/VFSB source, protocol, ABI, persisted and path identifiers still present in the tree are classified migration compatibility debt, not current branding. `docs/REBRAND_PLAN.md` and `platform/terminology.json` govern the staged migration. Blind replacement across wire/ABI/persisted boundaries is prohibited.
 
@@ -84,9 +106,9 @@ When sources conflict, use this order unless a newer explicit decision says othe
 
 1. explicit current human direction/corrections;
 2. executable code, schemas and reproducible runtime evidence;
-3. locked brand/version/provider/requirements/toolchain manifests;
+3. locked brand/version/provider/requirements/toolchain/feature-analysis manifests;
 4. accepted architecture and decision records;
-5. retained requirements ledger, project plan, roadmap, feature map and TODO state;
+5. retained requirements ledger, project plan, roadmap, development map, feature map and TODO state;
 6. AI handoff/context/index material;
 7. generated summaries, experiments and speculative notes.
 
@@ -123,14 +145,15 @@ Readiness is evidence-bound and can be demoted when upstream APIs, mappings, loa
 13. **Community/contribution** — onboarding, architecture education, support routing, conduct expectations, evidence literacy and ownership/reviewer structures.
 14. **Gridelyx migration** — terminology/source/path/protocol/ABI/persisted migration plus compatibility aliases where required.
 15. **Dependency/toolchain hardening** — version policy, cross-platform compiler/runtime matrix, SBOM/licensing and external-tool provenance.
+16. **Feature analysis/program optimisation** — Feature Decision Packets, critical path, Kanban, benchmark/evidence research, cost/risk/horizon analysis and cross-feature primitive discovery.
 
 ## Work item lifecycle
 
-`PROPOSED -> FRAMED -> DESIGNED -> IMPLEMENTING -> VERIFYING -> ACCEPTED`
+Project-level Kanban uses `Backlog -> Ready -> Doing -> Blocked -> Verifying -> Done`, while engineering maturity may also be described as `PROPOSED -> FRAMED -> DESIGNED -> IMPLEMENTING -> VERIFYING -> ACCEPTED`.
 
-Exceptional states: `BLOCKED`, `DEFERRED`, `REJECTED`, `SUPERSEDED`, `REGRESSED`.
+Exceptional states: `DEFERRED`, `REJECTED`, `SUPERSEDED`, `REGRESSED`.
 
-A work item is not complete merely because source files exist.
+A work item is not complete merely because source files exist. `Done` requires the evidence appropriate to the claimed readiness and synchronized project-control state.
 
 ## Decision protocol
 
@@ -146,7 +169,7 @@ For architecture/compatibility decisions record:
 - rollback/migration route;
 - files/issues/tests affected.
 
-Use `ai/decision-ledger.json` and `docs/DECISIONS.md`.
+Use `ai/decision-ledger.json` and `docs/DECISIONS.md`. Substantial features should additionally carry a Feature Decision Packet.
 
 L5-L8 deep-integration decisions additionally record why shallower mechanisms are insufficient, exact target fingerprints, blast radius, derived-runtime/overlay model, upstream maintenance burden and recovery behavior.
 
@@ -162,25 +185,27 @@ For substantial AI-assisted work:
 
 1. read `AGENTS.md` and `AI_HANDOFF.md`;
 2. identify affected CR IDs in the retained requirements ledger;
-3. inspect brand, requirements and toolchain manifests;
-4. read AI organisation/drift controls and task context map;
-5. inspect authoritative implementation/evidence before maturity claims;
-6. update work state when work spans sessions/agents;
-7. make the smallest coherent change set;
-8. run the relevant verification lane;
-9. update requirements/dependencies/decisions/assumptions/readiness/TODO state when truth changes;
-10. leave a handoff distinguishing completed, verified, unverified, blocked and next work.
+3. use the Feature Decision Packet when the work is substantial/architectural;
+4. inspect brand, repository metadata, requirements, feature-analysis and toolchain manifests;
+5. read AI organisation/drift controls and task context map;
+6. inspect authoritative implementation/evidence before maturity claims;
+7. update work state when work spans sessions/agents;
+8. make the smallest coherent change set;
+9. run the relevant verification lane;
+10. update requirements/dependencies/decisions/assumptions/readiness/TODO/Kanban state when truth changes;
+11. leave a handoff distinguishing completed, verified, unverified, blocked and next work.
 
 ## Drift review cadence
 
 Run a drift review after:
 
-- product/protocol rename;
+- product/protocol/repository rename;
 - loader/Minecraft/Bedrock/API version change;
 - executable/library fingerprint or patch target change;
 - major architecture change;
 - new runtime/language bridge/tool dependency;
 - new/materially changed retained requirement;
+- feature-analysis/critical-path change that materially alters sequencing;
 - readiness promotion/demotion;
 - milestone completion;
 - long-running branch/AI handoff;
@@ -201,7 +226,7 @@ Run a drift review after:
 ## Milestones
 
 ### M0 — Repository/control-plane convergence
-Canonical Gridelyx identity, complete retained-scope ledger, toolchain inventory, AI operating model, drift controls, evidence/readiness model, provider policy, community onboarding and synchronized planning surfaces.
+Canonical Gridelyx identity, complete CR-001..CR-034 retained-scope ledger, feature-analysis/critical-path system, toolchain inventory, AI operating model, drift controls, evidence/readiness model, provider policy, community onboarding and synchronized planning surfaces.
 
 ### M1 — Vanilla launcher
 Desktop shell, supported authentication, Mojang metadata, managed Java, cache, instance lock and reliable vanilla launch.
@@ -237,6 +262,7 @@ Release/control-plane changes require:
 python tools/continuity_check.py
 python tools/chat_requirements_check.py
 python tools/toolchain_requirements_check.py
+python tools/feature_planning_check.py
 python tools/terminology_check.py
 ```
 
@@ -246,10 +272,17 @@ plus subsystem-specific tests.
 
 - `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` — complete retained conversation scope;
 - `platform/chat-requirements.json` — machine-readable requirement/evidence paths;
+- `docs/FEATURE_DECISION_FRAMEWORK.md` — substantial-feature analysis method;
+- `docs/PROJECT_VALUES.md` — values/invariants used by feature analysis;
+- `docs/DEVELOPMENT_MAP.md` — critical path, parallel lanes, horizons and Kanban;
+- `docs/BENCHMARKING_MATRIX.md` — benchmark targets/process;
+- `docs/templates/FEATURE_EVALUATION_TEMPLATE.md` — reusable decision packet;
+- `platform/feature-analysis.schema.json` — machine-readable feature packet contract;
 - `docs/DEPENDENCIES_AND_TOOLCHAIN.md` — dependency/tool documentation;
 - `docs/CAPABILITY_DEPENDENCY_MATRIX.md` — capability-to-prerequisite/validation mapping;
 - `platform/toolchain-requirements.json` — machine-readable tools/libraries;
-- `platform/brand.json` — canonical Gridelyx identity;
+- `platform/brand.json` — canonical Gridelyx product identity;
+- `platform/repository-metadata.json` — requested GitHub slug/description state;
 - `platform/terminology.json` / `docs/REBRAND_PLAN.md` — migration state;
 - `docs/PROJECT_OVERVIEW.md` — product architecture;
 - `docs/PROJECT_STRUCTURE.md` — ownership boundaries;
