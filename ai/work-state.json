@@ -4,14 +4,32 @@
   "active_objectives": [
     {
       "id": "GRIDELYX-SCOPE-001",
-      "objective": "Preserve and implement the complete Gridelyx retained development scope CR-001 through CR-033 with evidence-bound readiness and no silent scope loss.",
+      "objective": "Preserve and implement the complete Gridelyx retained development scope CR-001 through CR-034 with evidence-bound readiness and no silent scope loss.",
       "state": "implementing",
+      "kanban_state": "doing",
       "authoritative_files": [
         "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
         "platform/chat-requirements.json",
         "docs/TODO.md",
         "docs/ROADMAP.md",
+        "docs/DEVELOPMENT_MAP.md",
         "docs/FEATURE_MAP.md"
+      ],
+      "issue": 25
+    },
+    {
+      "id": "GRIDELYX-FEATURE-PLANNING-001",
+      "objective": "Apply the CR-034 Feature Decision Packet, W5x5x5, long-horizon/risk/cost/critical-path and Kanban framework to substantial Gridelyx work as backlog items become Ready.",
+      "state": "implementing",
+      "kanban_state": "doing",
+      "authoritative_files": [
+        "docs/FEATURE_DECISION_FRAMEWORK.md",
+        "docs/PROJECT_VALUES.md",
+        "docs/DEVELOPMENT_MAP.md",
+        "docs/BENCHMARKING_MATRIX.md",
+        "docs/templates/FEATURE_EVALUATION_TEMPLATE.md",
+        "platform/feature-analysis.schema.json",
+        "tools/feature_planning_check.py"
       ],
       "issue": 25
     },
@@ -19,6 +37,7 @@
       "id": "GRIDELYX-BRAND-001",
       "objective": "Complete the staged Gridelyx/VFSB to Gridelyx public/source/path/protocol/ABI/persisted compatibility migration without breaking existing technical consumers.",
       "state": "implementing",
+      "kanban_state": "doing",
       "authoritative_files": [
         "platform/brand.json",
         "platform/terminology.json",
@@ -33,9 +52,24 @@
       "issue": 26
     },
     {
+      "id": "GRIDELYX-REPO-METADATA-001",
+      "objective": "Rename the GitHub repository to IAMACESIRX/gridlyx and apply the canonical combined Gridelyx/Minecraft Advanced Mod Development Kit description without changing product/API brand identity or rewriting Git history.",
+      "state": "blocked",
+      "kanban_state": "blocked",
+      "authoritative_files": [
+        "platform/repository-metadata.json",
+        "platform/brand.json",
+        "docs/ROADMAP.md",
+        "docs/TODO.md"
+      ],
+      "blocker": "The currently available connected GitHub write surface does not expose repository-name/description mutation.",
+      "issue": 28
+    },
+    {
       "id": "GRIDELYX-TOOLCHAIN-001",
       "objective": "Make every Gridelyx compiler, runtime, library, external program and provider prerequisite explicit, reproducible and evidence-linked.",
       "state": "implementing",
+      "kanban_state": "doing",
       "authoritative_files": [
         "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
         "docs/CAPABILITY_DEPENDENCY_MATRIX.md",
@@ -46,7 +80,7 @@
     }
   ],
   "verification": {
-    "structural_check": "Gridelyx continuity CI must pass continuity, requirements, toolchain and staged terminology checks on the current head.",
+    "structural_check": "Gridelyx continuity CI must pass continuity, CR-001..CR-034 requirements, toolchain, feature-planning and staged terminology checks on the current head.",
     "runtime_effect": "Control-plane changes do not by themselves promote Minecraft/Bedrock/runtime feature readiness."
   },
   "handoff_requirements": [
@@ -55,6 +89,8 @@
     "Carry forward unresolved assumptions and blockers.",
     "Do not promote readiness without matching evidence.",
     "Identify affected CR IDs and toolchain changes.",
-    "Keep Gridelyx compatibility migration state explicit until source/protocol/ABI consumers are verified."
+    "Use Feature Decision Packets for substantial work and carry forward Kanban/critical-path state.",
+    "Keep Gridelyx compatibility migration state explicit until source/protocol/ABI consumers are verified.",
+    "Keep the GitHub repository metadata task blocked until the actual gridlyx rename/description mutation is verified."
   ]
 }
