@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 /** Concrete NeoForge/Minecraft target adapter for the neutral reload orchestrator. */
@@ -55,37 +56,47 @@ public final class NeoForgeReloadTargetBindings implements AutoCloseable {
 
     private void reloadServerResources(Path changed, ReloadTargetBindings.ChangeKind change) throws Exception {
         Class<?> hooks = Class.forName(
-                "net.neoforged.neoforge.server.ServerLifecycleHooks", false, applicationClassLoader);
+                "net.neoforged.neoforge.server.ServerLifecycleHooks",
+                false,
+                applicationClassLoader);
         Object server = hooks.getMethod("getCurrentServer").invoke(null);
         if (server == null) {
             throw new IllegalStateException("No active NeoForge MinecraftServer is available for data reload");
         }
 
-        Object repository = server.getClass().getMethod("getPackRepository").invoke(server);
-        Object selected = repository.getClass().getMethod("getSelectedPacks").invoke(repository);
-        if (!(selected instanceof Collection<?> packs)) {
-            throw new IllegalStateException("NeoForge pack repository returned a non-collection selected-pack set");
-        }
+        invokeOnOwnerExecutor(server, () -> {
+            Object repository = server.getClass().getMethod("getPackRepository").invoke(server);
+            Object selected = repository.getClass().getMethod("getSelectedPacks").invoke(repository);
+            if (!(selected instanceof Collection<?> packs)) {
+                throw new IllegalStateException(
+                        "NeoForge pack repository returned a non-collection selected-pack set");
+            }
 
-        List<String> selectedIds = new ArrayList<>(packs.size());
-        for (Object pack : packs) {
-            Object id = pack.getClass().getMethod("getId").invoke(pack);
-            selectedIds.add(Objects.toString(id));
-        }
+            List<String> selectedIds = new ArrayList<>(packs.size());
+            for (Object pack : packs) {
+                Object id = pack.getClass().getMethod("getId").invoke(pack);
+                selectedIds.add(Objects.toString(id));
+            }
 
-        Method reload = findSingleArgumentMethod(server.getClass(), "reloadResources");
-        await(reload.invoke(server, selectedIds));
+            Method reload = findCollectionArgumentMethod(server.getClass(), "reloadResources");
+            return reload.invoke(server, selectedIds);
+        });
     }
 
     private void reloadClientResources(Path changed, ReloadTargetBindings.ChangeKind change) throws Exception {
-        Class<?> minecraft = Class.forName("net.minecraft.client.Minecraft", false, applicationClassLoader);
+        Class<?> minecraft = Class.forName(
+                "net.minecraft.client.Minecraft",
+                false,
+                applicationClassLoader);
         Object client = minecraft.getMethod("getInstance").invoke(null);
         if (client == null) {
             throw new IllegalStateException("Minecraft client is not available for asset reload");
         }
 
-        Method reload = findZeroArgumentMethod(client.getClass(), "reloadResourcePacks");
-        await(reload.invoke(client));
+        invokeOnOwnerExecutor(client, () -> {
+            Method reload = findZeroArgumentMethod(client.getClass(), "reloadResourcePacks");
+            return reload.invoke(client);
+        });
     }
 
     private ActivationStrategy reloadModule(Path path, ReloadTargetBindings.ChangeKind change) throws Exception {
@@ -107,6 +118,53 @@ public final class NeoForgeReloadTargetBindings implements AutoCloseable {
         throw new UnsupportedOperationException("No NeoForge target binding accepts " + path);
     }
 
+    private static void invokeOnOwnerExecutor(Object owner, AsyncAction action) throws Exception {
+        CompletableFuture<Void> completion = new CompletableFuture<>();
+        Method execute = findRunnableArgumentMethod(owner.getClass(), "execute");
+        Runnable task = () -> {
+            try {
+                completeFromResult(action.run(), completion);
+            } catch (InvocationTargetException failure) {
+                completion.completeExceptionally(failure.getCause());
+            } catch (Exception | LinkageError failure) {
+                completion.completeExceptionally(failure);
+            }
+        };
+        execute.invoke(owner, task);
+        await(completion);
+    }
+
+    private static void completeFromResult(Object result, CompletableFuture<Void> completion) {
+        if (result == null) {
+            completion.complete(null);
+            return;
+        }
+        if (result instanceof CompletionStage<?> stage) {
+            stage.whenComplete((unused, failure) -> {
+                if (failure == null) {
+                    completion.complete(null);
+                } else {
+                    completion.completeExceptionally(failure);
+                }
+            });
+            return;
+        }
+        completion.completeExceptionally(new IllegalStateException(
+                "Reload API returned unsupported async result type: " + result.getClass()));
+    }
+
+    private static void await(CompletionStage<?> stage) throws Exception {
+        try {
+            stage.toCompletableFuture().join();
+        } catch (RuntimeException failure) {
+            Throwable cause = failure.getCause();
+            if (cause instanceof Exception exception) {
+                throw exception;
+            }
+            throw failure;
+        }
+    }
+
     private static boolean containsSegment(Path path, String expected) {
         for (Path segment : path) {
             if (segment.toString().toLowerCase(Locale.ROOT).equals(expected)) {
@@ -125,32 +183,28 @@ public final class NeoForgeReloadTargetBindings implements AutoCloseable {
         throw new NoSuchMethodException(type.getName() + "." + name + "()");
     }
 
-    private static Method findSingleArgumentMethod(Class<?> type, String name) throws NoSuchMethodException {
+    private static Method findCollectionArgumentMethod(Class<?> type, String name)
+            throws NoSuchMethodException {
         for (Method method : type.getMethods()) {
-            if (method.getName().equals(name) && method.getParameterCount() == 1) {
+            if (method.getName().equals(name)
+                    && method.getParameterCount() == 1
+                    && method.getParameterTypes()[0].isAssignableFrom(List.class)) {
                 return method;
             }
         }
-        throw new NoSuchMethodException(type.getName() + "." + name + "(<one argument>)");
+        throw new NoSuchMethodException(type.getName() + "." + name + "(Collection)");
     }
 
-    private static void await(Object result) throws Exception {
-        if (result == null) {
-            return;
-        }
-        if (result instanceof CompletionStage<?> stage) {
-            try {
-                stage.toCompletableFuture().join();
-                return;
-            } catch (RuntimeException failure) {
-                Throwable cause = failure.getCause();
-                if (cause instanceof Exception exception) {
-                    throw exception;
-                }
-                throw failure;
+    private static Method findRunnableArgumentMethod(Class<?> type, String name)
+            throws NoSuchMethodException {
+        for (Method method : type.getMethods()) {
+            if (method.getName().equals(name)
+                    && method.getParameterCount() == 1
+                    && method.getParameterTypes()[0].isAssignableFrom(Runnable.class)) {
+                return method;
             }
         }
-        throw new IllegalStateException("Reload API returned unsupported async result type: " + result.getClass());
+        throw new NoSuchMethodException(type.getName() + "." + name + "(Runnable)");
     }
 
     @Override
@@ -158,11 +212,8 @@ public final class NeoForgeReloadTargetBindings implements AutoCloseable {
         modules.close();
     }
 
-    static Exception unwrapInvocationFailure(InvocationTargetException failure) {
-        Throwable cause = failure.getCause();
-        if (cause instanceof Exception exception) {
-            return exception;
-        }
-        return failure;
+    @FunctionalInterface
+    private interface AsyncAction {
+        Object run() throws Exception;
     }
 }
