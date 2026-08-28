@@ -1,153 +1,88 @@
-# Gridelyx rebrand migration plan
+# Gridelyx identity migration completion record
 
-Status: **identity selected; migration in progress**
+Status: **current-tree migration complete; protocol/native boundary advanced to v2**
 
-The replacement root brand is **Gridelyx**. The integrated product suite is **Gridelyx Studio**.
+The canonical root brand is **Gridelyx** and the integrated product suite is **Gridelyx Studio**. `platform/brand.json` is authoritative for machine-readable identity.
 
-Ordinary web/GitHub collision screening performed during selection found no obvious current software/game/company collision for the exact name. That is an engineering naming screen only, **not legal trademark clearance**. Public/commercial release still requires appropriate trademark, business-name, domain and social-handle checks.
-
-## Canonical identity record
-
-The authoritative machine-readable record is `../platform/brand.json`.
+## Canonical identity
 
 ```text
 ROOT_BRAND=Gridelyx
 DISPLAY_NAME=Gridelyx Studio
 CANONICAL_CASE=Gridelyx
-REPOSITORY_SLUG=gridelyx              # desired future public slug; current GitHub repo path remains unchanged until migration step
+REPOSITORY_SLUG=gridelyx
 SHORT_NAME=gridelyx
 PROTOCOL_PREFIX=GLYX
-PACKAGE_NAMESPACE=dev.gridelyx        # engineering target namespace; domain/trademark ownership is a separate legal concern
+PACKAGE_NAMESPACE=dev.gridelyx
 EXECUTABLE_NAME=gridelyx
 DATA_ROOT_NAME=Gridelyx
 NATIVE_LIBRARY=gridelyx_native
 NATIVE_SYMBOL_PREFIX=gridelyx_
+BRIDGE_MAGIC=GLXB
+BRIDGE_PROTOCOL_VERSION=2
+NATIVE_TRANSPORT_MAGIC=GLXM
+NATIVE_ABI_VERSION=2
 ```
 
-### Compatibility identifiers
+## Migration result
 
-The current bridge magic `VFSB` and existing `gridelyx_*`/`Gridelyx*` ABI/source/persisted identifiers are **legacy compatibility state**, not current branding. They must not be blindly replaced because native symbols, serialized data, bridge magic and class/file names can be compatibility boundaries.
+The current project-owned tree has been migrated across:
 
-The target future bridge magic is recorded as `GLXB`, but changing it requires a versioned bridge migration and compatibility tests.
-
-## Why migration is staged
-
-Retired terminology exists across:
-
-- README and architecture documentation;
+- public documentation and community entrypoints;
+- Java/Rust/C/C++ symbols and package metadata;
+- native library and executable targets;
+- Bedrock scripts, manifests and runtime identifiers;
+- schemas and serialized project metadata;
+- binary bridge and shared-memory protocol identities;
 - workflow/job names;
-- Java/Rust/C/C++ symbols;
-- schemas and serialized project files;
-- protocol names, magic values and ABI functions;
-- package/module identifiers;
-- generated templates/examples;
-- Bedrock script filenames/content;
-- issue/PR templates;
-- AI context, indexes and handoffs;
-- filenames/directories;
-- tests that assert terminology;
-- release/package metadata.
+- AI context, handoff, decision and assumption state;
+- tests and validation tooling;
+- tracked filenames and paths.
 
-A blind search-and-replace can make the tree look renamed while breaking wire compatibility, native linkage or persisted projects. Gridelyx therefore migrates by identifier class.
+The protocol/native migration is deliberately represented as a breaking version boundary rather than an ambiguous in-place rename. Gridelyx bridge protocol v2 uses `GLXB`; the native shared-memory transport uses `GLXM`; the native ABI exports `gridelyx_*` symbols at ABI version 2.
 
-## Inventory classes
+## Enforcement
 
-Every retired-brand occurrence is classified as:
+`platform/terminology.json` and `tools/terminology_check.py` enforce Gridelyx identity across the whole current project-owned tree, including tracked path names and textual content. Build/cache/binary locations are excluded from source terminology scanning because they are generated or non-text artefacts.
 
-- **A — public terminology:** docs, UI, workflow/display names, examples;
-- **B — project-owned source identifier:** classes, functions, modules, package metadata, tests;
-- **C — persistent compatibility identifier:** schemas, config keys, instance/project data, protocol identifiers;
-- **D — binary/ABI identifier:** C ABI symbols, bridge magic, IPC/native names;
-- **E — filename/path:** tracked project-owned paths;
-- **F — historical/external provenance:** factual historical/upstream references that must not be falsified;
-- **G — generated/cache artifact:** regenerated after source migration.
+Any future compatibility adapter for a pre-v2 consumer must be explicit, versioned, isolated from the canonical API and covered by interoperability/rollback evidence. It must not redefine the current project identity.
 
-A/B/E normally migrate directly after references are updated. C/D require migration/versioning analysis. F remains only where historically necessary. G is regenerated.
+## Validation requirements
 
-## Migration phases
+Before release, run:
 
-### Phase 0 — Select — COMPLETE
+```bash
+python tools/terminology_check.py
+python tools/continuity_check.py
+python tools/chat_requirements_check.py
+python tools/toolchain_requirements_check.py
+python tools/feature_planning_check.py
+python tools/bedrock_check.py
+python tools/validate_platform.py
+cargo test --manifest-path studio/Cargo.toml --all-targets
+cargo test --manifest-path native/rust/Cargo.toml
+cmake -S native -B build/native -DCMAKE_BUILD_TYPE=Release
+cmake --build build/native --config Release
+cd templates/neoforge-26.2 && ./gradlew --no-daemon -Penable_advanced_engines=true spotlessCheck check build
+```
 
-- [x] Screen candidate.
-- [x] Select Gridelyx.
-- [x] Freeze canonical identity in `platform/brand.json`.
-- [x] Record human decision in the decision ledger.
+The advanced polyglot smoke lane additionally exercises the Gridelyx runtime smoke suite, bridge round trip, reload orchestrator routing and production timeline primitives.
 
-### Phase 1 — Inventory — IN PROGRESS
+## Repository metadata
 
-- [x] Identify major legacy public/source/protocol/native path families from the recursive repository tree.
-- [ ] Produce a complete machine-readable retired-term occurrence inventory.
-- [ ] Classify every occurrence A-G.
-- [ ] Identify persisted consumers of VFSB/native names before changing them.
-
-### Phase 2 — Public/current-tree terminology
-
-- [ ] Rename root README/product docs to Gridelyx.
-- [ ] Rename AI handoff/context/control material.
-- [ ] Rename workflow/job/check display names.
-- [ ] Rename community docs and issue/PR user-facing strings.
-- [ ] Rename Studio/Creator/Production UI-facing strings.
-- [ ] Update repository description/topics where supported.
-
-New project-owned documentation should use Gridelyx immediately even while compatibility migration remains unfinished.
-
-### Phase 3 — Source identifiers
-
-Migrate project-owned classes/types/functions/constants/modules, including legacy `Gridelyx*` Java classes, Rust crate/package names, Bedrock script names, C/C++ headers/sources and tests. Compile/static/native/Bedrock checks must run after each compatibility boundary rather than one giant replacement.
-
-### Phase 4 — Persistent/protocol/ABI migration
-
-For every persisted/wire/ABI identifier choose one:
-
-- direct rename because there is provably no consumer;
-- versioned migration reader/writer;
-- temporary compatibility alias;
-- intentionally retained legacy wire token with explicit removal policy.
-
-`VFSB` is in this class. It remains active until a Gridelyx bridge-protocol migration proves safe interoperability.
-
-### Phase 5 — Terminology enforcement
-
-Add and maintain:
-
-- `platform/terminology.json` containing canonical and retired terms;
-- a terminology checker;
-- CI enforcement that becomes stricter as migration phases complete.
-
-During migration, only explicitly classified compatibility/provenance occurrences may remain. After migration, public/current project terminology must contain no unexplained retired brand usage.
-
-### Phase 6 — Regenerate and validate
-
-- regenerate AI repository indexes/docs;
-- rebuild Java/Studio/native/Bedrock targets;
-- run continuity, requirements, toolchain, platform, Bedrock, native and security checks;
-- re-run full-tree terminology inventory;
-- inspect package/release metadata;
-- test persisted/protocol migration paths.
-
-### Phase 7 — Repository metadata
-
-Where supported and approved:
-
-- rename repository slug to the chosen Gridelyx slug;
-- update description/topics;
-- update release/package names;
-- update external/community links;
-- verify GitHub redirects instead of assuming them.
+The source tree is now Gridelyx-first. Repository slug/description/topics are independent GitHub metadata operations and may be changed separately without altering source compatibility.
 
 ## Git history
 
-A clean Gridelyx current tree and a rewritten Git history are separate operations. Removing Gridelyx from historical commits would rewrite history, invalidate commit SHAs and disrupt clones/forks. It is not part of ordinary rebranding without separate explicit approval.
+This migration applies to the current tree. Historical commits are not rewritten; rewriting history would invalidate commit SHAs and disrupt existing clones/forks. Historical identity is therefore a Git-history concern rather than current-source terminology.
 
 ## Exit criteria
 
-The migration is complete when:
+The migration is considered complete when:
 
-- Gridelyx identity values are canonical;
-- current tracked public terminology uses Gridelyx consistently;
-- every persistent/ABI legacy identifier has migrated or has an explicit compatibility exception;
-- terminology CI passes at strict mode;
-- AI/context indexes contain no accidental retired branding;
-- Java/Studio/native/Bedrock builds and relevant runtime validation pass;
-- repository metadata is updated;
-- a final tracked-tree scan produces no unexplained Gridelyx occurrence.
+- `platform/brand.json` exposes only canonical Gridelyx identity;
+- native ABI v2 and GLXB/GLXM protocol identities are built and validated;
+- Bedrock and Java bridges use the v2 identifiers;
+- strict terminology scanning passes;
+- Java, Studio, native and Bedrock validation passes;
+- no current project-owned path or text reintroduces the retired identifier.
