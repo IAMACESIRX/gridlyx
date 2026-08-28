@@ -11,9 +11,15 @@ REQUIRED_PATHS = [
     "AI_HANDOFF.md",
     "docs/PROJECT_PLAN.md",
     "docs/CHAT_REQUIREMENTS_TRACEABILITY.md",
+    "docs/FEATURE_DECISION_FRAMEWORK.md",
+    "docs/PROJECT_VALUES.md",
+    "docs/DEVELOPMENT_MAP.md",
+    "docs/BENCHMARKING_MATRIX.md",
     "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
     "platform/brand.json",
+    "platform/repository-metadata.json",
     "platform/chat-requirements.json",
+    "platform/feature-analysis.schema.json",
     "platform/toolchain-requirements.json",
     "ai/AI_ORGANISATION.md",
     "ai/DRIFT_MITIGATION.md",
@@ -21,11 +27,13 @@ REQUIRED_PATHS = [
     "ai/decision-ledger.json",
     "ai/assumption-ledger.json",
     "ai/context-map.json",
+    "tools/feature_planning_check.py",
 ]
 
 HANDOFF_HEADINGS = [
     "## Source-of-truth order",
     "## Non-negotiable invariants",
+    "## Feature-planning protocol",
     "## Session start protocol",
     "## Session end protocol",
 ]
@@ -64,6 +72,32 @@ def validate_brand() -> None:
         raise SystemExit("FAIL: platform/brand.json must identify Gridelyx / Gridelyx Studio")
     if data.get("legacy_root") != "Gridelyx":
         raise SystemExit("FAIL: platform/brand.json must retain the retired root for migration checks")
+
+    metadata = load_json("platform/repository-metadata.json")
+    if metadata.get("product_brand") != "Gridelyx":
+        raise SystemExit("FAIL: repository metadata must retain Gridelyx as product brand")
+    if metadata.get("requested_repository_slug") != "gridlyx":
+        raise SystemExit("FAIL: requested GitHub repository slug must be gridlyx")
+
+
+def validate_requirements() -> None:
+    data = load_json("platform/chat-requirements.json")
+    requirements = data.get("requirements")
+    if not isinstance(requirements, list):
+        raise SystemExit("FAIL: chat requirements must contain a list")
+    ids = {item.get("id") for item in requirements if isinstance(item, dict)}
+    for number in range(1, 35):
+        expected = f"CR-{number:03d}"
+        if expected not in ids:
+            raise SystemExit(f"FAIL: retained scope missing {expected}")
+
+
+def validate_feature_analysis() -> None:
+    schema = load_json("platform/feature-analysis.schema.json")
+    required = set(schema.get("required", []))
+    for field in ("w5x5x5", "cost", "time_horizons", "risks", "critical_path", "cynefin", "rollback"):
+        if field not in required:
+            raise SystemExit(f"FAIL: feature-analysis schema must require {field}")
 
 
 def validate_work_state() -> None:
@@ -124,11 +158,13 @@ def validate_handoff() -> None:
 def main() -> int:
     require_paths()
     validate_brand()
+    validate_requirements()
+    validate_feature_analysis()
     validate_work_state()
     validate_ledgers()
     validate_context_map()
     validate_handoff()
-    print("PASS: Gridelyx AI continuity, brand, requirements and drift-control structure is coherent")
+    print("PASS: Gridelyx AI continuity, brand, retained scope, feature planning and drift-control structure is coherent")
     return 0
 
 
