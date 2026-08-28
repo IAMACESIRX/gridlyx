@@ -3,13 +3,13 @@
   "assumptions": [
     {
       "id": "ASM-2026-08-28-001",
-      "status": "open",
+      "status": "resolved",
       "scope": "rebrand",
-      "statement": "The replacement brand can be selected without preserving the current Gridelyx-derived public terminology.",
+      "statement": "The Gridelyx identity migration may use an explicit breaking protocol/native ABI v2 boundary rather than retaining pre-v2 project-owned public/source identifiers in the current tree.",
       "confidence": "high",
-      "validation_route": "Select a replacement brand, inventory persistent protocol/data identifiers, then determine which identifiers can be renamed immediately and which require migration aliases.",
-      "review_trigger": "Replacement brand selected",
-      "impact_if_false": "Some existing identifiers may require compatibility aliases or staged migration rather than immediate deletion."
+      "validation_route": "Validate strict whole-tree terminology, GLXB/GLXM v2 identity, Java/native/Bedrock builds and rollback/recovery documentation.",
+      "review_trigger": "A compatibility adapter for a pre-v2 consumer is proposed",
+      "impact_if_false": "An isolated versioned compatibility adapter may be required without changing the canonical Gridelyx v2 identity."
     },
     {
       "id": "ASM-2026-08-28-002",
@@ -17,8 +17,8 @@
       "scope": "brand-clearance",
       "statement": "A web/GitHub collision screen can identify obvious existing uses but cannot prove trademark, company-name, domain or worldwide legal availability.",
       "confidence": "high",
-      "validation_route": "For the final candidate, perform jurisdiction-appropriate trademark/business/domain clearance before commercial release.",
-      "review_trigger": "Final brand candidate chosen",
+      "validation_route": "Perform jurisdiction-appropriate trademark/business/domain clearance before commercial release.",
+      "review_trigger": "Public or commercial Gridelyx release preparation",
       "impact_if_false": "A name considered clear from ordinary search could still conflict legally or commercially."
     }
   ]
