@@ -8,6 +8,8 @@ Canonical machine-readable mirror: `../platform/chat-requirements.json`.
 
 Canonical dependency/tool inventory: `DEPENDENCIES_AND_TOOLCHAIN.md` and `../platform/toolchain-requirements.json`.
 
+Canonical feature-analysis system: `FEATURE_DECISION_FRAMEWORK.md`, `DEVELOPMENT_MAP.md` and `../platform/feature-analysis.schema.json`.
+
 ## Brand state
 
 The selected root brand is **Gridelyx** and the integrated suite is **Gridelyx Studio**. Previous Gridelyx terminology is retired project branding. Existing `VFSB`/`gridelyx_*` protocol, ABI, persisted or source identifiers are temporary compatibility/migration debt and must be changed through the versioned rebrand plan rather than blind replacement.
@@ -56,7 +58,7 @@ Retain JUnit/tests/mocks, ArchUnit architecture tests, NeoForge GameTest/headles
 
 ### CR-009 — Full project planning, issue tracking and development management — implemented
 
-Retain project overview, full structure/ownership map, roadmap, milestones, feature/readiness map, detailed TODO, GitHub Issues/PR project workflow, decisions, assumptions, active work/recovery state, requirements-to-evidence traceability, community onboarding, human contributor docs, AI handoff and efficient repository indexing/context consumption.
+Retain project overview, full structure/ownership map, roadmap, milestones, feature/readiness map, detailed TODO, development/critical-path map, GitHub Issues/PR project workflow, decisions, assumptions, active work/recovery state, requirements-to-evidence traceability, community onboarding, human contributor docs, AI handoff and efficient repository indexing/context consumption.
 
 ### CR-010 — Ground-up/top-down Polyloader and Unified Abstraction Layer — framework
 
@@ -154,6 +156,10 @@ Root brand **Gridelyx** and suite **Gridelyx Studio** are selected. Retain a fro
 
 Retain a machine-readable and human-readable inventory for every core/subsystem/optional/reference dependency: Java, Gradle, ModDevGradle, Minecraft/NeoForge, ASM, LWJGL, GraalVM, Spotless, Checkstyle, JUnit, ArchUnit, Python, Rust/Cargo, CMake/C++ compilers, Go, .NET/C#, Docker/Dev Containers, FFmpeg/encoder tooling, decompiler integration, Bedrock targets, MCP/AI adapters, provider APIs and the exact reference vault. Known versions must be pinned; unpinned tools must be explicitly marked and receive release-version policy before support claims.
 
+### CR-034 — Advanced feature decision, W5x5x5 and long-horizon planning system — implemented
+
+Retain the Gridelyx Feature Decision Packet process for substantial features. It includes repeated five-level interrogation of **Who, What, When, Where, How and Why**, plus inverse **Who not, What isn't, When isn't, Where isn't, How not and Why isn't**; five analysis perspectives and evidence depths; task decomposition; project-values alignment; cost/time/money/energy diagnostics; 10-minute, 10-hour, 10-day, 10-month, 1-year, 5-year and 10-year horizons; opportunity cost; regret minimisation; reversible-vs-irreversible decisions; risk registers; inversion; second-order thinking; Eisenhower classification; Venn/overlap analysis; structured brainstorming; first-principles thinking; benchmarking; Feynman explanation; MVP; 30/60-minute research timeboxes; pre-mortem; asymmetric-risk analysis; working backward; Pareto/80-20; Critical Path Method; Cynefin; and Kanban. This framework guides sequencing and architecture but does not automatically delete retained features because they are expensive or difficult.
+
 ## Coverage rule
 
 Every capability requested in this development conversation must have either:
@@ -165,4 +171,4 @@ Difficulty, absence of a normal mod/API surface, or lack of current validation d
 
 ## Synchronization rule
 
-When implementation/planning paths move, update this file and `../platform/chat-requirements.json`. When tool requirements change, update `DEPENDENCIES_AND_TOOLCHAIN.md` and `../platform/toolchain-requirements.json`. When readiness changes, update `FEATURE_MAP.md`/target manifests only after evidence exists. Broad AI work must consult this ledger through `../ai/context-map.json`.
+When implementation/planning paths move, update this file and `../platform/chat-requirements.json`. When tool requirements change, update `DEPENDENCIES_AND_TOOLCHAIN.md` and `../platform/toolchain-requirements.json`. When feature-planning policy changes, update `FEATURE_DECISION_FRAMEWORK.md`, `DEVELOPMENT_MAP.md`, the feature-analysis schema and issue template. When readiness changes, update `FEATURE_MAP.md`/target manifests only after evidence exists. Broad AI work must consult this ledger through `../ai/context-map.json`.
