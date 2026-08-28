@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Convert resolvable documentation link targets into explicit clickable Markdown links.
+"""Convert resolvable documentation targets into explicit clickable Markdown links.
 
 The linkifier is intentionally conservative. It rewrites prose references only and
-skips fenced code, existing Markdown links/images, HTML href/src attributes, and
-Markdown autolinks. Supported targets include:
+skips fenced code, existing Markdown links/images, HTML href/src attributes,
+Markdown autolinks, and reference-style link definitions. Supported targets include:
 
 - repository files and directories, regardless of extension;
 - inline-code repository paths;
 - raw http:// and https:// URLs;
-- raw www. addresses;
-- inline-code web addresses.
+- raw www. addresses and common bare-domain addresses;
+- raw email addresses;
+- inline-code web/email addresses.
 
 Visible text is preserved. For example `` `tools/check.py` `` becomes
 ``[`tools/check.py`](tools/check.py)`` and ``https://example.com`` becomes
@@ -32,18 +33,35 @@ from urllib.parse import unquote
 ROOT = Path(__file__).resolve().parents[1]
 
 ANCHOR = r"(?:#[A-Za-z0-9_.%:/?&=+~-]+)?"
+EXTENSIONLESS_REPO_NAMES = (
+    r"README|LICENSE|NOTICE|CONTRIBUTING|CODE_OF_CONDUCT|SECURITY|SAFETY|"
+    r"SUPPORT|CHANGELOG|Dockerfile|Makefile|gradlew|gradlew\.bat"
+)
 REPO_REF_BODY = (
-    r"(?:"
-    r"(?:\.\.?/)?(?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+/?"
-    r"|(?:\.\.?/)?[A-Za-z0-9_.-]+/"
-    r"|[A-Za-z0-9_.-]+\.[A-Za-z0-9_.-]+"
-    r")"
+    rf"(?:"
+    rf"(?:\.\.?/)?(?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+/?"
+    rf"|(?:\.\.?/)?[A-Za-z0-9_.-]+/"
+    rf"|[A-Za-z0-9_.-]+\.[A-Za-z0-9_.-]+"
+    rf"|(?:{EXTENSIONLESS_REPO_NAMES})"
+    rf")"
 )
 REPO_REF_RE = re.compile(rf"(?P<path>{REPO_REF_BODY}{ANCHOR})")
 INLINE_CODE_REPO_REF_RE = re.compile(rf"`(?P<path>{REPO_REF_BODY}{ANCHOR})`")
-INLINE_CODE_URL_RE = re.compile(r"`(?P<url>(?:https?://|www\.)[^`\s]+)`", re.IGNORECASE)
-RAW_URL_RE = re.compile(r"(?P<url>(?:https?://|www\.)[^\s<>`]+)", re.IGNORECASE)
+
+COMMON_TLDS = (
+    r"com|org|net|io|dev|app|ai|co|edu|gov|info|biz|me|tech|cloud|site|"
+    r"online|xyz|gg|au|uk|us|ca|nz|de|fr|jp"
+)
+BARE_DOMAIN = rf"(?:[A-Za-z0-9](?:[A-Za-z0-9-]{{0,62}}[A-Za-z0-9])?\.)+(?:{COMMON_TLDS})"
+WEB_TARGET_BODY = rf"(?:https?://|www\.|{BARE_DOMAIN})(?:[^\s<>`]*)"
+INLINE_CODE_URL_RE = re.compile(rf"`(?P<url>{WEB_TARGET_BODY})`", re.IGNORECASE)
+RAW_URL_RE = re.compile(rf"(?P<url>{WEB_TARGET_BODY})", re.IGNORECASE)
+EMAIL_BODY = r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,63}"
+INLINE_CODE_EMAIL_RE = re.compile(rf"`(?P<email>{EMAIL_BODY})`", re.IGNORECASE)
+RAW_EMAIL_RE = re.compile(rf"(?<![A-Z0-9._%+-])(?P<email>{EMAIL_BODY})(?![A-Z0-9._%+-])", re.IGNORECASE)
+
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
+REFERENCE_DEFINITION_RE = re.compile(r"^\s{0,3}\[[^\]]+\]:\s*\S+")
 
 SKIP_DIRS = {
     ".git",
@@ -107,12 +125,15 @@ def protected_spans(line: str) -> list[tuple[int, int]]:
     """Return spans that should never be rewritten on this line."""
     spans: list[tuple[int, int]] = []
 
-    for match in re.finditer(r"!?\[[^\]]*\]\([^)]*\)", line):
+    # Existing inline Markdown links/images.
+    for match in re.finditer(r"!?\[[^\]]*\]\((?:[^()]|\([^)]*\))*\)", line):
         spans.append(match.span())
 
-    for match in re.finditer(r"<https?://[^>]+>|<www\.[^>]+>", line, re.IGNORECASE):
+    # Markdown autolinks.
+    for match in re.finditer(r"<(?:https?://|www\.|mailto:)[^>]+>", line, re.IGNORECASE):
         spans.append(match.span())
 
+    # HTML attributes containing addresses.
     for match in re.finditer(r"(?:href|src)\s*=\s*[\"'][^\"']+[\"']", line, re.IGNORECASE):
         spans.append(match.span())
 
@@ -124,15 +145,31 @@ def inside_any(start: int, end: int, spans: list[tuple[int, int]]) -> bool:
 
 
 def split_url_suffix(url: str) -> tuple[str, str]:
+    """Keep prose punctuation and unmatched closing delimiters outside the URL."""
     suffix = ""
     while url and url[-1] in TRAILING_URL_PUNCTUATION:
         suffix = url[-1] + suffix
         url = url[:-1]
+
+    pairs = ((")", "("), ("]", "["), ("}", "{"))
+    changed = True
+    while url and changed:
+        changed = False
+        for closing, opening in pairs:
+            if url.endswith(closing) and url.count(closing) > url.count(opening):
+                suffix = closing + suffix
+                url = url[:-1]
+                changed = True
+                break
+
     return url, suffix
 
 
 def url_href(written: str) -> str:
-    return written if written.lower().startswith(("http://", "https://")) else "https://" + written
+    lower = written.lower()
+    href = written if lower.startswith(("http://", "https://")) else "https://" + written
+    # Parentheses are legal URL characters but awkward in Markdown destinations.
+    return href.replace("(", "%28").replace(")", "%29")
 
 
 def linkify_inline_code_urls(line: str) -> str:
@@ -147,6 +184,23 @@ def linkify_inline_code_urls(line: str) -> str:
             continue
         output.append(line[cursor : match.start()])
         output.append(f"[`{written}`]({url_href(written)}){suffix}")
+        cursor = match.end()
+    if cursor == 0:
+        return line
+    output.append(line[cursor:])
+    return "".join(output)
+
+
+def linkify_inline_code_emails(line: str) -> str:
+    spans = protected_spans(line)
+    output: list[str] = []
+    cursor = 0
+    for match in INLINE_CODE_EMAIL_RE.finditer(line):
+        if inside_any(match.start(), match.end(), spans):
+            continue
+        email = match.group("email")
+        output.append(line[cursor : match.start()])
+        output.append(f"[`{email}`](mailto:{email})")
         cursor = match.end()
     if cursor == 0:
         return line
@@ -186,6 +240,8 @@ def linkify_raw_urls(line: str) -> str:
     for match in RAW_URL_RE.finditer(line):
         if inside_any(match.start(), match.end(), spans):
             continue
+        if match.start() > 0 and line[match.start() - 1] in "@/":
+            continue
 
         written, suffix = split_url_suffix(match.group("url"))
         if not written:
@@ -201,9 +257,29 @@ def linkify_raw_urls(line: str) -> str:
     return "".join(output)
 
 
+def linkify_raw_emails(line: str) -> str:
+    spans = protected_spans(line)
+    for match in re.finditer(r"`[^`]*`", line):
+        spans.append(match.span())
+
+    output: list[str] = []
+    cursor = 0
+    for match in RAW_EMAIL_RE.finditer(line):
+        if inside_any(match.start(), match.end(), spans):
+            continue
+        email = match.group("email")
+        output.append(line[cursor : match.start()])
+        output.append(f"[{email}](mailto:{email})")
+        cursor = match.end()
+
+    if cursor == 0:
+        return line
+    output.append(line[cursor:])
+    return "".join(output)
+
+
 def linkify_plain_repo_refs(source: Path, line: str) -> str:
     spans = protected_spans(line)
-
     for match in re.finditer(r"`[^`]*`", line):
         spans.append(match.span())
 
@@ -212,7 +288,6 @@ def linkify_plain_repo_refs(source: Path, line: str) -> str:
     for match in REPO_REF_RE.finditer(line):
         if inside_any(match.start(), match.end(), spans):
             continue
-
         if match.start() > 0 and line[match.start() - 1] in "@:/":
             continue
 
@@ -243,13 +318,15 @@ def transform(source: Path, text: str) -> str:
             in_fence = not in_fence
             output.append(line)
             continue
-        if in_fence:
+        if in_fence or REFERENCE_DEFINITION_RE.match(line):
             output.append(line)
             continue
 
         newline = linkify_inline_code_urls(line)
+        newline = linkify_inline_code_emails(newline)
         newline = linkify_inline_code_repo_refs(source, newline)
         newline = linkify_raw_urls(newline)
+        newline = linkify_raw_emails(newline)
         newline = linkify_plain_repo_refs(source, newline)
         output.append(newline)
 
@@ -260,13 +337,13 @@ def validate_generated_repo_links(source: Path, text: str) -> list[str]:
     """Validate local Markdown destinations that look like repository references."""
     errors: list[str] = []
     in_fence = False
-    link_re = re.compile(r"!?\[[^\]]*\]\((?P<dest>[^)]+)\)")
+    link_re = re.compile(r"!?\[[^\]]*\]\((?P<dest>(?:[^()]|\([^)]*\))+)\)")
 
     for line_number, line in enumerate(text.splitlines(), start=1):
         if FENCE_RE.match(line):
             in_fence = not in_fence
             continue
-        if in_fence:
+        if in_fence or REFERENCE_DEFINITION_RE.match(line):
             continue
 
         for match in link_re.finditer(line):
