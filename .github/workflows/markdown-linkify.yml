@@ -15,11 +15,10 @@ permissions:
 
 jobs:
   linkify:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Check out branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: gridelyx-rebrand-reload-orchestrator
           fetch-depth: 0
