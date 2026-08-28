@@ -35,6 +35,7 @@
     {"id":"CR-030","title":"Additive deep integration, patch manager and engine augmentation","state":"planned","paths":["docs/DEEP_INTEGRATION_ARCHITECTURE.md","docs/PROJECT_PLAN.md","ai/decision-ledger.json"]},
     {"id":"CR-031","title":"Community onboarding and collaboration documentation","state":"implemented","paths":["COMMUNITY.md","CONTRIBUTING.md","CODE_OF_CONDUCT.md","SUPPORT.md","docs/community"]},
     {"id":"CR-032","title":"Gridelyx identity and complete retired-terminology migration","state":"transition","paths":["platform/brand.json","platform/terminology.json","docs/REBRAND_PLAN.md","tools/terminology_check.py","ai/decision-ledger.json"]},
-    {"id":"CR-033","title":"Complete dependency, prerequisite, tool and external-program inventory","state":"mixed","paths":["docs/DEPENDENCIES_AND_TOOLCHAIN.md","docs/CAPABILITY_DEPENDENCY_MATRIX.md","platform/toolchain-requirements.json","tools/toolchain_requirements_check.py","studio/providers/providers.json"]}
+    {"id":"CR-033","title":"Complete dependency, prerequisite, tool and external-program inventory","state":"mixed","paths":["docs/DEPENDENCIES_AND_TOOLCHAIN.md","docs/CAPABILITY_DEPENDENCY_MATRIX.md","platform/toolchain-requirements.json","tools/toolchain_requirements_check.py","studio/providers/providers.json"]},
+    {"id":"CR-034","title":"Advanced feature decision, W5x5x5 and long-horizon planning system","state":"implemented","paths":["docs/FEATURE_DECISION_FRAMEWORK.md","docs/PROJECT_VALUES.md","docs/DEVELOPMENT_MAP.md","docs/BENCHMARKING_MATRIX.md","docs/templates/FEATURE_EVALUATION_TEMPLATE.md","platform/feature-analysis.schema.json","tools/feature_planning_check.py",".github/ISSUE_TEMPLATE/feature-evaluation.yml"]}
   ]
 }
