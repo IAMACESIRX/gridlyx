@@ -75,9 +75,11 @@ def main() -> None:
     if brand.get("bedrock_plane") != "Gridelyx Bedrock Runtime":
         fail("canonical Bedrock plane name is not Gridelyx Bedrock Runtime")
     if brand.get("native_symbol_prefix") != "gridelyx_":
-        fail("canonical future native ABI prefix is not gridelyx_")
-    if brand.get("bridge_magic_status") != "legacy_compatibility_identifier_pending_protocol_migration":
-        fail("legacy bridge magic must remain explicitly classified during migration")
+        fail("canonical native ABI prefix is not gridelyx_")
+    if brand.get("bridge_magic") != "GLXB":
+        fail("canonical bridge magic is not GLXB")
+    if brand.get("bridge_protocol_version") != 2:
+        fail("canonical bridge protocol version is not 2")
 
     capabilities = load_json("platform/bedrock-capabilities.json")
     if capabilities.get("plane") != "gridelyx-bedrock":
@@ -120,16 +122,6 @@ def main() -> None:
     except ValueError as exc:
         fail(f"invalid Bedrock pack UUID: {exc}")
 
-    forbidden = "madk_"
-    for path in (ROOT / "native").rglob("*"):
-        if not path.is_file() or path.suffix.lower() not in {".h", ".hpp", ".c", ".cc", ".cpp", ".rs", ".toml", ".md"}:
-            continue
-        if forbidden in path.read_text(encoding="utf-8", errors="ignore"):
-            fail(f"legacy MADK native symbol remains in {path.relative_to(ROOT)}")
-
-    # These Gridelyx-prefixed symbols are explicitly legacy compatibility ABI during the
-    # staged Gridelyx migration. They remain required until Issue #26 lands a versioned ABI
-    # transition with interoperability/rollback evidence.
     header = (ROOT / "native/cpp/include/gridelyx_native.h").read_text(encoding="utf-8")
     for symbol in (
         "gridelyx_abi_version",
@@ -139,9 +131,24 @@ def main() -> None:
         "gridelyx_shm_snapshot",
     ):
         if symbol not in header:
-            fail(f"missing legacy compatibility native bridge symbol {symbol}")
+            fail(f"missing Gridelyx native bridge symbol {symbol}")
 
-    print("PASS: Gridelyx Studio Bedrock manifests, capability plane, native compatibility bridge and brand invariants")
+    codec = (ROOT / "templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/bedrock/BedrockBridgeCodec.java").read_text(encoding="utf-8")
+    if "0x474C5842" not in codec or "VERSION = 2" not in codec:
+        fail("Java Bedrock bridge is not on GLXB protocol v2")
+
+    retired = "".join(chr(value) for value in (118, 111, 120, 101, 108, 102, 111, 114, 103, 101))
+    for base in (ROOT / "native", ROOT / "bedrock"):
+        for path in base.rglob("*"):
+            if not path.is_file():
+                continue
+            if retired in path.name.lower():
+                fail(f"retired product identifier remains in path {path.relative_to(ROOT)}")
+            if path.suffix.lower() in {".h", ".hpp", ".c", ".cc", ".cpp", ".rs", ".toml", ".md", ".json", ".js", ".lang", ".yml", ".yaml"}:
+                if retired in path.read_text(encoding="utf-8", errors="ignore").lower():
+                    fail(f"retired product identifier remains in {path.relative_to(ROOT)}")
+
+    print("PASS: Gridelyx Studio Bedrock manifests, GLXB v2 bridge, native ABI and brand invariants")
 
 
 if __name__ == "__main__":
