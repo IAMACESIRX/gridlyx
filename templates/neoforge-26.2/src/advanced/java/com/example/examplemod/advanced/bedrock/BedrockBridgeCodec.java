@@ -5,8 +5,8 @@ import java.nio.ByteOrder;
 import java.util.zip.CRC32;
 
 public final class BedrockBridgeCodec {
-    public static final int MAGIC = 0x56465342; // VFSB
-    public static final short VERSION = 1;
+    public static final int MAGIC = 0x474C5842; // GLXB
+    public static final short VERSION = 2;
     private static final int HEADER_BYTES = Integer.BYTES
             + Short.BYTES
             + Short.BYTES
