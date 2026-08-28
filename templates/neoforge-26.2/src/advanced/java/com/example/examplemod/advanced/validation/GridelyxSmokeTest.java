@@ -4,15 +4,21 @@ import com.example.examplemod.advanced.assets.DynamicModelRegistry;
 import com.example.examplemod.advanced.assets.DynamicTextureRegistry;
 import com.example.examplemod.advanced.assets.MeshAsset;
 import com.example.examplemod.advanced.assets.TextureAsset;
+import com.example.examplemod.advanced.polyloader.ActivationStrategy;
 import com.example.examplemod.advanced.polyloader.AsmInvocationTranslator;
 import com.example.examplemod.advanced.polyloader.CallTranslationRule;
 import com.example.examplemod.advanced.polyloader.ModArtifactAnalyzer;
 import com.example.examplemod.advanced.polyloader.ModArtifactProfile;
 import com.example.examplemod.advanced.polyloader.SideloadMode;
 import com.example.examplemod.advanced.polyloader.UnifiedAbstractionLayer;
+import com.example.examplemod.advanced.runtime.ClassHotSwapService;
+import com.example.examplemod.advanced.runtime.ExternalHotloadCore;
+import com.example.examplemod.advanced.runtime.ReloadOrchestrator;
+import com.example.examplemod.advanced.runtime.ReloadTargetBindings;
 import com.example.examplemod.advanced.sandbox.PreparedWorldTransaction;
 import com.example.examplemod.advanced.sandbox.ScriptSupervisor;
 import com.example.examplemod.advanced.sandbox.TransactionalWorldSandbox;
+import com.example.examplemod.advanced.scripting.PolyglotScriptHost;
 import com.example.examplemod.advanced.worldedit.SectionDelta;
 import com.example.examplemod.advanced.worldedit.SectionKey;
 import com.example.examplemod.advanced.worldedit.WorldMutationSink;
@@ -21,12 +27,14 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import org.objectweb.asm.ClassReader;
@@ -45,6 +53,7 @@ public final class GridelyxSmokeTest {
         testDynamicAssets();
         testScriptDeadline();
         testTransactionalRollback();
+        testReloadOrchestrator();
         System.out.println("PASS: Gridelyx runtime smoke test");
     }
 
@@ -53,9 +62,7 @@ public final class GridelyxSmokeTest {
         layer.register(
                 UnifiedAbstractionLayer.Domain.REGISTRY,
                 operation -> new UnifiedAbstractionLayer.OperationResult(
-                        operation.action().equals("register"),
-                        operation.action(),
-                        operation.payload()));
+                        operation.action().equals("register"), operation.action(), operation.payload()));
         UnifiedAbstractionLayer.OperationResult result = layer.dispatch(
                 UnifiedAbstractionLayer.Domain.REGISTRY,
                 "register",
@@ -110,12 +117,7 @@ public final class GridelyxSmokeTest {
     private static byte[] classWithInvocation() {
         ClassWriter writer = new ClassWriter(0);
         writer.visit(Opcodes.V17, Opcodes.ACC_PUBLIC, "sample/TranslationFixture", null, "java/lang/Object", null);
-        MethodVisitor method = writer.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC,
-                "run",
-                "()V",
-                null,
-                null);
+        MethodVisitor method = writer.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "run", "()V", null, null);
         method.visitCode();
         method.visitMethodInsn(Opcodes.INVOKESTATIC, "source/Api", "ping", "()V", false);
         method.visitInsn(Opcodes.RETURN);
@@ -139,8 +141,7 @@ public final class GridelyxSmokeTest {
             ModArtifactProfile earlyProfile = analyzer.analyze(early);
             require(plainProfile.recommendedMode() == SideloadMode.LIVE_SAFE, "plain JAR classification failed");
             require(fabricProfile.recommendedMode() == SideloadMode.EMULATED, "Fabric JAR classification failed");
-            require(
-                    earlyProfile.recommendedMode() == SideloadMode.PRELAUNCH_REQUIRED,
+            require(earlyProfile.recommendedMode() == SideloadMode.PRELAUNCH_REQUIRED,
                     "Mixin-bearing JAR was not forced to prelaunch");
         } finally {
             Files.deleteIfExists(plain);
@@ -150,8 +151,7 @@ public final class GridelyxSmokeTest {
     }
 
     private static void createJar(Path path, String... entries) throws IOException {
-        try (OutputStream output = Files.newOutputStream(path);
-                JarOutputStream jar = new JarOutputStream(output)) {
+        try (OutputStream output = Files.newOutputStream(path); JarOutputStream jar = new JarOutputStream(output)) {
             for (String entryName : entries) {
                 jar.putNextEntry(new JarEntry(entryName));
                 jar.write("{}".getBytes(java.nio.charset.StandardCharsets.UTF_8));
@@ -173,8 +173,7 @@ public final class GridelyxSmokeTest {
         TextureAsset initial = textures.publish("gridelyx:test_texture", 2, 2, new int[] {0, 0, 0, 0});
         TextureAsset patched = textures.patch("gridelyx:test_texture", 1, 0, 1, 2, new int[] {7, 9});
         require(patched.revision() > initial.revision(), "texture patch did not advance the revision");
-        require(
-                Arrays.equals(patched.rgbaPixels(), new int[] {0, 7, 0, 9}),
+        require(Arrays.equals(patched.rgbaPixels(), new int[] {0, 7, 0, 9}),
                 "texture patch wrote unexpected pixels");
     }
 
@@ -199,20 +198,68 @@ public final class GridelyxSmokeTest {
         SectionKey first = new SectionKey(0, 0, 0);
         SectionKey second = new SectionKey(1, 0, 0);
         PreparedWorldTransaction transaction = new PreparedWorldTransaction(
-                77L,
-                java.util.List.of(
-                        mutation(first, 5),
-                        mutation(second, 6)));
+                77L, java.util.List.of(mutation(first, 5), mutation(second, 6)));
         FakeSink sink = new FakeSink(second);
         TransactionalWorldSandbox.TransactionResult result =
                 new TransactionalWorldSandbox().commit(sink, transaction, true);
-        require(
-                result.state() == TransactionalWorldSandbox.State.ROLLED_BACK,
+        require(result.state() == TransactionalWorldSandbox.State.ROLLED_BACK,
                 "world transaction did not report a complete rollback");
         require(sink.value(first) == 0 && sink.value(second) == 0, "rollback did not restore world values");
         require(sink.currentRevision(first) == 2L, "first section rollback revision is incorrect");
         require(sink.currentRevision(second) == 2L, "mutate-then-throw section was not rolled back");
         require(sink.reconciled(), "rollback did not request lighting reconciliation");
+    }
+
+    private static void testReloadOrchestrator() throws Exception {
+        Path root = Files.createTempDirectory("gridelyx-reload-");
+        Path classes = Files.createDirectories(root.resolve("classes"));
+        Path data = root.resolve("config.json");
+        Files.writeString(data, "{}");
+        AtomicInteger dataReloads = new AtomicInteger();
+        AtomicInteger epochHandoffs = new AtomicInteger();
+        ReloadTargetBindings bindings = ReloadTargetBindings.builder()
+                .dataReload((path, change) -> dataReloads.incrementAndGet())
+                .runtimeEpochHandoff((event, reason) -> epochHandoffs.incrementAndGet())
+                .build();
+        try (ExternalHotloadCore core = new ExternalHotloadCore();
+                PolyglotScriptHost scripts = new PolyglotScriptHost();
+                ReloadOrchestrator orchestrator = new ReloadOrchestrator(
+                        core,
+                        new ClassHotSwapService(),
+                        scripts,
+                        bindings,
+                        root,
+                        classes,
+                        GridelyxSmokeTest.class.getClassLoader())) {
+            ReloadOrchestrator.ReloadResult dataResult = orchestrator.reloadNow(new ExternalHotloadCore.ReloadEvent(
+                    data,
+                    ExternalHotloadCore.ReloadKind.DATA,
+                    Instant.now(),
+                    "ENTRY_MODIFY"));
+            require(dataResult.status() == ReloadOrchestrator.Status.APPLIED, "data reload was not applied");
+            require(dataResult.strategy() == ActivationStrategy.TRANSACTIONAL_RELOAD,
+                    "data reload used the wrong activation strategy");
+            require(dataReloads.get() == 1, "data target binding was not invoked exactly once");
+
+            Path unknownClass = classes.resolve("missing.class");
+            ReloadOrchestrator.ReloadResult javaResult = orchestrator.reloadNow(new ExternalHotloadCore.ReloadEvent(
+                    unknownClass,
+                    ExternalHotloadCore.ReloadKind.JAVA_BYTECODE,
+                    Instant.now(),
+                    "ENTRY_DELETE"));
+            require(javaResult.status() == ReloadOrchestrator.Status.ESCALATED,
+                    "structural Java change did not escalate to runtime epoch handoff");
+            require(epochHandoffs.get() == 1, "runtime epoch target was not invoked exactly once");
+        } finally {
+            try (var paths = Files.walk(root)) {
+                paths.sorted(java.util.Comparator.reverseOrder()).forEach(path -> {
+                    try {
+                        Files.deleteIfExists(path);
+                    } catch (IOException ignored) {
+                    }
+                });
+            }
+        }
     }
 
     private static PreparedWorldTransaction.MutationPair mutation(SectionKey key, int value) {
