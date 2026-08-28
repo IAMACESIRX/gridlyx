@@ -1,0 +1,46 @@
+name: Markdown Linkify
+
+on:
+  push:
+    branches:
+      - gridelyx-rebrand-reload-orchestrator
+    paths:
+      - tools/markdown_linkify.py
+      - .github/workflows/markdown-linkify.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  linkify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: gridelyx-rebrand-reload-orchestrator
+          fetch-depth: 0
+
+      - name: Convert document references to clickable links
+        run: python tools/markdown_linkify.py --fix
+
+      - name: Verify generated links
+        run: python tools/markdown_linkify.py --check
+
+      - name: Check whitespace
+        run: git diff --check
+
+      - name: Commit linkified documentation
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No Markdown references required conversion."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- '*.md'
+          git commit -m "Make Markdown document references clickable"
+          git push origin HEAD:gridelyx-rebrand-reload-orchestrator
