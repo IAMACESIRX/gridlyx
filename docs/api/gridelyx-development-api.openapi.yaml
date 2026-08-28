@@ -1,0 +1,178 @@
+openapi: 3.1.0
+info:
+  title: Gridelyx Development Bridge API
+  version: 0.1.0
+  description: >-
+    Capability-gated development/control API contract for Gridelyx Studio tooling.
+    This specification is an R1 contract surface, not a claim that every endpoint is
+    implemented on every Minecraft edition/version/loader. Runtime capability discovery
+    and server-side authorization are authoritative.
+servers:
+  - url: http://127.0.0.1:{port}
+    description: Local development bridge
+    variables:
+      port:
+        default: '8765'
+tags:
+  - name: system
+  - name: capabilities
+  - name: hotload
+  - name: world
+  - name: telemetry
+  - name: automation
+paths:
+  /v1/health:
+    get:
+      tags: [system]
+      summary: Read bridge health
+      operationId: getHealth
+      responses:
+        '200':
+          description: Health state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+  /v1/capabilities:
+    get:
+      tags: [capabilities]
+      summary: Discover negotiated runtime capabilities
+      operationId: getCapabilities
+      responses:
+        '200':
+          description: Capability snapshot
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [revision, capabilities]
+                properties:
+                  revision: {type: integer, minimum: 0}
+                  capabilities:
+                    type: array
+                    items: {$ref: '#/components/schemas/Capability'}
+  /v1/hotload:
+    post:
+      tags: [hotload]
+      summary: Request a bounded hotload operation
+      operationId: requestHotload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HotloadRequest'
+      responses:
+        '202':
+          description: Accepted for validation/execution
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/OperationReceipt'}
+        '409': {description: Capability or lifecycle conflict}
+  /v1/world/transactions:
+    post:
+      tags: [world]
+      summary: Submit a transactional world-edit request
+      operationId: submitWorldTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/WorldTransaction'}
+      responses:
+        '202':
+          description: Transaction accepted for authoritative scheduling
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/OperationReceipt'}
+        '403': {description: Caller lacks required capability/authority}
+        '409': {description: Revision conflict}
+  /v1/telemetry/snapshot:
+    get:
+      tags: [telemetry]
+      summary: Read bounded development telemetry
+      operationId: getTelemetrySnapshot
+      responses:
+        '200':
+          description: Telemetry snapshot
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /v1/automation/actions:
+    post:
+      tags: [automation]
+      summary: Request a high-level client/server automation action
+      operationId: submitAutomationAction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action: {type: string}
+                arguments: {type: object, additionalProperties: true}
+                dry_run: {type: boolean, default: false}
+      responses:
+        '202':
+          description: Accepted subject to capability and permission checks
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/OperationReceipt'}
+        '403': {description: Permission denied}
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status, product, protocol]
+      properties:
+        status: {type: string, enum: [ok, degraded, unavailable]}
+        product: {type: string, const: Gridelyx Studio}
+        protocol: {type: string}
+        target: {type: string}
+    Capability:
+      type: object
+      required: [id, state]
+      properties:
+        id: {type: string}
+        state:
+          type: string
+          enum: [live-safe, emulated, prelaunch-required, unsupported, unavailable, experimental]
+        authority: {type: string}
+        evidence_level: {type: string, pattern: '^R[0-6]$'}
+        target_fingerprint: {type: string}
+    HotloadRequest:
+      type: object
+      required: [kind, source]
+      properties:
+        kind: {type: string, enum: [script, data, asset, service, class]}
+        source: {type: string}
+        expected_revision: {type: integer, minimum: 0}
+        rollback_on_failure: {type: boolean, default: true}
+    WorldTransaction:
+      type: object
+      required: [transaction_id, expected_revision, operations]
+      properties:
+        transaction_id: {type: string}
+        expected_revision: {type: integer, minimum: 0}
+        operations:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [type]
+            properties:
+              type: {type: string}
+              payload: {type: object, additionalProperties: true}
+        dry_run: {type: boolean, default: false}
+    OperationReceipt:
+      type: object
+      required: [operation_id, state]
+      properties:
+        operation_id: {type: string}
+        state: {type: string, enum: [accepted, rejected, queued, validating]}
+        revision: {type: integer, minimum: 0}
+        message: {type: string}
