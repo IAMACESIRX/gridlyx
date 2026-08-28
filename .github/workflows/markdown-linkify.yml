@@ -5,6 +5,7 @@ on:
     branches:
       - gridelyx-rebrand-reload-orchestrator
     paths:
+      - '**/*.md'
       - tools/markdown_linkify.py
       - .github/workflows/markdown-linkify.yml
   workflow_dispatch:
