@@ -1,23 +1,41 @@
 # Gridelyx TODO and validation ledger
 
-This is the live implementation ledger. Capability maturity is summarized in `FEATURE_MAP.md`; staged sequencing is in `ROADMAP.md`. Complete retained scope is in `CHAT_REQUIREMENTS_TRACEABILITY.md` / `../platform/chat-requirements.json`. Tool and program prerequisites are in `DEPENDENCIES_AND_TOOLCHAIN.md`, `CAPABILITY_DEPENDENCY_MATRIX.md` and `../platform/toolchain-requirements.json`.
+This is the live implementation ledger. Capability maturity is summarized in `FEATURE_MAP.md`; staged sequencing is in `ROADMAP.md`; dependency order and Kanban topology are in `DEVELOPMENT_MAP.md`. Complete retained scope is in `CHAT_REQUIREMENTS_TRACEABILITY.md` / `../platform/chat-requirements.json`. Tool and program prerequisites are in `DEPENDENCIES_AND_TOOLCHAIN.md`, `CAPABILITY_DEPENDENCY_MATRIX.md` and `../platform/toolchain-requirements.json`.
 
 ## Whole-chat requirements, identity and dependency control
 
 - [x] Add canonical human-readable conversation requirements ledger.
-- [x] Add machine-readable **33-group** requirements manifest (`CR-001`…`CR-033`).
+- [x] Add machine-readable **34-group** requirements manifest (`CR-001`…`CR-034`).
 - [x] Add `tools/chat_requirements_check.py` and require it in Gridelyx continuity CI.
 - [x] Select **Gridelyx** as canonical root brand and **Gridelyx Studio** as integrated suite.
 - [x] Freeze canonical identity/compatibility state in `platform/brand.json` and decision/ADR records.
+- [x] Record requested GitHub slug `gridlyx` and canonical combined description in `platform/repository-metadata.json`.
 - [x] Add staged terminology manifest and CI checker; classify legacy `VFSB`/Gridelyx identifiers as migration debt.
 - [x] Add complete dependency/tool inventory and machine-readable toolchain manifest.
 - [x] Add capability→dependency→target→validation matrix.
 - [x] Add toolchain evidence-path checker to Gridelyx continuity CI.
 - [x] Add community entrypoint, contributor onboarding, architecture tour, evidence guide, support guide, conduct rules and glossary.
-- [x] Route AI context through retained requirements, brand and toolchain manifests.
+- [x] Route AI context through retained requirements, brand, feature planning and toolchain manifests.
 - [ ] Generate readiness/evidence summaries automatically from the requirements graph where practical.
 - [ ] Keep every new human-requested capability mapped to implementation evidence or an explicit planned CR.
 - [ ] Complete retired source/path/protocol/ABI/persisted terminology migration and switch terminology CI to strict mode.
+
+## Feature decision / planning framework
+
+- [x] Add CR-034 advanced Feature Decision Packet process.
+- [x] Add W5x5x5 five-level positive/inverse Who/What/When/Where/How/Why questioning.
+- [x] Add project-values alignment, task decomposition and cost/time/money/energy diagnostics.
+- [x] Add 10-minute / 10-hour / 10-day / 10-month / 1-year / 5-year / 10-year horizon analysis.
+- [x] Add opportunity-cost and regret-minimisation analysis.
+- [x] Add reversible-vs-irreversible classification and risk register.
+- [x] Add inversion, second-order thinking, Eisenhower, overlap/Venn and brainstorming analysis.
+- [x] Add first-principles thinking, benchmarking and Feynman explanation.
+- [x] Add MVP, 30/60-minute timebox, pre-mortem and asymmetric-risk analysis.
+- [x] Add working-backward, Pareto/80-20, Critical Path, Cynefin and Kanban methods.
+- [x] Add machine-readable feature-analysis schema, reusable template and GitHub feature-evaluation issue form.
+- [x] Add `tools/feature_planning_check.py` to Gridelyx continuity CI.
+- [ ] Apply complete Feature Decision Packets to major backlog issues when they move from Backlog to Ready.
+- [ ] Generate machine-readable feature packets/graphs from accepted issue packets where useful.
 
 ## Immediate architecture / CI
 
@@ -26,11 +44,11 @@ This is the live implementation ledger. Capability maturity is summarized in `FE
 - [x] Add GUI-independent `studio/core` instance/provider/provenance/dependency contracts.
 - [x] Add official/authorized provider and loader-adapter manifests.
 - [x] Add deterministic repository index and task-context tooling.
-- [x] Add AI handoff/context map and full product/roadmap/feature/structure docs.
+- [x] Add AI handoff/context map and full product/roadmap/development/feature/structure docs.
 - [x] Add capability-scoped AI organization, work-state, decision/assumption ledgers and drift mitigation.
 - [x] Add additive deep-integration architecture covering loader/JVM/native/bootstrap/binary-patch/project-owned component escalation.
 - [x] Compile Rust/C++ native examples on Windows and Linux.
-- [x] Add continuity CI for brand, requirements, toolchain, terminology, Studio core, repo index and context retrieval.
+- [x] Add continuity CI for brand, requirements, toolchain, feature planning, terminology, Studio core, repo index and context retrieval.
 - [ ] Add representative NeoForge 26.2 GameTest fixtures and require them in nightly CI.
 - [ ] Add client-side rendering smoke-world capture/benchmark.
 - [ ] Add SBOM and automated dependency/licence/provenance report.
@@ -327,17 +345,18 @@ This is the live implementation ledger. Capability maturity is summarized in `FE
 - [x] Repository-index/context-pack smoke validation in Gridelyx continuity CI.
 - [x] Role organization, work state, decision/assumption ledgers and drift controls.
 - [x] Complete conversation scope ledger and machine-verifiable paths.
-- [x] Dependency/toolchain and brand/terminology domains in AI context map.
+- [x] Dependency/toolchain, brand/terminology and feature-planning domains in AI context map.
 - [ ] Feed deterministic chunk IDs into local semantic/vector index.
 - [ ] Incremental embeddings keyed by commit/path/range/SHA-256.
 - [ ] Generate feature/readiness evidence map from tests/manifests where possible.
 - [ ] ADR template + machine-readable decision index.
-- [ ] Rich cross-doc drift checks between requirements, roadmap, TODO and capability manifests.
+- [ ] Rich cross-doc drift checks between requirements, roadmap, development map, TODO and capability manifests.
 
 ## Community / governance
 
 - [x] `COMMUNITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SUPPORT.md`, security routing.
 - [x] Getting-started, contributor onboarding, architecture tour, testing/evidence and glossary docs.
+- [x] Feature-evaluation GitHub issue form tied to CR-034.
 - [ ] Maintainer/reviewer ownership map when contributor base grows.
 - [ ] Release/contribution checklist templates for deep-integration and cross-edition changes.
 - [ ] Public compatibility/support matrix once target evidence is mature enough.
@@ -349,6 +368,7 @@ This is the live implementation ledger. Capability maturity is summarized in `FE
 - [x] Rebrand root README, project overview, project plan, structure, roadmap, feature map, AGENTS, AI handoff and requirements/dependency control docs.
 - [x] Add staged terminology manifest/checker to CI.
 - [x] Classify major legacy `VFSB`/Gridelyx source/ABI/path identifiers as migration debt.
+- [x] Record requested GitHub repository target `IAMACESIRX/gridlyx` and exact description; track as issue #28.
 - [ ] Complete full tracked-tree occurrence inventory and migration class A-G classification.
 - [ ] Rename remaining public docs/workflow display strings.
 - [ ] Rename project-owned Java/Rust/C/C++/Bedrock source/path/package identifiers coherently.
@@ -356,7 +376,7 @@ This is the live implementation ledger. Capability maturity is summarized in `FE
 - [ ] Migrate bridge magic/prefix to Gridelyx protocol only with cross-version compatibility tests.
 - [ ] Switch forbidden-terminology scanner to strict whole-current-tree mode.
 - [ ] Regenerate AI indexes/autodoc and run zero-unexplained-occurrence scan.
-- [ ] Rename GitHub repository metadata/slug where supported/approved.
+- [ ] Apply actual GitHub repository name/description mutation when the available write surface permits it.
 - [ ] Decide separately whether Git history should ever be rewritten.
 
 ## Operations / release
