@@ -1,0 +1,56 @@
+name: Gridelyx Release Notes Candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_ref:
+        description: Base tag/commit/ref (blank = latest tag or first commit)
+        required: false
+        type: string
+      head_ref:
+        description: Head ref
+        required: true
+        default: HEAD
+        type: string
+      use_ai:
+        description: Use configured AI release-note adapter
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  release-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Generate deterministic changelog evidence
+        shell: bash
+        run: |
+          mkdir -p dist/release
+          if [ -n "${{ inputs.base_ref }}" ]; then
+            python tools/generate_changelog.py --base "${{ inputs.base_ref }}" --head "${{ inputs.head_ref }}" --output dist/release/changelog-candidate.md
+          else
+            python tools/generate_changelog.py --head "${{ inputs.head_ref }}" --output dist/release/changelog-candidate.md
+          fi
+      - name: Generate deterministic release notes
+        if: ${{ !inputs.use_ai }}
+        run: python tools/generate_release_notes.py dist/release/changelog-candidate.md --output dist/release/release-notes-candidate.md
+      - name: Generate AI-assisted release notes
+        if: ${{ inputs.use_ai }}
+        env:
+          GRIDELYX_AI_RELEASE_NOTES_COMMAND: ${{ vars.GRIDELYX_AI_RELEASE_NOTES_COMMAND }}
+          GRIDELYX_AI_RELEASE_NOTES_ENDPOINT: ${{ vars.GRIDELYX_AI_RELEASE_NOTES_ENDPOINT }}
+          GRIDELYX_AI_RELEASE_NOTES_TOKEN: ${{ secrets.GRIDELYX_AI_RELEASE_NOTES_TOKEN }}
+        run: python tools/generate_release_notes.py dist/release/changelog-candidate.md --output dist/release/release-notes-candidate.md --ai
+      - name: Upload release communication candidates
+        uses: actions/upload-artifact@v5
+        with:
+          name: gridelyx-release-notes-candidate
+          path: dist/release/
+          if-no-files-found: error
