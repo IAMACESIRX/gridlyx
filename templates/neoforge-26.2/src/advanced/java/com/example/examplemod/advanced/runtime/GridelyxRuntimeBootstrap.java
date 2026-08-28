@@ -19,19 +19,24 @@ public final class GridelyxRuntimeBootstrap {
             return;
         }
 
+        ExternalHotloadCore nextCore = null;
+        NeoForgeReloadTargetBindings nextTargets = null;
+        ReloadOrchestrator nextOrchestrator = null;
         try {
-            Path workspace = Path.of(System.getProperty("gridelyx.hotload.root", "run/gridelyx-hotload"))
+            Path workspace = Path.of(System.getProperty(
+                            "gridelyx.hotload.root",
+                            "run/gridelyx-hotload"))
                     .toAbsolutePath()
                     .normalize();
             Path classes = workspace.resolve("classes");
             Files.createDirectories(classes);
 
             ClassLoader loader = GridelyxRuntimeBootstrap.class.getClassLoader();
-            ExternalHotloadCore hotloadCore = new ExternalHotloadCore();
-            hotloadCore.addRoot(workspace);
-            NeoForgeReloadTargetBindings nextTargets = new NeoForgeReloadTargetBindings(loader);
-            ReloadOrchestrator nextOrchestrator = new ReloadOrchestrator(
-                    hotloadCore,
+            nextCore = new ExternalHotloadCore();
+            nextCore.addRoot(workspace);
+            nextTargets = new NeoForgeReloadTargetBindings(loader);
+            nextOrchestrator = new ReloadOrchestrator(
+                    nextCore,
                     new ClassHotSwapService(),
                     new PolyglotScriptHost(),
                     nextTargets.bindings(),
@@ -40,17 +45,17 @@ public final class GridelyxRuntimeBootstrap {
                     loader);
             nextOrchestrator.addResultListener(GridelyxRuntimeBootstrap::logResult);
             nextOrchestrator.start();
+            installShutdownHook();
 
             targets = nextTargets;
             orchestrator = nextOrchestrator;
-            installShutdownHook();
             ExampleMod.LOGGER.info(
                     "Gridelyx hotload runtime started at {} (runtime epoch driver: {})",
                     workspace,
                     nextTargets.hasRuntimeEpochDriver() ? "available" : "not installed");
         } catch (Exception | LinkageError failure) {
             ExampleMod.LOGGER.error("Gridelyx hotload runtime failed to start", failure);
-            stop();
+            closeStartupFailure(nextOrchestrator, nextCore, nextTargets, failure);
         }
     }
 
@@ -88,6 +93,29 @@ public final class GridelyxRuntimeBootstrap {
         }
     }
 
+    private static void closeStartupFailure(
+            ReloadOrchestrator nextOrchestrator,
+            ExternalHotloadCore nextCore,
+            NeoForgeReloadTargetBindings nextTargets,
+            Throwable primary) {
+        try {
+            if (nextOrchestrator != null) {
+                nextOrchestrator.close();
+            } else if (nextCore != null) {
+                nextCore.close();
+            }
+        } catch (Exception | LinkageError closeFailure) {
+            primary.addSuppressed(closeFailure);
+        }
+        if (nextTargets != null) {
+            try {
+                nextTargets.close();
+            } catch (Exception | LinkageError closeFailure) {
+                primary.addSuppressed(closeFailure);
+            }
+        }
+    }
+
     private static boolean enabled() {
         String canonical = System.getProperty("gridelyx.hotload.enabled");
         if (canonical != null) {
@@ -100,7 +128,9 @@ public final class GridelyxRuntimeBootstrap {
         if (shutdownHook != null) {
             return;
         }
-        shutdownHook = new Thread(GridelyxRuntimeBootstrap::stop, "gridelyx-hotload-shutdown");
+        shutdownHook = new Thread(
+                GridelyxRuntimeBootstrap::stop,
+                "gridelyx-hotload-shutdown");
         Runtime.getRuntime().addShutdownHook(shutdownHook);
     }
 
