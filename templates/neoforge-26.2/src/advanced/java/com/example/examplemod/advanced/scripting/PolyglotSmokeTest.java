@@ -1,8 +1,8 @@
 package com.example.examplemod.advanced.scripting;
 
 import com.example.examplemod.advanced.validation.BedrockBridgeSmokeTest;
-import com.example.examplemod.advanced.validation.ProductionSmokeTest;
 import com.example.examplemod.advanced.validation.GridelyxSmokeTest;
+import com.example.examplemod.advanced.validation.ProductionSmokeTest;
 import org.graalvm.polyglot.Context;
 
 public final class PolyglotSmokeTest {
