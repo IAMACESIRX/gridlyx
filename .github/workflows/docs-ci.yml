@@ -42,7 +42,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.x'
-      - name: Validate clickable Markdown document references
+      - name: Validate clickable documentation link targets
         run: python tools/markdown_linkify.py --check
       - name: Validate project presentation contracts
         run: |
