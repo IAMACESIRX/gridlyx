@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
@@ -42,14 +43,15 @@ public final class VersionedModuleRuntime implements AutoCloseable {
     }
 
     public synchronized ActivationStrategy reload(Path jar) throws Exception {
-        Path key = canonicalExistingJar(jar);
-        ModArtifactProfile profile = analyzer.analyze(key);
+        Path key = logicalKey(jar);
+        Path source = canonicalExistingJar(jar);
+        ModArtifactProfile profile = analyzer.analyze(source);
         PublicHotloadPlanner.ActivationPlan plan = planner.plan(profile);
         if (plan.strategy() != ActivationStrategy.CLASSLOADER_EPOCH) {
             throw new StructuralReloadRequiredException(plan.strategy(), plan.rationale());
         }
 
-        URLClassLoader loader = new URLClassLoader(new URL[] {key.toUri().toURL()}, parent);
+        URLClassLoader loader = new URLClassLoader(new URL[] {source.toUri().toURL()}, parent);
         GridelyxHotloadModule candidate;
         try {
             candidate = ServiceLoader.load(GridelyxHotloadModule.class, loader)
@@ -73,7 +75,7 @@ public final class VersionedModuleRuntime implements AutoCloseable {
 
         long epoch = epochs.incrementAndGet();
         ModuleScope candidateScope = new ModuleScope(moduleId, epoch);
-        candidateScope.own("classloader", key.toString(), loader);
+        candidateScope.own("classloader", source.toString(), loader);
         candidateScope.own("module", moduleId, candidate);
 
         try {
@@ -90,7 +92,10 @@ public final class VersionedModuleRuntime implements AutoCloseable {
                 closeScope(candidateScope, null);
                 throw new StructuralReloadRequiredException(
                         ActivationStrategy.RUNTIME_EPOCH_HANDOFF,
-                        "Replacement moduleId changed from " + previous.moduleId() + " to " + moduleId);
+                        "Replacement moduleId changed from "
+                                + previous.moduleId()
+                                + " to "
+                                + moduleId);
             }
             try {
                 previous.scope().close();
@@ -114,12 +119,12 @@ public final class VersionedModuleRuntime implements AutoCloseable {
                     activationFailure);
         }
 
-        activeByPath.put(key, new ActiveModule(key, moduleId, epoch, candidateScope));
+        activeByPath.put(key, new ActiveModule(moduleId, candidateScope));
         return ActivationStrategy.CLASSLOADER_EPOCH;
     }
 
     public synchronized ActivationStrategy remove(Path jar) throws Exception {
-        Path key = jar.toAbsolutePath().normalize();
+        Path key = logicalKey(jar);
         ActiveModule previous = activeByPath.remove(key);
         if (previous == null) {
             return ActivationStrategy.CLASSLOADER_EPOCH;
@@ -139,9 +144,14 @@ public final class VersionedModuleRuntime implements AutoCloseable {
         return activeByPath.size();
     }
 
+    private static Path logicalKey(Path jar) {
+        return Objects.requireNonNull(jar, "jar").toAbsolutePath().normalize();
+    }
+
     private static Path canonicalExistingJar(Path jar) throws IOException {
-        Path canonical = Objects.requireNonNull(jar, "jar").toRealPath();
-        if (!Files.isRegularFile(canonical) || !canonical.getFileName().toString().toLowerCase().endsWith(".jar")) {
+        Path canonical = logicalKey(jar).toRealPath();
+        String fileName = canonical.getFileName().toString().toLowerCase(Locale.ROOT);
+        if (!Files.isRegularFile(canonical) || !fileName.endsWith(".jar")) {
             throw new IOException("Expected an existing module JAR: " + canonical);
         }
         return canonical;
@@ -181,13 +191,14 @@ public final class VersionedModuleRuntime implements AutoCloseable {
         }
         activeByPath.clear();
         if (!failures.isEmpty()) {
-            Exception aggregate = new Exception("Failed to retire " + failures.size() + " Gridelyx module epoch(s)");
+            Exception aggregate = new Exception(
+                    "Failed to retire " + failures.size() + " Gridelyx module epoch(s)");
             failures.forEach(aggregate::addSuppressed);
             throw aggregate;
         }
     }
 
-    private record ActiveModule(Path jar, String moduleId, long epoch, ModuleScope scope) {}
+    private record ActiveModule(String moduleId, ModuleScope scope) {}
 
     public static final class StructuralReloadRequiredException extends Exception {
         private final ActivationStrategy requiredStrategy;
