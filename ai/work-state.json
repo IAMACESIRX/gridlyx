@@ -35,21 +35,39 @@
     },
     {
       "id": "GRIDELYX-BRAND-001",
-      "objective": "Complete the staged Gridelyx/VFSB to Gridelyx public/source/path/protocol/ABI/persisted compatibility migration without breaking existing technical consumers.",
-      "state": "implementing",
+      "objective": "Keep the completed Gridelyx current-tree identity and GLXB/GLXM/native ABI v2 boundary coherent across source, schemas, documentation, Bedrock and native consumers.",
+      "state": "validating",
       "kanban_state": "doing",
       "authoritative_files": [
         "platform/brand.json",
         "platform/terminology.json",
         "docs/REBRAND_PLAN.md",
+        "docs/GRIDELYX_BRIDGE_PROTOCOL.md",
         "tools/terminology_check.py"
       ],
       "constraints": [
-        "Gridelyx is already selected and must be used for new project-owned naming.",
-        "Protocol/ABI/persisted identifiers require migration analysis and compatibility tests rather than blind replacement.",
-        "Git-history rewriting is a separate destructive operation and is not authorized by current-tree rebranding alone."
+        "Gridelyx is canonical for all current project-owned naming.",
+        "Protocol and native ABI compatibility begins at the explicit v2 boundary.",
+        "Git-history rewriting is a separate destructive operation and is not authorized by current-tree migration."
       ],
       "issue": 26
+    },
+    {
+      "id": "GRIDELYX-HOTLOAD-001",
+      "objective": "Integrate and validate the serialized public reload orchestrator and target bindings across data, assets, scripts, Java redefine/module replacement and runtime epoch handoff.",
+      "state": "validating",
+      "kanban_state": "doing",
+      "authoritative_files": [
+        "docs/HOTLOAD_ARCHITECTURE.md",
+        "templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/runtime/ReloadOrchestrator.java",
+        "templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/runtime/ReloadTargetBindings.java",
+        "templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/validation/GridelyxSmokeTest.java"
+      ],
+      "constraints": [
+        "Use the smallest safe activation mechanism for each change.",
+        "Do not claim target runtime support until target-specific callbacks are validated in the selected Minecraft/loader runtime.",
+        "Escalate unsupported structural changes to a versioned runtime epoch handoff rather than unsafe in-process mutation."
+      ]
     },
     {
       "id": "GRIDELYX-REPO-METADATA-001",
@@ -80,8 +98,8 @@
     }
   ],
   "verification": {
-    "structural_check": "Gridelyx continuity CI must pass continuity, CR-001..CR-034 requirements, toolchain, feature-planning and staged terminology checks on the current head.",
-    "runtime_effect": "Control-plane changes do not by themselves promote Minecraft/Bedrock/runtime feature readiness."
+    "structural_check": "Gridelyx continuity CI must pass continuity, CR-001..CR-034 requirements, toolchain, feature-planning and strict whole-tree terminology checks on the current head.",
+    "runtime_effect": "Control-plane and neutral orchestration changes do not by themselves promote Minecraft/Bedrock target readiness; target bindings require target validation."
   },
   "handoff_requirements": [
     "Distinguish committed from uncommitted/staged work.",
@@ -90,7 +108,7 @@
     "Do not promote readiness without matching evidence.",
     "Identify affected CR IDs and toolchain changes.",
     "Use Feature Decision Packets for substantial work and carry forward Kanban/critical-path state.",
-    "Keep Gridelyx compatibility migration state explicit until source/protocol/ABI consumers are verified.",
+    "Keep the Gridelyx v2 protocol/native boundary explicit and validated across consumers.",
     "Keep the GitHub repository metadata task blocked until the actual gridlyx rename/description mutation is verified."
   ]
 }
