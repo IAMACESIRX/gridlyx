@@ -1,22 +1,24 @@
-# Gridelyx Studio Bedrock Runtime
+# Gridelyx Bedrock Runtime
 
-This directory is the Bedrock target plane for Gridelyx Studio. It shares the platform's neutral operation and asset concepts with the Java polyloader while adapting them to APIs that actually exist in Minecraft: Bedrock Edition.
+This directory is the Bedrock target plane for **Gridelyx Studio**. It shares neutral operation, asset, scene, transaction and scripting concepts with the Java Polyloader while adapting them to APIs and target-specific integration surfaces that exist in Minecraft: Bedrock Edition.
 
 ## Integration tiers
 
 ### 1. Stable Add-On runtime
 
-`addon/behavior_pack` and `addon/resource_pack` target the stable Bedrock creator stack. The behavior pack uses `@minecraft/server` and accepts Gridelyx commands through `/scriptevent` without assuming access to native process memory.
+`addon/behavior_pack` and `addon/resource_pack` target the stable Bedrock creator stack. The behavior pack uses `@minecraft/server` and accepts Gridelyx actions through `/scriptevent` without assuming native process-memory access.
 
 ### 2. Editor extension (preview)
 
-`editor-extension` is deliberately isolated because `@minecraft/server-editor` is pre-release. It is the natural Bedrock home for Gridelyx authoring tools, selection, transform, asset and world-edit UI as Microsoft exposes the required Editor extension surfaces.
+`editor-extension` is deliberately isolated because `@minecraft/server-editor` is pre-release. It is the Bedrock home for Gridelyx authoring tools such as selection, transform, asset/model editing and world-edit UI as required Editor surfaces are validated.
 
 ### 3. Native companion bridge
 
-Java and native tools exchange versioned Gridelyx binary frames through the named shared-memory ABI in `native/cpp`. `native/bedrock` consumes those frames behind a `BedrockAdapter` interface. The default companion does not patch or inject into the closed-source Bedrock executable.
+Java and native tools exchange versioned Gridelyx binary frames through the shared-memory ABI in `native/cpp`. The **current version-1 compatibility transport still uses legacy `VFSB` magic and `gridelyx_*` native symbols**. These are migration identifiers only; canonical future identifiers are `GLXB`, `gridelyx_native` and `gridelyx_*` as recorded in `platform/brand.json`.
 
-A version-specific native renderer integration may implement that adapter only when a supported or explicitly validated integration surface exists. Gridelyx Studio must continue to function through the stable Add-On/Editor route when such a native adapter is unavailable.
+`native/bedrock` consumes frames behind a `BedrockAdapter` boundary. The default companion does not patch or inject into the closed-source Bedrock executable.
+
+A version-specific native renderer/world integration may implement that adapter only when a supported or explicitly validated integration surface exists. Gridelyx must continue to function through stable Add-On/Editor paths when a deeper adapter is unavailable.
 
 ## Capability routing
 
@@ -27,19 +29,44 @@ Gridelyx UAL / AI / scripts
           |
           +--> Bedrock Script Adapter --> behavior/resource packs
           |
-          +--> VFSB binary codec --> Panama --> gridelyx_native
-                                           |
-                                           +--> Bedrock companion
+          +--> binary bridge --> Panama/FFM --> native compatibility ABI
                                                 |
-                                                +--> versioned adapter
+                                                +--> Bedrock companion
+                                                     |
+                                                     +--> versioned adapter
 ```
 
-The binary bridge is a transport, not a claim that Java objects or Minecraft Java Edition classes can be projected directly into Bedrock's C++ object model.
+The bridge is a transport, not a claim that Java objects or Minecraft Java Edition classes can be projected directly into Bedrock's C++ object model.
+
+## Target capability goals
+
+The Bedrock plane participates in the same retained Gridelyx capability graph, including target-specific implementations for:
+
+- live world editing, structures, generated-chunk events and transactional rollback;
+- model/voxel/mesh/texture authoring;
+- microgeometry and custom render/collision representations where technically achievable;
+- liquids, paint layers and world-transmutation state;
+- scene graph, transform gizmos and sandbox physics;
+- scripts, AI/IDE automation and external-tool bridges;
+- multiplayer-authoritative editing and replication;
+- replay, animation, camera and production/capture systems.
+
+Parity is evidence-gated. A Java feature is not automatically marked supported on Bedrock just because a neutral contract exists.
 
 ## Current baselines
 
-- Stable creator target: Bedrock 1.26.40 / `@minecraft/server` 2.9.0.
+- Stable creator target: Bedrock `1.26.40` / `@minecraft/server` `2.9.0`.
 - Editor extension target: separately versioned preview scaffold.
-- Dedicated-server network integration is optional because `@minecraft/server-net` is not available in the normal game client or Realms.
+- Dedicated-server network integration is optional because server-only networking APIs are not a universal client/Realm transport.
 
-Run `python tools/bedrock_check.py` from the repository root to validate the Bedrock plane.
+## Validation
+
+Run:
+
+```bash
+python tools/bedrock_check.py
+```
+
+Canonical bridge documentation: `docs/GRIDELYX_BRIDGE_PROTOCOL.md`.
+
+Deep-integration policy: `docs/DEEP_INTEGRATION_ARCHITECTURE.md`.
