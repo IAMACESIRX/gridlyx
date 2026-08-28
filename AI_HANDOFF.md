@@ -2,7 +2,7 @@
 
 ## Current identity state
 
-The canonical root brand is **Gridelyx** and the integrated suite is **Gridelyx Studio**. `platform/brand.json` is authoritative. Product/API slug remains `gridelyx`; the requested GitHub repository slug is `gridlyx`, tracked in `platform/repository-metadata.json`. Gridelyx/VFSB technical identifiers that still exist are migration compatibility state only; consult `docs/REBRAND_PLAN.md` before renaming source, ABI, wire or persisted identifiers.
+The canonical root brand is **Gridelyx** and the integrated suite is **Gridelyx Studio**. `platform/brand.json` is authoritative. Product/API slug remains `gridelyx`; the requested GitHub repository slug is `gridlyx`, tracked in `platform/repository-metadata.json`. Gridelyx/VFSB technical identifiers that still exist are migration compatibility state only; consult [`docs/REBRAND_PLAN.md`](docs/REBRAND_PLAN.md) before renaming source, ABI, wire or persisted identifiers.
 
 ## Mission
 
@@ -12,7 +12,7 @@ The project is **not constrained to conventional modding extension points**. Req
 
 ## Canonical retained scope
 
-Read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json` before broad design work. They preserve CR-001 through CR-034, including:
+Read [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and `platform/chat-requirements.json` before broad design work. They preserve CR-001 through CR-034, including:
 
 - reproducible Java/NeoForge R&D and multi-JAR workspaces;
 - quality/CI/Codespaces/Copilot/CodeQL/build locks;
@@ -52,11 +52,11 @@ Never silently drop one of these because it is difficult, expensive or outside n
 
 For a substantial feature or architecture decision read:
 
-- `docs/FEATURE_DECISION_FRAMEWORK.md`;
-- `docs/PROJECT_VALUES.md`;
-- `docs/DEVELOPMENT_MAP.md`;
-- `docs/BENCHMARKING_MATRIX.md`;
-- `docs/templates/FEATURE_EVALUATION_TEMPLATE.md`;
+- [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md);
+- [`docs/PROJECT_VALUES.md`](docs/PROJECT_VALUES.md);
+- [`docs/DEVELOPMENT_MAP.md`](docs/DEVELOPMENT_MAP.md);
+- [`docs/BENCHMARKING_MATRIX.md`](docs/BENCHMARKING_MATRIX.md);
+- [`docs/templates/FEATURE_EVALUATION_TEMPLATE.md`](docs/templates/FEATURE_EVALUATION_TEMPLATE.md);
 - `platform/feature-analysis.schema.json`.
 
 The packet must cover W5x5x5 positive/inverse questions, task decomposition, values, cost, 10m/10h/10d/10mo/1y/5y/10y horizons, opportunity cost, regret/reversibility, risk/inversion/pre-mortem, second-order effects, Eisenhower, overlap/Venn analysis, brainstorming, first principles, verified benchmarks, Feynman explanation, MVP/timebox, asymmetric risk, working backward, Pareto, Critical Path, Cynefin, Kanban, validation and rollback. This framework guides sequencing; it is not an automatic scope veto.
@@ -64,15 +64,15 @@ The packet must cover W5x5x5 positive/inverse questions, task decomposition, val
 ## Current architecture
 
 - **Java advanced runtime:** `templates/neoforge-26.2/src/advanced` — UAL/Polyloader, hotload, bytecode, scripting, MCP/indexing, world editing, assets, scene/physics tooling, rendering, native/IPC and production foundations.
-- **Deep integration:** `docs/DEEP_INTEGRATION_ARCHITECTURE.md` — L0-L8 escalation from supported APIs through additive patch/runtime ownership.
+- **Deep integration:** [`docs/DEEP_INTEGRATION_ARCHITECTURE.md`](docs/DEEP_INTEGRATION_ARCHITECTURE.md) — L0-L8 escalation from supported APIs through additive patch/runtime ownership.
 - **Bedrock:** `bedrock/` + `native/bedrock/` + `platform/bedrock-capabilities.json`.
 - **Native/IPC:** `native/`, `bridges/`, FFM/Panama/shared-memory framing.
 - **Studio/launcher core:** `studio/core` plus provider/loader manifests and schemas.
-- **Project control:** `docs/PROJECT_PLAN.md`, `ROADMAP.md`, `DEVELOPMENT_MAP.md`, `FEATURE_MAP.md`, `TODO.md`, requirements ledger.
-- **AI continuity:** `ai/AI_ORGANISATION.md`, drift controls, work/decision/assumption ledgers, context map.
-- **Dependencies/toolchain:** `docs/DEPENDENCIES_AND_TOOLCHAIN.md`, `platform/toolchain-requirements.json`.
-- **Feature analysis:** `docs/FEATURE_DECISION_FRAMEWORK.md`, `platform/feature-analysis.schema.json`.
-- **Community:** `COMMUNITY.md`, `CONTRIBUTING.md`, `SUPPORT.md`, `CODE_OF_CONDUCT.md`, `docs/community/`.
+- **Project control:** [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md), `ROADMAP.md`, `DEVELOPMENT_MAP.md`, `FEATURE_MAP.md`, `TODO.md`, requirements ledger.
+- **AI continuity:** [`ai/AI_ORGANISATION.md`](ai/AI_ORGANISATION.md), drift controls, work/decision/assumption ledgers, context map.
+- **Dependencies/toolchain:** [`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](docs/DEPENDENCIES_AND_TOOLCHAIN.md), `platform/toolchain-requirements.json`.
+- **Feature analysis:** [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md), `platform/feature-analysis.schema.json`.
+- **Community:** [`COMMUNITY.md`](COMMUNITY.md), [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SUPPORT.md`](SUPPORT.md), [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md), `docs/community/`.
 
 ## Source-of-truth order
 
@@ -106,7 +106,7 @@ Never resolve contradictions by averaging incompatible summaries.
 14. A requirement cannot be rejected merely because public APIs cannot express it; use the shallowest reliable layer and escalate when justified.
 15. Deep integration must not bypass authentication, entitlement, DRM, anti-cheat or platform security controls.
 16. Tool installation is not runtime validation; dependency state and feature state remain separate.
-17. Do not claim the exact remote reference-vault binary payload is complete while `vault/REMOTE_BINARY_IMPORT_PENDING.md` exists.
+17. Do not claim the exact remote reference-vault binary payload is complete while [`vault/REMOTE_BINARY_IMPORT_PENDING.md`](vault/REMOTE_BINARY_IMPORT_PENDING.md) exists.
 18. Cost/priority analysis is diagnostic; it cannot silently erase retained CR scope.
 19. Difficult-to-reverse decisions require stronger evidence and explicit migration/recovery analysis.
 
@@ -131,11 +131,11 @@ Never resolve contradictions by averaging incompatible summaries.
 
 For non-trivial work:
 
-1. read `AGENTS.md`;
+1. read [`AGENTS.md`](AGENTS.md);
 2. read this handoff;
-3. read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md`;
-4. for substantial feature/architecture work, read `docs/FEATURE_DECISION_FRAMEWORK.md` and `docs/DEVELOPMENT_MAP.md`;
-5. read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`;
+3. read [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md);
+4. for substantial feature/architecture work, read [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md) and [`docs/DEVELOPMENT_MAP.md`](docs/DEVELOPMENT_MAP.md);
+5. read [`ai/AI_ORGANISATION.md`](ai/AI_ORGANISATION.md) and [`ai/DRIFT_MITIGATION.md`](ai/DRIFT_MITIGATION.md);
 6. inspect `platform/brand.json`, `platform/repository-metadata.json`, `platform/chat-requirements.json`, `platform/feature-analysis.schema.json` and `platform/toolchain-requirements.json`;
 7. inspect work-state, decision and assumption ledgers;
 8. use `ai/context-map.json` for task-specific canonical source;

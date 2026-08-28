@@ -12,10 +12,10 @@ The human project owner has final authority over mission, product direction, bra
 
 For non-trivial work:
 
-1. Read `AI_HANDOFF.md`.
-2. Read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and identify affected CR IDs.
-3. Read `docs/FEATURE_DECISION_FRAMEWORK.md` for substantial feature/architecture work.
-4. Read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`.
+1. Read [`AI_HANDOFF.md`](AI_HANDOFF.md).
+2. Read [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and identify affected CR IDs.
+3. Read [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md) for substantial feature/architecture work.
+4. Read [`ai/AI_ORGANISATION.md`](ai/AI_ORGANISATION.md) and [`ai/DRIFT_MITIGATION.md`](ai/DRIFT_MITIGATION.md).
 5. Inspect `platform/brand.json`, `platform/repository-metadata.json`, `platform/chat-requirements.json`, `platform/toolchain-requirements.json`, work state, decision ledger and assumption ledger.
 6. Use the relevant domain in `ai/context-map.json` instead of scanning unrelated trees.
 7. Read `platform/versions.json`, provider manifests and relevant `references/index/` entries before guessing external APIs.
@@ -25,17 +25,17 @@ For non-trivial work:
 
 ## Brand rule
 
-**Gridelyx** is the canonical root brand; **Gridelyx Studio** is the integrated suite. New project-owned names use Gridelyx. Existing Gridelyx/VFSB source, ABI, protocol, persisted and filename identifiers are migration compatibility state governed by `docs/REBRAND_PLAN.md`. Do not introduce new retired-brand identifiers and do not blindly rename compatibility boundaries without migration tests.
+**Gridelyx** is the canonical root brand; **Gridelyx Studio** is the integrated suite. New project-owned names use Gridelyx. Existing Gridelyx/VFSB source, ABI, protocol, persisted and filename identifiers are migration compatibility state governed by [`docs/REBRAND_PLAN.md`](docs/REBRAND_PLAN.md). Do not introduce new retired-brand identifiers and do not blindly rename compatibility boundaries without migration tests.
 
 Product/API slug remains `gridelyx`; the requested GitHub repository slug is `gridlyx` and is recorded separately in `platform/repository-metadata.json`.
 
 ## Requirements preservation
 
-`docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json` are the retained whole-chat scope, currently CR-001 through CR-034. A future agent may not remove or materially weaken a requirement because it is difficult, outside normal Minecraft APIs, expensive, lower priority or not currently target-validated. Such discoveries change integration level, schedule and evidence burden. Scope removal needs explicit human approval recorded in the decision ledger.
+[`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and `platform/chat-requirements.json` are the retained whole-chat scope, currently CR-001 through CR-034. A future agent may not remove or materially weaken a requirement because it is difficult, outside normal Minecraft APIs, expensive, lower priority or not currently target-validated. Such discoveries change integration level, schedule and evidence burden. Scope removal needs explicit human approval recorded in the decision ledger.
 
 ## Feature decision protocol
 
-Substantial features and architecture changes use `docs/FEATURE_DECISION_FRAMEWORK.md` and `docs/templates/FEATURE_EVALUATION_TEMPLATE.md`.
+Substantial features and architecture changes use [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md) and [`docs/templates/FEATURE_EVALUATION_TEMPLATE.md`](docs/templates/FEATURE_EVALUATION_TEMPLATE.md).
 
 Required analysis includes:
 
@@ -55,7 +55,7 @@ This is diagnostic/planning machinery. It must not be used to silently discard a
 
 ## Source-of-truth discipline
 
-When sources conflict, follow `docs/PROJECT_PLAN.md` and `AI_HANDOFF.md`. Do not choose the most convenient summary.
+When sources conflict, follow [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md) and [`AI_HANDOFF.md`](AI_HANDOFF.md). Do not choose the most convenient summary.
 
 Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRES VALIDATION when useful. Capability maturity cannot exceed its recorded R0-R6 evidence.
 
@@ -72,13 +72,13 @@ Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRE
 
 ## Dependency/toolchain rules
 
-`docs/DEPENDENCIES_AND_TOOLCHAIN.md` and `platform/toolchain-requirements.json` are canonical.
+[`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](docs/DEPENDENCIES_AND_TOOLCHAIN.md) and `platform/toolchain-requirements.json` are canonical.
 
 - Never invent a version for an unpinned tool.
 - Tool installation is not proof that a feature works.
 - Optional language/native/production tooling is capability-specific, not universally required.
 - Reference JDK/LWJGL archives are not default Minecraft runtime dependencies.
-- Do not claim the large remote reference-vault payload is complete while `vault/REMOTE_BINARY_IMPORT_PENDING.md` exists.
+- Do not claim the large remote reference-vault payload is complete while [`vault/REMOTE_BINARY_IMPORT_PENDING.md`](vault/REMOTE_BINARY_IMPORT_PENDING.md) exists.
 - Before release claims, presently unpinned Python/Rust/CMake/compiler/Go/.NET/encoder policies need supported-version evidence.
 
 ## Launcher / acquisition rules

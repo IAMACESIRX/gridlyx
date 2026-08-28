@@ -27,7 +27,7 @@ For Java Edition the project can operate at progressively deeper levels:
 7. version-pinned executable/library patches;
 8. project-owned engine subsystem augmentation or runtime components.
 
-See `docs/DEEP_INTEGRATION_ARCHITECTURE.md` for the governing rules.
+See [`docs/DEEP_INTEGRATION_ARCHITECTURE.md`](../DEEP_INTEGRATION_ARCHITECTURE.md) for the governing rules.
 
 ## Creator runtime
 
@@ -39,10 +39,10 @@ Java and Bedrock consume neutral project contracts where useful, but each target
 
 ## Planning and truth
 
-- `docs/PROJECT_PLAN.md` — program control.
-- `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` — retained conversation scope.
-- `docs/FEATURE_MAP.md` — evidence/readiness snapshot.
-- `docs/TODO.md` — active implementation ledger.
-- `AI_HANDOFF.md` — current continuation state.
+- [`docs/PROJECT_PLAN.md`](../PROJECT_PLAN.md) — program control.
+- [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](../CHAT_REQUIREMENTS_TRACEABILITY.md) — retained conversation scope.
+- [`docs/FEATURE_MAP.md`](../FEATURE_MAP.md) — evidence/readiness snapshot.
+- [`docs/TODO.md`](../TODO.md) — active implementation ledger.
+- [`AI_HANDOFF.md`](../../AI_HANDOFF.md) — current continuation state.
 
-When these disagree, follow the source-of-truth ordering in `docs/PROJECT_PLAN.md` and inspect implementation/test evidence.
+When these disagree, follow the source-of-truth ordering in [`docs/PROJECT_PLAN.md`](../PROJECT_PLAN.md) and inspect implementation/test evidence.

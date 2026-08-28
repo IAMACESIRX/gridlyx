@@ -4,7 +4,7 @@
 
 Gridelyx deliberately works close to engine, runtime, memory, networking and world-state boundaries. This document defines the engineering safety rules for developing, testing and operating those capabilities.
 
-`SAFETY.md` is about preventing accidental harm, corruption, data loss, unsafe execution and uncontrolled failure. Security vulnerabilities and hostile abuse are covered by `SECURITY.md`; contributor behaviour is covered by `CODE_OF_CONDUCT.md`.
+[`SAFETY.md`](SAFETY.md) is about preventing accidental harm, corruption, data loss, unsafe execution and uncontrolled failure. Security vulnerabilities and hostile abuse are covered by [`SECURITY.md`](SECURITY.md); contributor behaviour is covered by [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 
 ## Safety model
 
@@ -325,7 +325,7 @@ If Gridelyx causes unexpected destructive or unsafe behaviour:
 7. reproduce on disposable state before attempting a fix on valuable data;
 8. document the failure class and add regression coverage.
 
-Security incidents should additionally follow `SECURITY.md`.
+Security incidents should additionally follow [`SECURITY.md`](SECURITY.md).
 
 ## Safety is not capability removal
 
@@ -335,8 +335,8 @@ Where physics or platform constraints make an in-place mechanism unsafe, Gridely
 
 ## Related documents
 
-- `SECURITY.md` — security policy and vulnerability reporting.
-- `CODE_OF_CONDUCT.md` — community and contributor behaviour.
-- `docs/SECURITY_MODEL.md` — architecture-level threat/security model.
-- `docs/FAULT_TOLERANCE.md` — failure containment and recovery hierarchy.
-- `docs/HOTLOAD_ARCHITECTURE.md` — public hotload and runtime epoch design.
+- [`SECURITY.md`](SECURITY.md) — security policy and vulnerability reporting.
+- [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) — community and contributor behaviour.
+- [`docs/SECURITY_MODEL.md`](docs/SECURITY_MODEL.md) — architecture-level threat/security model.
+- [`docs/FAULT_TOLERANCE.md`](docs/FAULT_TOLERANCE.md) — failure containment and recovery hierarchy.
+- [`docs/HOTLOAD_ARCHITECTURE.md`](docs/HOTLOAD_ARCHITECTURE.md) — public hotload and runtime epoch design.

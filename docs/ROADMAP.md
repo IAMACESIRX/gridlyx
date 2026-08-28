@@ -1,6 +1,6 @@
 # Gridelyx roadmap
 
-Retained scope is canonicalized in `CHAT_REQUIREMENTS_TRACEABILITY.md` and `../platform/chat-requirements.json`. Dependencies/tools are canonicalized in `DEPENDENCIES_AND_TOOLCHAIN.md`, `CAPABILITY_DEPENDENCY_MATRIX.md` and `../platform/toolchain-requirements.json`. Feature analysis, critical path and prioritisation are governed by `FEATURE_DECISION_FRAMEWORK.md` and `DEVELOPMENT_MAP.md`.
+Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md) and `../platform/chat-requirements.json`. Dependencies/tools are canonicalized in [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md), [`CAPABILITY_DEPENDENCY_MATRIX.md`](CAPABILITY_DEPENDENCY_MATRIX.md) and `../platform/toolchain-requirements.json`. Feature analysis, critical path and prioritisation are governed by [`FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md) and [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md).
 
 ## Readiness scale
 

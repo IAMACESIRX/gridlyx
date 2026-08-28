@@ -17,7 +17,7 @@ GitHub Issues are the operational work queue; repository ledgers remain the arch
 
 ## Feature Decision Packet
 
-Substantial feature or architecture work uses `../FEATURE_DECISION_FRAMEWORK.md` and `../templates/FEATURE_EVALUATION_TEMPLATE.md`. The repository issue form `.github/ISSUE_TEMPLATE/feature-evaluation.yml` provides the intake surface.
+Substantial feature or architecture work uses [`../FEATURE_DECISION_FRAMEWORK.md`](../FEATURE_DECISION_FRAMEWORK.md) and [`../templates/FEATURE_EVALUATION_TEMPLATE.md`](../templates/FEATURE_EVALUATION_TEMPLATE.md). The repository issue form `.github/ISSUE_TEMPLATE/feature-evaluation.yml` provides the intake surface.
 
 Before an item moves from Backlog toward Ready, analyse it at a depth proportionate to risk/reversibility, including W5x5x5, first principles, values, cost/horizons, opportunity cost, regret/reversibility, risks/inversion/pre-mortem, second-order effects, benchmarks, MVP/timebox, Pareto, Critical Path, Cynefin and evidence/rollback.
 
@@ -27,10 +27,10 @@ Cost or priority analysis controls sequencing; it does not silently delete retai
 
 An issue may track implementation status but must not silently redefine project scope. If an issue changes architecture, scope, dependency requirements, planning state or evidence state, update the corresponding canonical files in the same work:
 
-- `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` / `platform/chat-requirements.json`;
-- `docs/FEATURE_DECISION_FRAMEWORK.md` / `platform/feature-analysis.schema.json` when decision methodology changes;
-- `docs/TODO.md`, `ROADMAP.md`, `DEVELOPMENT_MAP.md`, `FEATURE_MAP.md`;
-- `docs/DEPENDENCIES_AND_TOOLCHAIN.md` / `platform/toolchain-requirements.json`;
+- [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](../CHAT_REQUIREMENTS_TRACEABILITY.md) / `platform/chat-requirements.json`;
+- [`docs/FEATURE_DECISION_FRAMEWORK.md`](../FEATURE_DECISION_FRAMEWORK.md) / `platform/feature-analysis.schema.json` when decision methodology changes;
+- [`docs/TODO.md`](../TODO.md), `ROADMAP.md`, `DEVELOPMENT_MAP.md`, `FEATURE_MAP.md`;
+- [`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](../DEPENDENCIES_AND_TOOLCHAIN.md) / `platform/toolchain-requirements.json`;
 - decision/assumption/work-state ledgers when project truth changes.
 
 ## Closing an issue

@@ -32,7 +32,7 @@ mkdocs serve
 
 ## Interactive API documentation
 
-`docs/api/gridelyx-development-api.openapi.yaml` is OpenAPI 3.1. `mkdocs-swagger-ui-tag` renders it inside `docs/api/index.md`. The API spec is a capability contract and must not be interpreted as proof that every route exists on every runtime target.
+`docs/api/gridelyx-development-api.openapi.yaml` is OpenAPI 3.1. `mkdocs-swagger-ui-tag` renders it inside [`docs/api/index.md`](api/index.md). The API spec is a capability contract and must not be interpreted as proof that every route exists on every runtime target.
 
 ## Diagrams as code
 

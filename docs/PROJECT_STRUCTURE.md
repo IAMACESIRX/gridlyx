@@ -99,7 +99,7 @@ Owns Java in-game creator/runtime mechanisms: UAL/Polyloader, scripting, bytecod
 Owns supported Bedrock Script/Add-On/Editor assets and target adapters. Neutral Gridelyx operations should be reused where practical; target capability differences remain explicit.
 
 ### `native`
-Owns trusted native process/in-process code and ABI boundaries. Deep binary/runtime patching follows `DEEP_INTEGRATION_ARCHITECTURE.md` and explicit version/fingerprint/provenance/rollback records.
+Owns trusted native process/in-process code and ABI boundaries. Deep binary/runtime patching follows [`DEEP_INTEGRATION_ARCHITECTURE.md`](DEEP_INTEGRATION_ARCHITECTURE.md) and explicit version/fingerprint/provenance/rollback records.
 
 Legacy `gridelyx_*`/`VFSB` symbols still present are classified compatibility migration state until the versioned Gridelyx ABI/protocol transition is tested.
 
@@ -157,4 +157,4 @@ Downloaded immutable binaries may be hard-linked/reflinked into instances. Mutab
 
 ## Dependency ownership
 
-`docs/DEPENDENCIES_AND_TOOLCHAIN.md` and `platform/toolchain-requirements.json` own cross-project prerequisite truth. Subsystems may add narrower local manifests, but they must not introduce a hidden compiler/runtime/executable/provider that bypasses the central inventory.
+[`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md) and `platform/toolchain-requirements.json` own cross-project prerequisite truth. Subsystems may add narrower local manifests, but they must not introduce a hidden compiler/runtime/executable/provider that bypasses the central inventory.

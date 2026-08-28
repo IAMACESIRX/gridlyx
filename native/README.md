@@ -21,7 +21,7 @@ The `gridelyx_shm_create` / `gridelyx_shm_open` functions expose a named mapped 
 
 Consumers snapshot/copy the payload and verify publication sequence. If the sequence changes during the read, the consumer retries rather than accepting a torn revision.
 
-Canonical logical protocol documentation: `docs/GRIDELYX_BRIDGE_PROTOCOL.md`.
+Canonical logical protocol documentation: [`docs/GRIDELYX_BRIDGE_PROTOCOL.md`](../docs/GRIDELYX_BRIDGE_PROTOCOL.md).
 
 ## Bedrock companion
 

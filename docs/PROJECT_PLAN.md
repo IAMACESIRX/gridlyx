@@ -24,7 +24,7 @@ Consumer simplicity and expert transparency must use the same resolver, lockfile
 
 ## Retained scope contract
 
-`docs/CHAT_REQUIREMENTS_TRACEABILITY.md` is the human-readable retained-scope ledger. `platform/chat-requirements.json` is its machine-readable companion.
+[`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md) is the human-readable retained-scope ledger. `platform/chat-requirements.json` is its machine-readable companion.
 
 Every retained capability must remain represented by either:
 
@@ -37,7 +37,7 @@ A requirement does not disappear because it is difficult, expensive, version-fra
 
 ## Dependency and toolchain contract
 
-`docs/DEPENDENCIES_AND_TOOLCHAIN.md`, `docs/CAPABILITY_DEPENDENCY_MATRIX.md` and `platform/toolchain-requirements.json` define what must be installed/acquired for each development or validation lane.
+[`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md), [`docs/CAPABILITY_DEPENDENCY_MATRIX.md`](CAPABILITY_DEPENDENCY_MATRIX.md) and `platform/toolchain-requirements.json` define what must be installed/acquired for each development or validation lane.
 
 Rules:
 
@@ -53,7 +53,7 @@ Rules:
 
 ## Feature analysis and decision contract
 
-CR-034 is governed by `docs/FEATURE_DECISION_FRAMEWORK.md`, `docs/PROJECT_VALUES.md`, `docs/DEVELOPMENT_MAP.md`, `docs/BENCHMARKING_MATRIX.md`, `docs/templates/FEATURE_EVALUATION_TEMPLATE.md` and `platform/feature-analysis.schema.json`.
+CR-034 is governed by [`docs/FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md), [`docs/PROJECT_VALUES.md`](PROJECT_VALUES.md), [`docs/DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md), [`docs/BENCHMARKING_MATRIX.md`](BENCHMARKING_MATRIX.md), [`docs/templates/FEATURE_EVALUATION_TEMPLATE.md`](templates/FEATURE_EVALUATION_TEMPLATE.md) and `platform/feature-analysis.schema.json`.
 
 For substantial features/architecture, analysis is proportionate to risk and reversibility and includes:
 
@@ -76,7 +76,7 @@ Cost/priority diagnosis informs sequencing. It does not silently erase retained 
 
 `platform/brand.json` is the canonical product identity source. Root brand: **Gridelyx**. Integrated suite: **Gridelyx Studio**. `platform/repository-metadata.json` separately records the explicitly requested GitHub repository slug `gridlyx` and desired combined description.
 
-Gridelyx/VFSB source, protocol, ABI, persisted and path identifiers still present in the tree are classified migration compatibility debt, not current branding. `docs/REBRAND_PLAN.md` and `platform/terminology.json` govern the staged migration. Blind replacement across wire/ABI/persisted boundaries is prohibited.
+Gridelyx/VFSB source, protocol, ABI, persisted and path identifiers still present in the tree are classified migration compatibility debt, not current branding. [`docs/REBRAND_PLAN.md`](REBRAND_PLAN.md) and `platform/terminology.json` govern the staged migration. Blind replacement across wire/ABI/persisted boundaries is prohibited.
 
 ## Integration boundary and escalation
 
@@ -94,7 +94,7 @@ Use the shallowest reliable layer that satisfies a capability, but escalate when
 - engine-subsystem augmentation/replacement behind project-owned contracts;
 - maintained project-owned runtime components/forks when repeated patching is less reliable than owning the extension surface.
 
-`docs/DEEP_INTEGRATION_ARCHITECTURE.md` governs L0-L8 escalation.
+[`docs/DEEP_INTEGRATION_ARCHITECTURE.md`](DEEP_INTEGRATION_ARCHITECTURE.md) governs L0-L8 escalation.
 
 Deep integration is additive: retain or recover a verified upstream/base artifact, express changes as attributable patch/overlay/component graphs, fingerprint exact targets, verify derived runtime state and maintain rollback. Lack of a public API changes the integration level and validation burden; it does **not** automatically delete or weaken the requirement.
 
@@ -169,7 +169,7 @@ For architecture/compatibility decisions record:
 - rollback/migration route;
 - files/issues/tests affected.
 
-Use `ai/decision-ledger.json` and `docs/DECISIONS.md`. Substantial features should additionally carry a Feature Decision Packet.
+Use `ai/decision-ledger.json` and [`docs/DECISIONS.md`](DECISIONS.md). Substantial features should additionally carry a Feature Decision Packet.
 
 L5-L8 deep-integration decisions additionally record why shallower mechanisms are insufficient, exact target fingerprints, blast radius, derived-runtime/overlay model, upstream maintenance burden and recovery behavior.
 
@@ -183,7 +183,7 @@ Unverified assumptions belong in `ai/assumption-ledger.json` with scope, confide
 
 For substantial AI-assisted work:
 
-1. read `AGENTS.md` and `AI_HANDOFF.md`;
+1. read [`AGENTS.md`](../AGENTS.md) and [`AI_HANDOFF.md`](../AI_HANDOFF.md);
 2. identify affected CR IDs in the retained requirements ledger;
 3. use the Feature Decision Packet when the work is substantial/architectural;
 4. inspect brand, repository metadata, requirements, feature-analysis and toolchain manifests;
@@ -270,25 +270,25 @@ plus subsystem-specific tests.
 
 ## Planning surfaces
 
-- `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` — complete retained conversation scope;
+- [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md) — complete retained conversation scope;
 - `platform/chat-requirements.json` — machine-readable requirement/evidence paths;
-- `docs/FEATURE_DECISION_FRAMEWORK.md` — substantial-feature analysis method;
-- `docs/PROJECT_VALUES.md` — values/invariants used by feature analysis;
-- `docs/DEVELOPMENT_MAP.md` — critical path, parallel lanes, horizons and Kanban;
-- `docs/BENCHMARKING_MATRIX.md` — benchmark targets/process;
-- `docs/templates/FEATURE_EVALUATION_TEMPLATE.md` — reusable decision packet;
+- [`docs/FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md) — substantial-feature analysis method;
+- [`docs/PROJECT_VALUES.md`](PROJECT_VALUES.md) — values/invariants used by feature analysis;
+- [`docs/DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md) — critical path, parallel lanes, horizons and Kanban;
+- [`docs/BENCHMARKING_MATRIX.md`](BENCHMARKING_MATRIX.md) — benchmark targets/process;
+- [`docs/templates/FEATURE_EVALUATION_TEMPLATE.md`](templates/FEATURE_EVALUATION_TEMPLATE.md) — reusable decision packet;
 - `platform/feature-analysis.schema.json` — machine-readable feature packet contract;
-- `docs/DEPENDENCIES_AND_TOOLCHAIN.md` — dependency/tool documentation;
-- `docs/CAPABILITY_DEPENDENCY_MATRIX.md` — capability-to-prerequisite/validation mapping;
+- [`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md) — dependency/tool documentation;
+- [`docs/CAPABILITY_DEPENDENCY_MATRIX.md`](CAPABILITY_DEPENDENCY_MATRIX.md) — capability-to-prerequisite/validation mapping;
 - `platform/toolchain-requirements.json` — machine-readable tools/libraries;
 - `platform/brand.json` — canonical Gridelyx product identity;
 - `platform/repository-metadata.json` — requested GitHub slug/description state;
-- `platform/terminology.json` / `docs/REBRAND_PLAN.md` — migration state;
-- `docs/PROJECT_OVERVIEW.md` — product architecture;
-- `docs/PROJECT_STRUCTURE.md` — ownership boundaries;
-- `docs/DEEP_INTEGRATION_ARCHITECTURE.md` — additive integration model;
-- `docs/ROADMAP.md` — staged delivery;
-- `docs/FEATURE_MAP.md` — readiness/evidence matrix;
-- `docs/TODO.md` — live implementation ledger;
-- `COMMUNITY.md` and `docs/community/` — onboarding;
-- `AI_HANDOFF.md`, `ai/` — AI continuity/control/navigation.
+- `platform/terminology.json` / [`docs/REBRAND_PLAN.md`](REBRAND_PLAN.md) — migration state;
+- [`docs/PROJECT_OVERVIEW.md`](PROJECT_OVERVIEW.md) — product architecture;
+- [`docs/PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md) — ownership boundaries;
+- [`docs/DEEP_INTEGRATION_ARCHITECTURE.md`](DEEP_INTEGRATION_ARCHITECTURE.md) — additive integration model;
+- [`docs/ROADMAP.md`](ROADMAP.md) — staged delivery;
+- [`docs/FEATURE_MAP.md`](FEATURE_MAP.md) — readiness/evidence matrix;
+- [`docs/TODO.md`](TODO.md) — live implementation ledger;
+- [`COMMUNITY.md`](../COMMUNITY.md) and `docs/community/` — onboarding;
+- [`AI_HANDOFF.md`](../AI_HANDOFF.md), `ai/` — AI continuity/control/navigation.

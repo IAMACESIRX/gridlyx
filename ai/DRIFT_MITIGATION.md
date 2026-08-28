@@ -36,11 +36,11 @@ A retired public identity remains in source, docs, protocols, package labels, wo
 The following anchors are checked before material changes:
 
 1. explicit current user direction;
-2. `docs/PROJECT_PLAN.md`;
-3. `docs/PROJECT_OVERVIEW.md` and subsystem architecture docs;
-4. `docs/FEATURE_MAP.md` and readiness evidence;
-5. `docs/TODO.md` and active GitHub issues;
-6. `AI_HANDOFF.md` and `ai/work-state.json`;
+2. [`docs/PROJECT_PLAN.md`](../docs/PROJECT_PLAN.md);
+3. [`docs/PROJECT_OVERVIEW.md`](../docs/PROJECT_OVERVIEW.md) and subsystem architecture docs;
+4. [`docs/FEATURE_MAP.md`](../docs/FEATURE_MAP.md) and readiness evidence;
+5. [`docs/TODO.md`](../docs/TODO.md) and active GitHub issues;
+6. [`AI_HANDOFF.md`](../AI_HANDOFF.md) and `ai/work-state.json`;
 7. `ai/decision-ledger.json` and `ai/assumption-ledger.json`;
 8. target-specific implementation, tests and upstream version evidence.
 

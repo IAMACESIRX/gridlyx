@@ -91,7 +91,7 @@ For each prompt, perform at least five progressively deeper passes.
 
 ## Values alignment
 
-Use `docs/PROJECT_VALUES.md`.
+Use [`docs/PROJECT_VALUES.md`](../PROJECT_VALUES.md).
 
 - Strengthens:
 - Tensions:
@@ -121,7 +121,7 @@ Use `docs/PROJECT_VALUES.md`.
 
 ## Benchmarking
 
-Reference `docs/BENCHMARKING_MATRIX.md` and current evidence.
+Reference [`docs/BENCHMARKING_MATRIX.md`](../BENCHMARKING_MATRIX.md) and current evidence.
 
 - Benchmarks:
 - Emulate:

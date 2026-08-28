@@ -6,11 +6,11 @@ This document preserves the requirements requested throughout the Gridelyx devel
 
 Canonical machine-readable mirror: `../platform/chat-requirements.json`.
 
-Canonical dependency/tool inventory: `DEPENDENCIES_AND_TOOLCHAIN.md` and `../platform/toolchain-requirements.json`.
+Canonical dependency/tool inventory: [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md) and `../platform/toolchain-requirements.json`.
 
-Canonical feature-analysis system: `FEATURE_DECISION_FRAMEWORK.md`, `DEVELOPMENT_MAP.md` and `../platform/feature-analysis.schema.json`.
+Canonical feature-analysis system: [`FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md), [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md) and `../platform/feature-analysis.schema.json`.
 
-Canonical stakeholder/documentation layer: `STAKEHOLDER_DASHBOARD.md`, `ARCHITECTURE_DIAGRAMS.md`, `../mkdocs.yml` and `DOCUMENTATION_DRIVEN_MARKETING.md`.
+Canonical stakeholder/documentation layer: [`STAKEHOLDER_DASHBOARD.md`](STAKEHOLDER_DASHBOARD.md), [`ARCHITECTURE_DIAGRAMS.md`](ARCHITECTURE_DIAGRAMS.md), `../mkdocs.yml` and [`DOCUMENTATION_DRIVEN_MARKETING.md`](DOCUMENTATION_DRIVEN_MARKETING.md).
 
 ## Brand state
 
@@ -177,4 +177,4 @@ Difficulty, absence of a normal mod/API surface, or lack of current validation d
 
 ## Synchronization rule
 
-When implementation/planning paths move, update this file and `../platform/chat-requirements.json`. When tool requirements change, update `DEPENDENCIES_AND_TOOLCHAIN.md` and `../platform/toolchain-requirements.json`. When feature-planning policy changes, update `FEATURE_DECISION_FRAMEWORK.md`, `DEVELOPMENT_MAP.md`, the feature-analysis schema and issue template. When stakeholder/documentation surfaces change, update `STAKEHOLDER_DASHBOARD.md`, diagrams, docs-site/API/release communication files and `tools/docs_check.py` as applicable. When readiness changes, update `FEATURE_MAP.md`/target manifests only after evidence exists. Broad AI work must consult this ledger through `../ai/context-map.json`.
+When implementation/planning paths move, update this file and `../platform/chat-requirements.json`. When tool requirements change, update [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md) and `../platform/toolchain-requirements.json`. When feature-planning policy changes, update [`FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md), [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md), the feature-analysis schema and issue template. When stakeholder/documentation surfaces change, update [`STAKEHOLDER_DASHBOARD.md`](STAKEHOLDER_DASHBOARD.md), diagrams, docs-site/API/release communication files and `tools/docs_check.py` as applicable. When readiness changes, update [`FEATURE_MAP.md`](FEATURE_MAP.md)/target manifests only after evidence exists. Broad AI work must consult this ledger through `../ai/context-map.json`.

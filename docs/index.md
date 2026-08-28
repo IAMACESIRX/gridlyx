@@ -28,7 +28,7 @@
 | Feature owner | [Feature Decision Framework](FEATURE_DECISION_FRAMEWORK.md) |
 | API/tool developer | [Interactive API Documentation](api/index.md) |
 | Maintainer | [Roadmap](ROADMAP.md), [TODO](TODO.md), [Release Communications](RELEASE_NOTES_AND_CHANGELOGS.md) |
-| AI agent | root `AGENTS.md`, `AI_HANDOFF.md`, then `ai/context-map.json` |
+| AI agent | root [`AGENTS.md`](../AGENTS.md), [`AI_HANDOFF.md`](../AI_HANDOFF.md), then `ai/context-map.json` |
 
 ## Current visual map
 

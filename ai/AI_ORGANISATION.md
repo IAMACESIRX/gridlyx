@@ -82,7 +82,7 @@ The validator should be independent from the implementation claim when practical
 
 Owns:
 
-- `AI_HANDOFF.md` coherence;
+- [`AI_HANDOFF.md`](../AI_HANDOFF.md) coherence;
 - `ai/work-state.json`;
 - decision and assumption ledgers;
 - context-map integrity;
@@ -165,7 +165,7 @@ For work that crosses agents/sessions, record:
 - rollback/recovery point;
 - exact next actions.
 
-`ai/work-state.json` is the compact machine-readable form; `AI_HANDOFF.md` is the human-readable summary.
+`ai/work-state.json` is the compact machine-readable form; [`AI_HANDOFF.md`](../AI_HANDOFF.md) is the human-readable summary.
 
 ## Conflict resolution
 

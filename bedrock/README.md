@@ -67,6 +67,6 @@ Run:
 python tools/bedrock_check.py
 ```
 
-Canonical bridge documentation: `docs/GRIDELYX_BRIDGE_PROTOCOL.md`.
+Canonical bridge documentation: [`docs/GRIDELYX_BRIDGE_PROTOCOL.md`](../docs/GRIDELYX_BRIDGE_PROTOCOL.md).
 
-Deep-integration policy: `docs/DEEP_INTEGRATION_ARCHITECTURE.md`.
+Deep-integration policy: [`docs/DEEP_INTEGRATION_ARCHITECTURE.md`](../docs/DEEP_INTEGRATION_ARCHITECTURE.md).

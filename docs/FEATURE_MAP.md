@@ -1,6 +1,6 @@
 # Gridelyx feature and readiness map
 
-Status uses R0-R6 from `PROJECT_PLAN.md`. This is an evidence snapshot, not a marketing promise. Complete retained scope lives in `CHAT_REQUIREMENTS_TRACEABILITY.md`; dependencies/tools live in `DEPENDENCIES_AND_TOOLCHAIN.md` and `CAPABILITY_DEPENDENCY_MATRIX.md`; feature analysis and execution topology live in `FEATURE_DECISION_FRAMEWORK.md` and `DEVELOPMENT_MAP.md`.
+Status uses R0-R6 from [`PROJECT_PLAN.md`](PROJECT_PLAN.md). This is an evidence snapshot, not a marketing promise. Complete retained scope lives in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md); dependencies/tools live in [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md) and [`CAPABILITY_DEPENDENCY_MATRIX.md`](CAPABILITY_DEPENDENCY_MATRIX.md); feature analysis and execution topology live in [`FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md) and [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md).
 
 | Domain | Capability | Target | State | Notes |
 |---|---|---|---:|---|

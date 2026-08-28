@@ -42,11 +42,11 @@ Server-only HTTP/WebSocket/network APIs may be used by validated Bedrock Dedicat
 
 Java 25 FFM/Panama can bind the project-owned native bridge. The current version-1 compatibility ABI still uses `gridelyx_native`, `gridelyx_*` symbols and `VFSB` magic. Those names are retained **only** as compatibility identifiers during the staged Gridelyx protocol/ABI migration in Issue #26.
 
-Canonical future identity is `gridelyx_native`, `gridelyx_*` and `GLXB`, as recorded in `platform/brand.json` and `GRIDELYX_BRIDGE_PROTOCOL.md`.
+Canonical future identity is `gridelyx_native`, `gridelyx_*` and `GLXB`, as recorded in `platform/brand.json` and [`GRIDELYX_BRIDGE_PROTOCOL.md`](GRIDELYX_BRIDGE_PROTOCOL.md).
 
 The native library owns named shared-memory publication state. Producers write encoded bridge frames and publish metadata; consumers validate sequence/length/CRC before dispatch to a `BedrockAdapter`.
 
-The default adapter is a logging/validation boundary. Deep renderer/world/executable integration is not treated as universally stable. If a retained capability requires a deeper target adapter, it must be exact-version/fingerprint gated, attributable and recoverable under `DEEP_INTEGRATION_ARCHITECTURE.md`.
+The default adapter is a logging/validation boundary. Deep renderer/world/executable integration is not treated as universally stable. If a retained capability requires a deeper target adapter, it must be exact-version/fingerprint gated, attributable and recoverable under [`DEEP_INTEGRATION_ARCHITECTURE.md`](DEEP_INTEGRATION_ARCHITECTURE.md).
 
 ## Shared neutral capabilities
 
@@ -111,9 +111,9 @@ Gridelyx aims for one authoring/runtime model across Java and Bedrock, not binar
 
 ## References
 
-- `docs/GRIDELYX_BRIDGE_PROTOCOL.md`
+- [`docs/GRIDELYX_BRIDGE_PROTOCOL.md`](GRIDELYX_BRIDGE_PROTOCOL.md)
 - `platform/bedrock-capabilities.json`
 - `platform/brand.json`
-- `docs/DEEP_INTEGRATION_ARCHITECTURE.md`
-- `docs/CHAT_REQUIREMENTS_TRACEABILITY.md`
-- `docs/FEATURE_DECISION_FRAMEWORK.md`
+- [`docs/DEEP_INTEGRATION_ARCHITECTURE.md`](DEEP_INTEGRATION_ARCHITECTURE.md)
+- [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md)
+- [`docs/FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md)

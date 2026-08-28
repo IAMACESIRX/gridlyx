@@ -57,11 +57,11 @@ No secret is committed to the repository.
 
 ## Publishing checklist
 
-Before promoting a candidate into a GitHub release or `CHANGELOG.md`:
+Before promoting a candidate into a GitHub release or [`CHANGELOG.md`](../CHANGELOG.md):
 
 1. verify commit/PR range;
 2. inspect CI and target tests;
-3. compare claims with `FEATURE_MAP.md` and capability manifests;
+3. compare claims with [`FEATURE_MAP.md`](FEATURE_MAP.md) and capability manifests;
 4. include migrations/rollback when relevant;
 5. name exact Java/Bedrock/version/loader targets for runtime support claims;
 6. preserve experimental/planned/framework labels;

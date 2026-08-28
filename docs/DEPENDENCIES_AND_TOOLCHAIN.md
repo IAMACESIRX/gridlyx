@@ -169,7 +169,7 @@ The reference vault records exact supplied artifacts for deep inspection/recover
 
 Their exact hashes/chunk layout are recorded in `../vault/manifest.json` and `../references/index/supplied-artifacts.tsv`.
 
-**Remote-state caveat:** `../vault/REMOTE_BINARY_IMPORT_PENDING.md` currently exists. Therefore the GitHub repository contains the manifest/control layer, but the exact large binary payload has not yet been fully imported to remote GitHub. This is a tracked deployment task, not hidden completion.
+**Remote-state caveat:** [`../vault/REMOTE_BINARY_IMPORT_PENDING.md`](../vault/REMOTE_BINARY_IMPORT_PENDING.md) currently exists. Therefore the GitHub repository contains the manifest/control layer, but the exact large binary payload has not yet been fully imported to remote GitHub. This is a tracked deployment task, not hidden completion.
 
 ## Tools that must not become implicit runtime dependencies
 

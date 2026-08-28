@@ -6,7 +6,7 @@ Gridelyx is an experimental cross-edition development/runtime platform with inte
 
 Those capabilities are not treated as inherently safe merely because they are part of Gridelyx. Privileged surfaces must be explicit, reviewable, bounded and recoverable.
 
-Operational engineering hazards that are not primarily security vulnerabilities are documented separately in `SAFETY.md`.
+Operational engineering hazards that are not primarily security vulnerabilities are documented separately in [`SAFETY.md`](SAFETY.md).
 
 ## Supported security state
 
@@ -208,6 +208,6 @@ After remediation or reasonable coordination, security findings may be documente
 
 ## Related policies
 
-- `SAFETY.md` — operational and engineering safety.
-- `CODE_OF_CONDUCT.md` — contributor/community conduct.
-- `docs/SECURITY_MODEL.md` — detailed architecture-level security model.
+- [`SAFETY.md`](SAFETY.md) — operational and engineering safety.
+- [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) — contributor/community conduct.
+- [`docs/SECURITY_MODEL.md`](docs/SECURITY_MODEL.md) — detailed architecture-level security model.

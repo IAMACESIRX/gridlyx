@@ -77,7 +77,7 @@ Generated code should be reviewed to the same standard as human-written code, wi
 
 Do not publish an exploitable vulnerability, credential, private user information or immediately actionable destructive procedure in a public issue merely to prove that it exists.
 
-Security vulnerabilities should follow `SECURITY.md`. Operational and engineering hazards should follow `SAFETY.md`. If a report contains both, use the more private route first.
+Security vulnerabilities should follow [`SECURITY.md`](SECURITY.md). Operational and engineering hazards should follow [`SAFETY.md`](SAFETY.md). If a report contains both, use the more private route first.
 
 Good-faith reporters should provide enough information for maintainers to reproduce and contain the problem without unnecessarily increasing exposure.
 

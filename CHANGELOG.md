@@ -18,4 +18,4 @@ All notable Gridelyx changes should be summarized here or generated into a relea
 
 - GitHub repository metadata rename to `IAMACESIRX/gridlyx` remains tracked separately.
 - Remote exact reference-vault binary import remains incomplete while the pending marker exists.
-- Many Gridelyx runtime capabilities remain at planned/framework/validation stages as recorded in `docs/FEATURE_MAP.md`.
+- Many Gridelyx runtime capabilities remain at planned/framework/validation stages as recorded in [`docs/FEATURE_MAP.md`](docs/FEATURE_MAP.md).

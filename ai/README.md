@@ -2,9 +2,9 @@
 
 For any substantial Gridelyx Studio task, read in this order:
 
-1. `../AGENTS.md`
-2. `../AI_HANDOFF.md`
-3. `CONTEXT.md`
+1. [`../AGENTS.md`](../AGENTS.md)
+2. [`../AI_HANDOFF.md`](../AI_HANDOFF.md)
+3. [`CONTEXT.md`](CONTEXT.md)
 4. `context-map.json`
 5. task-specific authoritative files named by the context map
 

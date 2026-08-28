@@ -8,7 +8,7 @@ It combines a low-friction default UX comparable to consumer launchers with an e
 
 The desktop product must launch even when Java is not installed. Java is a managed dependency of Java Edition instances, not a prerequisite of the Gridelyx desktop shell.
 
-The complete retained capability contract is `CHAT_REQUIREMENTS_TRACEABILITY.md` / `../platform/chat-requirements.json`; this overview describes the product-level composition rather than duplicating every CR item.
+The complete retained capability contract is [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md) / `../platform/chat-requirements.json`; this overview describes the product-level composition rather than duplicating every CR item.
 
 ## Product planes
 
@@ -50,7 +50,7 @@ The complete retained capability contract is `CHAT_REQUIREMENTS_TRACEABILITY.md`
 
 Built-in/planned adapters cover Mojang/vanilla, Fabric, Quilt, Forge and NeoForge. Legacy/future loaders use the same adapter contract or explicit user-supplied launcher-profile import. Content acquisition uses official or authorized channels and never bypasses an author/provider distribution restriction.
 
-The dependency/tool/provider inventory is in `DEPENDENCIES_AND_TOOLCHAIN.md`, `../platform/toolchain-requirements.json` and `../studio/providers/providers.json`.
+The dependency/tool/provider inventory is in [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md), `../platform/toolchain-requirements.json` and `../studio/providers/providers.json`.
 
 ## Managed Java
 
@@ -171,7 +171,7 @@ Gridelyx does not promise that arbitrary same-process corruption can never crash
 - process isolation for crash-prone/untrusted/native workloads;
 - supervised broader restart with preserved editor/project context.
 
-Normal mod APIs are not the product ceiling. Where needed, capabilities may escalate through loader transforms, JVM agents, native components, sidecars, launch/bootstrap changes, deterministic executable/shared-library patches or project-owned engine/runtime components. Deep integration preserves a verified base, exact fingerprints, an attributable patch/overlay graph and rollback. See `DEEP_INTEGRATION_ARCHITECTURE.md`.
+Normal mod APIs are not the product ceiling. Where needed, capabilities may escalate through loader transforms, JVM agents, native components, sidecars, launch/bootstrap changes, deterministic executable/shared-library patches or project-owned engine/runtime components. Deep integration preserves a verified base, exact fingerprints, an attributable patch/overlay graph and rollback. See [`DEEP_INTEGRATION_ARCHITECTURE.md`](DEEP_INTEGRATION_ARCHITECTURE.md).
 
 ## Bedrock
 
@@ -228,8 +228,8 @@ Hard links/reflinks may deduplicate immutable artifacts; mutable state must not 
 
 ## Project intelligence and community
 
-The whole-chat scope is retained in `CHAT_REQUIREMENTS_TRACEABILITY.md` and enforced by CI. Human onboarding lives in `../COMMUNITY.md`, `../CONTRIBUTING.md`, `community/`, `../SUPPORT.md` and `../CODE_OF_CONDUCT.md`. AI continuity uses `../AI_HANDOFF.md`, `../AGENTS.md`, `../ai/context-map.json` and deterministic repository indexing/context packs.
+The whole-chat scope is retained in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md) and enforced by CI. Human onboarding lives in [`../COMMUNITY.md`](../COMMUNITY.md), [`../CONTRIBUTING.md`](../CONTRIBUTING.md), `community/`, [`../SUPPORT.md`](../SUPPORT.md) and [`../CODE_OF_CONDUCT.md`](../CODE_OF_CONDUCT.md). AI continuity uses [`../AI_HANDOFF.md`](../AI_HANDOFF.md), [`../AGENTS.md`](../AGENTS.md), `../ai/context-map.json` and deterministic repository indexing/context packs.
 
 ## Definition of done
 
-A feature is not “supported” because an interface exists. Gridelyx uses R0-R6 from idea/contract through compile/static evidence, automated tests, headless integration, interactive target validation and release-candidate packaging/migration/rollback evidence. `FEATURE_MAP.md` records current evidence state.
+A feature is not “supported” because an interface exists. Gridelyx uses R0-R6 from idea/contract through compile/static evidence, automated tests, headless integration, interactive target validation and release-candidate packaging/migration/rollback evidence. [`FEATURE_MAP.md`](FEATURE_MAP.md) records current evidence state.

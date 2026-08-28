@@ -1,6 +1,6 @@
 # Completing the Exact Private Reference Vault
 
-The GitHub API connection used to initialise this repository can write source/text files but cannot stream the supplied ~632 MB binary payload. The repository therefore records the exact expected bytes in `vault/manifest.json` and keeps `vault/REMOTE_BINARY_IMPORT_PENDING.md` until the binary import is complete.
+The GitHub API connection used to initialise this repository can write source/text files but cannot stream the supplied ~632 MB binary payload. The repository therefore records the exact expected bytes in `vault/manifest.json` and keeps [`vault/REMOTE_BINARY_IMPORT_PENDING.md`](../vault/REMOTE_BINARY_IMPORT_PENDING.md) until the binary import is complete.
 
 The JDK and LWJGL archives are intentionally split into 24 MiB ordinary Git blobs. This stays below GitHub's single-file hard limit while keeping the private repository self-contained and independent of a third-party download remaining available forever.
 

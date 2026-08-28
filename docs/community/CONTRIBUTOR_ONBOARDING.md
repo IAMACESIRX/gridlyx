@@ -2,12 +2,12 @@
 
 ## Before changing code
 
-1. Read `CONTRIBUTING.md`.
+1. Read [`CONTRIBUTING.md`](../../CONTRIBUTING.md).
 2. Read the architecture document for the subsystem you are changing.
-3. Check `docs/FEATURE_MAP.md`, `docs/TODO.md` and open GitHub issues.
-4. If the change affects product scope, read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md`.
-5. If the work touches loaders, native code, bytecode, executable patches or engine replacement, read `docs/DEEP_INTEGRATION_ARCHITECTURE.md`.
-6. If AI is being used materially, follow `AGENTS.md` and `AI_HANDOFF.md`.
+3. Check [`docs/FEATURE_MAP.md`](../FEATURE_MAP.md), [`docs/TODO.md`](../TODO.md) and open GitHub issues.
+4. If the change affects product scope, read [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](../CHAT_REQUIREMENTS_TRACEABILITY.md).
+5. If the work touches loaders, native code, bytecode, executable patches or engine replacement, read [`docs/DEEP_INTEGRATION_ARCHITECTURE.md`](../DEEP_INTEGRATION_ARCHITECTURE.md).
+6. If AI is being used materially, follow [`AGENTS.md`](../../AGENTS.md) and [`AI_HANDOFF.md`](../../AI_HANDOFF.md).
 
 ## Contribution lifecycle
 
