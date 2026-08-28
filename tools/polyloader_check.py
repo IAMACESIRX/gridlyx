@@ -55,11 +55,11 @@ def main() -> None:
 
     capabilities = json.loads((ROOT / "platform/polyloader-capabilities.json").read_text(encoding="utf-8"))
     if capabilities.get("plane") != "gridelyx-polyloader":
-        fail("polyloader capability manifest has the wrong plane identifier")
+        fail("Polyloader capability manifest has the wrong Gridelyx plane identifier")
     if capabilities["capabilities"].get("absolute_all-version-compatibility") != "not-claimed":
         fail("capability manifest must not claim universal compatibility before validation")
 
-    print("PASS: Gridelyx polyloader, live-asset and sandbox invariants")
+    print("PASS: Gridelyx Polyloader, live-asset and sandbox invariants")
 
 
 if __name__ == "__main__":
