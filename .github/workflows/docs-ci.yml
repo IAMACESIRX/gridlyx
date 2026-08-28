@@ -3,30 +3,28 @@ name: Gridelyx Documentation CI
 on:
   push:
     paths:
-      - 'README.md'
-      - 'CHANGELOG.md'
+      - '**/*.md'
       - 'mkdocs.yml'
       - 'requirements-docs.txt'
-      - 'docs/**'
       - 'platform/label-taxonomy.json'
       - 'platform/portfolio-board.json'
       - 'platform/toolchain-requirements.json'
       - 'tools/docs_check.py'
+      - 'tools/markdown_linkify.py'
       - 'tools/generate_changelog.py'
       - 'tools/generate_release_notes.py'
       - 'tools/sync_labels.py'
       - '.github/workflows/docs-ci.yml'
   pull_request:
     paths:
-      - 'README.md'
-      - 'CHANGELOG.md'
+      - '**/*.md'
       - 'mkdocs.yml'
       - 'requirements-docs.txt'
-      - 'docs/**'
       - 'platform/label-taxonomy.json'
       - 'platform/portfolio-board.json'
       - 'platform/toolchain-requirements.json'
       - 'tools/docs_check.py'
+      - 'tools/markdown_linkify.py'
       - 'tools/generate_changelog.py'
       - 'tools/generate_release_notes.py'
       - 'tools/sync_labels.py'
@@ -47,6 +45,7 @@ jobs:
       - name: Validate project presentation contracts
         run: |
           python tools/docs_check.py
+          python tools/markdown_linkify.py --check
           python tools/sync_labels.py --repo "${{ github.repository }}" --dry-run
       - name: Install documentation dependencies
         run: python -m pip install --disable-pip-version-check -r requirements-docs.txt
