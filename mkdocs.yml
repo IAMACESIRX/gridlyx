@@ -1,0 +1,78 @@
+site_name: Gridelyx Studio
+site_description: Cross-edition Minecraft launcher, creator, runtime, world editor, AI development and production platform.
+repo_url: https://github.com/IAMACESIRX/minecraft-advanced-mod-development-kit
+repo_name: IAMACESIRX/gridlyx (rename target)
+docs_dir: docs
+site_dir: site
+strict: true
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+  - swagger-ui-tag
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.min.js
+
+nav:
+  - Home: index.md
+  - Stakeholder Dashboard: STAKEHOLDER_DASHBOARD.md
+  - Product:
+      - Overview: PROJECT_OVERVIEW.md
+      - Architecture Diagrams: ARCHITECTURE_DIAGRAMS.md
+      - User Journeys: USER_JOURNEYS.md
+      - Impact / Effort: IMPACT_EFFORT_MATRIX.md
+      - Feature Map: FEATURE_MAP.md
+      - Roadmap: ROADMAP.md
+      - Development Map: DEVELOPMENT_MAP.md
+  - Engineering:
+      - Architecture: ARCHITECTURE.md
+      - Project Structure: PROJECT_STRUCTURE.md
+      - Polyloader: POLYLOADER_ARCHITECTURE.md
+      - World Editing: WORLD_EDIT_RUNTIME.md
+      - Bedrock: BEDROCK_ARCHITECTURE.md
+      - Native / Bridge: GRIDELYX_BRIDGE_PROTOCOL.md
+      - Dependencies: DEPENDENCIES_AND_TOOLCHAIN.md
+      - Validation: TEST_STRATEGY.md
+  - API:
+      - Interactive API: api/index.md
+  - Project Control:
+      - Requirements: CHAT_REQUIREMENTS_TRACEABILITY.md
+      - Project Plan: PROJECT_PLAN.md
+      - Decision Framework: FEATURE_DECISION_FRAMEWORK.md
+      - Project Values: PROJECT_VALUES.md
+      - TODO: TODO.md
+      - Labels and Filtering: LABELS_AND_FILTERING.md
+  - Release & Community:
+      - Release Notes and Changelog: RELEASE_NOTES_AND_CHANGELOGS.md
+      - Documentation Marketing: DOCUMENTATION_DRIVEN_MARKETING.md
+      - Community: community/README.md
+      - Getting Started: community/GETTING_STARTED.md
+      - Contributor Onboarding: community/CONTRIBUTOR_ONBOARDING.md
