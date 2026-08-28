@@ -11,6 +11,7 @@ import java.nio.file.WatchService;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -134,24 +135,64 @@ public final class ExternalHotloadCore implements AutoCloseable {
         }
     }
 
-    private static ReloadKind classify(Path path) {
+    static ReloadKind classify(Path path) {
         if (path == null) {
             return ReloadKind.ERROR;
         }
-        String file = path.getFileName().toString().toLowerCase();
-        if (file.endsWith(".class") || file.endsWith(".jar")) {
+        String file = path.getFileName().toString().toLowerCase(Locale.ROOT);
+        if (hasExtension(file, ".class", ".jar")) {
             return ReloadKind.JAVA_BYTECODE;
         }
-        if (file.endsWith(".js") || file.endsWith(".mjs") || file.endsWith(".py")) {
+        if (hasExtension(file, ".js", ".mjs", ".py")) {
             return ReloadKind.SCRIPT;
         }
-        if (file.endsWith(".json") || file.endsWith(".toml") || file.endsWith(".mcmeta")) {
-            return ReloadKind.DATA;
-        }
-        if (file.endsWith(".png") || file.endsWith(".ogg") || file.endsWith(".bbmodel")) {
+
+        boolean assetPath = containsSegment(path, "assets");
+        boolean dataPath = containsSegment(path, "data");
+        if (assetPath && hasExtension(
+                file,
+                ".json",
+                ".mcmeta",
+                ".png",
+                ".ogg",
+                ".bbmodel",
+                ".lang",
+                ".properties",
+                ".vsh",
+                ".fsh",
+                ".glsl",
+                ".jem",
+                ".jpm")) {
             return ReloadKind.ASSET;
         }
+        if (dataPath && hasExtension(file, ".json", ".mcmeta", ".nbt", ".snbt")) {
+            return ReloadKind.DATA;
+        }
+        if (hasExtension(file, ".png", ".ogg", ".bbmodel", ".vsh", ".fsh", ".glsl")) {
+            return ReloadKind.ASSET;
+        }
+        if (hasExtension(file, ".json", ".toml", ".yaml", ".yml", ".properties", ".mcmeta", ".nbt", ".snbt")) {
+            return ReloadKind.DATA;
+        }
         return ReloadKind.OTHER;
+    }
+
+    private static boolean containsSegment(Path path, String expected) {
+        for (Path segment : path) {
+            if (segment.toString().toLowerCase(Locale.ROOT).equals(expected)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasExtension(String file, String... extensions) {
+        for (String extension : extensions) {
+            if (file.endsWith(extension)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
