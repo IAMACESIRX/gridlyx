@@ -12,7 +12,7 @@
     {"id":"moddevgradle","name":"NeoForge ModDevGradle","version":"2.0.144","state":"pinned","required_for":["neoforge-development"],"acquisition":"Gradle plugin repositories","evidence":["platform/versions.json","templates/neoforge-26.2/build.gradle"]},
     {"id":"neoforge","name":"NeoForge","version":"26.2.0.67","state":"pinned","required_for":["canonical-java-target"],"acquisition":"official NeoForged Maven/installer","evidence":["platform/versions.json","studio/providers/providers.json"]},
     {"id":"minecraft-java","name":"Minecraft Java Edition target","version":"26.2","state":"pinned-template-target","required_for":["canonical-java-target"],"acquisition":"Mojang launcher metadata/runtime graph","evidence":["platform/versions.json","studio/providers/providers.json"]},
-    {"id":"python","name":"Python 3","version":null,"state":"unversioned-required-development","required_for":["repository-tools","python-bridge","ai-sidecars"],"acquisition":"developer/CI environment","evidence":["tools/validate_platform.py","bridges/python/bridge_frame.py","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
+    {"id":"python","name":"Python 3","version":null,"state":"unversioned-required-development","required_for":["repository-tools","python-bridge","ai-sidecars","documentation-site"],"acquisition":"developer/CI environment","evidence":["tools/validate_platform.py","bridges/python/bridge_frame.py","requirements-docs.txt","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
     {"id":"rust","name":"Rust/Cargo","version":null,"state":"unversioned-required-subsystem","required_for":["studio-core","rust-native-extensions"],"acquisition":"developer/CI Rust toolchain; edition 2024 required","evidence":["studio/Cargo.toml","native/rust/Cargo.toml","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
     {"id":"cmake","name":"CMake","version":null,"state":"unversioned-required-subsystem","required_for":["cpp-native","bedrock-native-companion"],"acquisition":"developer/CI environment","evidence":["native/CMakeLists.txt","native/bedrock/CMakeLists.txt","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
     {"id":"cpp-compiler","name":"C++ compiler","version":null,"state":"platform-matrix-unpinned","required_for":["cpp-native","bedrock-native-companion"],"acquisition":"MSVC on Windows; GCC/Clang on Linux; macOS lane pending","evidence":["native/cpp/CMakeLists.txt","native/bedrock/CMakeLists.txt","docs/DEPENDENCIES_AND_TOOLCHAIN.md"]},
@@ -24,6 +24,9 @@
     {"id":"bedrock-stable","name":"Minecraft Bedrock stable target","version":"1.26.40","state":"pinned-target","required_for":["bedrock-stable-validation"],"acquisition":"legitimate Minecraft Bedrock installation","evidence":["platform/versions.json","docs/BEDROCK_ARCHITECTURE.md"]},
     {"id":"bedrock-preview","name":"Minecraft Bedrock Preview/Editor target","version":"1.26.50-preview.26","state":"pinned-target","required_for":["bedrock-preview-editor-validation"],"acquisition":"legitimate Bedrock Preview/Editor installation","evidence":["platform/versions.json","docs/BEDROCK_ARCHITECTURE.md"]},
     {"id":"mcp","name":"Model Context Protocol contract","version":"2026-07-28","state":"pinned-protocol","required_for":["mcp-ai-integration"],"acquisition":"protocol implementation; AI provider remains replaceable","evidence":["platform/versions.json","templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/ai/McpEndpoint.java"]},
+    {"id":"mkdocs","name":"MkDocs","version":"1.6.1","state":"pinned-documentation","required_for":["documentation-site"],"acquisition":"PyPI via requirements-docs.txt","evidence":["requirements-docs.txt","mkdocs.yml","docs/DOCUMENTATION_TOOLCHAIN.md"]},
+    {"id":"github-cli","name":"GitHub CLI","version":null,"state":"optional-project-management-unpinned","required_for":["label-taxonomy-sync"],"acquisition":"GitHub-hosted runner or developer environment","evidence":["tools/sync_labels.py","docs/LABELS_AND_FILTERING.md","docs/DOCUMENTATION_TOOLCHAIN.md"]},
+    {"id":"shields-io","name":"Shields.io badge service","version":null,"state":"external-documentation-service","required_for":["readme-badges","documentation-badges"],"acquisition":"img.shields.io HTTP service","evidence":["README.md","docs/index.md","docs/DOCUMENTATION_TOOLCHAIN.md"]},
     {"id":"reference-vault","name":"Exact supplied MDK/NeoForge/JDK/LWJGL reference vault","version":"manifest-locked","state":"remote-binary-import-pending","required_for":["deep-reference-recovery"],"acquisition":"local exact-artifact import using vault tools","evidence":["vault/manifest.json","vault/REMOTE_BINARY_IMPORT_PENDING.md","docs/REFERENCE_VAULT.md"]}
   ],
   "libraries": [
@@ -34,6 +37,9 @@
     {"id":"archunit","version":"1.4.2","source":"Maven Central","evidence":"platform/versions.json"},
     {"id":"asm","version":"9.10.1","source":"Maven Central","evidence":"platform/versions.json"},
     {"id":"lwjgl-reference","version":"3.4.1","source":"compile-only/reference bundle","evidence":"platform/versions.json"},
-    {"id":"graalvm-polyglot","version":"25.3.4.1","source":"Maven Central/GraalVM artifacts","evidence":"platform/versions.json"}
+    {"id":"graalvm-polyglot","version":"25.3.4.1","source":"Maven Central/GraalVM artifacts","evidence":"platform/versions.json"},
+    {"id":"mkdocs-material","version":"9.7.7","source":"PyPI documentation theme","evidence":"requirements-docs.txt"},
+    {"id":"mkdocs-swagger-ui-tag","version":"0.8.0","source":"PyPI MkDocs plugin","evidence":"requirements-docs.txt"},
+    {"id":"mermaid-browser","version":"11.17.2","source":"pinned jsDelivr browser asset","evidence":"mkdocs.yml"}
   ]
 }
