@@ -1,0 +1,60 @@
+name: Gridelyx Documentation CI
+
+on:
+  push:
+    paths:
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'mkdocs.yml'
+      - 'requirements-docs.txt'
+      - 'docs/**'
+      - 'platform/label-taxonomy.json'
+      - 'platform/portfolio-board.json'
+      - 'platform/toolchain-requirements.json'
+      - 'tools/docs_check.py'
+      - 'tools/generate_changelog.py'
+      - 'tools/generate_release_notes.py'
+      - 'tools/sync_labels.py'
+      - '.github/workflows/docs-ci.yml'
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'mkdocs.yml'
+      - 'requirements-docs.txt'
+      - 'docs/**'
+      - 'platform/label-taxonomy.json'
+      - 'platform/portfolio-board.json'
+      - 'platform/toolchain-requirements.json'
+      - 'tools/docs_check.py'
+      - 'tools/generate_changelog.py'
+      - 'tools/generate_release_notes.py'
+      - 'tools/sync_labels.py'
+      - '.github/workflows/docs-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - name: Validate project presentation contracts
+        run: |
+          python tools/docs_check.py
+          python tools/sync_labels.py --repo "${{ github.repository }}" --dry-run
+      - name: Install documentation dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements-docs.txt
+      - name: Build technical documentation site
+        run: mkdocs build --strict
+      - name: Upload documentation site
+        uses: actions/upload-artifact@v5
+        with:
+          name: gridelyx-documentation-site
+          path: site/
+          if-no-files-found: error
