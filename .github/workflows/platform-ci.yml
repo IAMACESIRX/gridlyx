@@ -72,7 +72,7 @@ jobs:
         run: python tools/headless_validate.py ${{ inputs.advanced && '--advanced' || '' }}
       - name: Upload compiled mod JARs and reports
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: gridelyx-java-build-${{ github.sha }}
           if-no-files-found: warn
