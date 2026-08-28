@@ -57,6 +57,36 @@
       ],
       "review_trigger": "Legal/trademark conflict, human-directed rename, or discovery that a frozen technical identifier must use a different compatibility namespace",
       "rollback": "Pause public migration, preserve compatibility aliases and update platform/brand.json plus the rebrand decision before any further source/ABI changes."
+    },
+    {
+      "id": "DEC-2026-08-28-005",
+      "status": "accepted",
+      "scope": "feature-analysis-project-control",
+      "decision": "Adopt CR-034 Feature Decision Packets as the standard analysis process for substantial Gridelyx features and architecture. The process combines W5x5x5 positive/inverse interrogation, task decomposition, project values, cost and multi-horizon diagnostics, opportunity cost, regret/reversibility, risk/inversion/pre-mortem, second-order analysis, Eisenhower, overlap/Venn analysis, first principles, verified benchmarking, Feynman explanation, MVP/timeboxing, asymmetric risk, working backward, Pareto, Critical Path, Cynefin, Kanban, evidence and rollback.",
+      "reason": "Gridelyx has many interacting long-horizon capabilities across launcher, loaders, Java/Bedrock, world mutation, rendering, physics, AI, native code and production. A repeatable decision packet makes hidden assumptions, dependencies, failure modes, shared primitives and long-term effects explicit while preserving ambitious retained scope.",
+      "evidence": [
+        "Explicit human direction requested the W5x5x5 and named decision/risk/planning frameworks as a standard feature-analysis model.",
+        "docs/FEATURE_DECISION_FRAMEWORK.md defines the complete method.",
+        "platform/feature-analysis.schema.json provides a machine-readable contract.",
+        ".github/ISSUE_TEMPLATE/feature-evaluation.yml provides contributor intake.",
+        "tools/feature_planning_check.py and Gridelyx continuity CI enforce structural preservation."
+      ],
+      "review_trigger": "The framework becomes materially burdensome, misses recurring failure classes, or a human-directed replacement methodology is accepted",
+      "rollback": "Retain existing Feature Decision Packets as historical evidence, replace the schema/process through an explicit decision, and update CR-034 plus AI/community/CI references coherently."
+    },
+    {
+      "id": "DEC-2026-08-28-006",
+      "status": "accepted",
+      "scope": "repository-metadata",
+      "decision": "Keep the canonical product/API identity as Gridelyx/gridelyx while using the explicitly requested GitHub repository slug gridlyx. Target repository full name is IAMACESIRX/gridlyx with the combined Gridelyx and Minecraft Advanced Mod Development Kit description recorded in platform/repository-metadata.json.",
+      "reason": "The human project owner explicitly requested the repository be renamed to gridlyx after Gridelyx had already been frozen as the product identity. Separating product identity from repository slug preserves both instructions without silently changing the product namespace.",
+      "evidence": [
+        "Explicit human request for repository name gridlyx and combined description.",
+        "platform/repository-metadata.json records the requested target and current blocked state.",
+        "GitHub Issue #28 tracks the actual repository metadata mutation and validation."
+      ],
+      "review_trigger": "Repository metadata is successfully migrated, GitHub reports a collision, or the human owner changes either product or repository naming",
+      "rollback": "Do not rewrite Git history. If the repository rename fails or is reversed, update repository metadata/remotes/links while retaining Gridelyx as product/API identity unless separately changed."
     }
   ]
 }
