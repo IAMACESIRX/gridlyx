@@ -1,0 +1,45 @@
+flowchart TB
+  User[Player / Creator / Developer / Server Operator]
+  Studio[Gridelyx Studio Desktop]
+  AI[AI + MCP + Context Index]
+  Resolver[Launcher / Resolver / Instance Manager]
+  UAL[Unified Abstraction Layer]
+  Poly[Polyloader / Instrumentation / Hotload]
+  Creator[Creator Workspace / In-game IDE / Asset Tools]
+  World[Transactional World Editor / Event Matrix]
+  Scene[Scene Graph / Physics / Microgeometry]
+  Prod[Replay / Animation / Machinima / Capture]
+  Java[Java Edition Adapters]
+  Bedrock[Bedrock Adapters]
+  Native[Panama / Rust / C++ / Shared Memory]
+  External[Python / JS / Go / C# / External Tools]
+  Server[Authoritative Multiplayer Server]
+  Evidence[Tests / Telemetry / R0-R6 Evidence / Rollback]
+
+  User --> Studio
+  Studio --> Resolver
+  Studio --> Creator
+  Studio --> Prod
+  Studio <--> AI
+  Resolver --> UAL
+  Creator --> UAL
+  World --> UAL
+  Scene --> UAL
+  Prod --> UAL
+  AI --> UAL
+  Poly --> UAL
+  External --> UAL
+  Native --> UAL
+  UAL --> Java
+  UAL --> Bedrock
+  Java --> Server
+  Bedrock --> Server
+  Server <--> World
+  Server <--> Scene
+  Evidence -. validates .-> Resolver
+  Evidence -. validates .-> Poly
+  Evidence -. validates .-> Creator
+  Evidence -. validates .-> World
+  Evidence -. validates .-> Java
+  Evidence -. validates .-> Bedrock
+  Evidence -. validates .-> Native
