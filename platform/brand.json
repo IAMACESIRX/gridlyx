@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "root_brand": "Gridelyx",
   "product_name": "Gridelyx Studio",
   "product_slug": "gridelyx",
@@ -12,12 +12,10 @@
   "native_symbol_prefix": "gridelyx_",
   "java_plane": "Gridelyx Java Polyloader",
   "bedrock_plane": "Gridelyx Bedrock Runtime",
-  "bridge_protocol_version": 1,
-  "bridge_magic": "VFSB",
-  "bridge_magic_status": "legacy_compatibility_identifier_pending_protocol_migration",
-  "future_bridge_magic": "GLXB",
-  "legacy_brand": "Gridelyx Studio",
-  "legacy_root": "Gridelyx",
-  "migration_status": "identity_frozen_migration_in_progress",
-  "canonical_name_policy": "Use Gridelyx as the root brand and Gridelyx Studio for the integrated suite. New project-owned names must use Gridelyx. Existing Gridelyx/VFSB source, ABI, protocol and persisted identifiers are migration debt only and must be changed through the versioned compatibility plan rather than blind replacement."
+  "bridge_protocol_version": 2,
+  "bridge_magic": "GLXB",
+  "native_transport_magic": "GLXM",
+  "native_abi_version": 2,
+  "migration_status": "gridelyx_identity_complete_breaking_v2",
+  "canonical_name_policy": "Use Gridelyx as the root brand and Gridelyx Studio for the integrated suite. All current project-owned source, ABI, protocol, persisted-schema, runtime, documentation and UI identifiers use Gridelyx naming. Protocol and native ABI v2 are the canonical compatibility boundary."
 }
