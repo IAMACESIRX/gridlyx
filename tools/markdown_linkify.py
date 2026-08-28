@@ -74,7 +74,7 @@ SKIP_DIRS = {
     "vault/objects",
 }
 
-TRAILING_URL_PUNCTUATION = ".,;:!?"
+TRAILING_URL_PUNCTUATION = ".,;:!?\"'"
 
 
 def markdown_files() -> list[Path]:
@@ -172,7 +172,11 @@ def url_href(written: str) -> str:
     return href.replace("(", "%28").replace(")", "%29")
 
 
-def linkify_inline_code_urls(line: str) -> str:
+def is_bare_web_target(written: str) -> bool:
+    return not written.lower().startswith(("http://", "https://", "www."))
+
+
+def linkify_inline_code_urls(source: Path, line: str) -> str:
     spans = protected_spans(line)
     output: list[str] = []
     cursor = 0
@@ -181,6 +185,10 @@ def linkify_inline_code_urls(line: str) -> str:
             continue
         written, suffix = split_url_suffix(match.group("url"))
         if not written:
+            continue
+        # If a bare domain-looking token is an actual local file, let the repo-path
+        # pass link it locally instead of converting it into an external website.
+        if is_bare_web_target(written) and resolve_repo_target(source, written) is not None:
             continue
         output.append(line[cursor : match.start()])
         output.append(f"[`{written}`]({url_href(written)}){suffix}")
@@ -230,7 +238,7 @@ def linkify_inline_code_repo_refs(source: Path, line: str) -> str:
     return "".join(output)
 
 
-def linkify_raw_urls(line: str) -> str:
+def linkify_raw_urls(source: Path, line: str) -> str:
     spans = protected_spans(line)
     for match in re.finditer(r"`[^`]*`", line):
         spans.append(match.span())
@@ -245,6 +253,10 @@ def linkify_raw_urls(line: str) -> str:
 
         written, suffix = split_url_suffix(match.group("url"))
         if not written:
+            continue
+        # Prefer a valid repository destination over treating a local filename such
+        # as something.dev as a bare external domain.
+        if is_bare_web_target(written) and resolve_repo_target(source, written) is not None:
             continue
 
         output.append(line[cursor : match.start()])
@@ -322,10 +334,10 @@ def transform(source: Path, text: str) -> str:
             output.append(line)
             continue
 
-        newline = linkify_inline_code_urls(line)
+        newline = linkify_inline_code_urls(source, line)
         newline = linkify_inline_code_emails(newline)
         newline = linkify_inline_code_repo_refs(source, newline)
-        newline = linkify_raw_urls(newline)
+        newline = linkify_raw_urls(source, newline)
         newline = linkify_raw_emails(newline)
         newline = linkify_plain_repo_refs(source, newline)
         output.append(newline)
