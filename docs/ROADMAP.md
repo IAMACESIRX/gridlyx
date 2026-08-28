@@ -1,6 +1,6 @@
 # Gridelyx roadmap
 
-Retained scope is canonicalized in `CHAT_REQUIREMENTS_TRACEABILITY.md` and `../platform/chat-requirements.json`. Dependencies/tools are canonicalized in `DEPENDENCIES_AND_TOOLCHAIN.md`, `CAPABILITY_DEPENDENCY_MATRIX.md` and `../platform/toolchain-requirements.json`.
+Retained scope is canonicalized in `CHAT_REQUIREMENTS_TRACEABILITY.md` and `../platform/chat-requirements.json`. Dependencies/tools are canonicalized in `DEPENDENCIES_AND_TOOLCHAIN.md`, `CAPABILITY_DEPENDENCY_MATRIX.md` and `../platform/toolchain-requirements.json`. Feature analysis, critical path and prioritisation are governed by `FEATURE_DECISION_FRAMEWORK.md` and `DEVELOPMENT_MAP.md`.
 
 ## Readiness scale
 
@@ -14,27 +14,31 @@ Retained scope is canonicalized in `CHAT_REQUIREMENTS_TRACEABILITY.md` and `../p
 
 ## Phase 0 — project skeleton, Gridelyx identity, continuity and requirements control
 
-**Goal:** make the repository understandable, recoverable and resistant to scope/evidence/dependency drift before product implementation accelerates.
+**Goal:** make the repository understandable, recoverable and resistant to scope/evidence/dependency/decision drift before product implementation accelerates.
 
 - [x] Select **Gridelyx** as root brand and **Gridelyx Studio** as integrated suite.
 - [x] Freeze canonical identity/compatibility state in `platform/brand.json`.
+- [x] Record requested GitHub slug/description in `platform/repository-metadata.json`.
 - [x] Cross-edition launcher + creator + runtime + production product definition.
 - [x] Java/Bedrock split behind neutral capability contracts.
 - [x] Native bridge foundation.
 - [x] Studio core crate and provider/dependency contracts.
-- [x] Human project overview, structure, roadmap, feature map and TODO.
+- [x] Human project overview, structure, roadmap, development map, feature map and TODO.
 - [x] AI handoff/context/index design and drift mitigation.
 - [x] Deterministic repository index/context-pack generation in CI.
-- [x] Canonical **33-group** whole-chat requirements traceability ledger and machine-readable manifest.
+- [x] Canonical **34-group** whole-chat requirements traceability ledger and machine-readable manifest.
 - [x] Requirements-path CI enforcement.
 - [x] Complete dependency/tool inventory plus capability→dependency matrix.
 - [x] Toolchain evidence-path CI enforcement.
 - [x] Community onboarding/support/conduct/evidence documentation.
 - [x] Additive deep-integration architecture from normal APIs through project-owned runtime components.
 - [x] Staged Gridelyx terminology manifest/checker for public entrypoints and classified compatibility identifiers.
+- [x] Advanced W5x5x5 Feature Decision Packet system with project values, cost/horizon/risk/decision frameworks, benchmarking, critical path, Cynefin and Kanban.
+- [x] Machine-readable feature-analysis schema and GitHub feature-evaluation issue intake.
 - [ ] Generate readiness/evidence summaries from manifests/tests automatically where practical.
 - [ ] Pin supported Python/Rust/CMake/compiler/Go/.NET toolchain versions for release lanes.
 - [ ] Produce SBOM/licence/provenance automation for release dependencies.
+- [ ] Apply full Feature Decision Packets to major backlog items as they move to Ready.
 
 ## Phase 1 — launcher and instance foundation
 
@@ -166,13 +170,14 @@ Retained scope is canonicalized in `CHAT_REQUIREMENTS_TRACEABILITY.md` and `../p
 - [x] Start machine-readable retired-term/legacy-identifier inventory.
 - [x] Rebrand canonical public/control entrypoints to Gridelyx.
 - [x] Add staged terminology CI for current public files and classified legacy technical identifiers.
+- [x] Record requested GitHub repository target as `IAMACESIRX/gridlyx` plus combined project description.
 - [ ] Complete full tracked-tree occurrence inventory and classify A-G migration classes.
 - [ ] Migrate remaining public documentation/workflow display strings.
 - [ ] Migrate Java/Rust/C/C++/Bedrock project-owned source/path identifiers.
 - [ ] Version-migrate `VFSB`/native ABI/persisted protocol identifiers with compatibility tests.
 - [ ] Switch terminology CI to strict whole-current-tree mode with narrow historical/provenance exceptions.
 - [ ] Regenerate AI indexes/autodoc and require zero unexplained current-tree occurrences.
-- [ ] Update repository metadata/slug where supported and approved.
+- [ ] Apply the actual GitHub repository rename/description mutation when repository-metadata write capability is available.
 - [ ] Keep Git-history rewriting as a separate explicit destructive decision.
 
 ## Phase 9 — dependency/toolchain reproducibility and reference-vault completion
@@ -189,6 +194,8 @@ Retained scope is canonicalized in `CHAT_REQUIREMENTS_TRACEABILITY.md` and `../p
 
 Every provider, loader, Minecraft/Bedrock release, deep patch and creator/production feature is capability-negotiated. New versions may move a capability backward in readiness until revalidated; UI/docs show actual state rather than stale compatibility claims.
 
-Every retained CR-001..CR-033 request must continue to have implementation evidence or explicit planning. Difficulty or lack of a normal API does not delete scope.
+Every retained CR-001..CR-034 request must continue to have implementation evidence or explicit planning. Difficulty or lack of a normal API does not delete scope.
+
+Every substantial feature moving toward execution must be evaluated with the CR-034 Feature Decision Packet at a depth proportionate to risk and reversibility. The framework informs sequencing and architecture; it does not automatically cancel retained scope.
 
 No new compiler/runtime/executable/provider/library becomes a hidden project prerequisite: it must update the dependency inventory, capability matrix, licensing/provenance and CI/setup surfaces as applicable.
