@@ -31,13 +31,13 @@ Powerful integration is not treated as inherently safe merely because Gridelyx s
 
 ## Feature decision rule
 
-Substantial new features and architecture changes should use the CR-034 Feature Decision Packet. That means mapping CR IDs, W5x5x5 positive/inverse questions, first principles, values, cost and time horizons, opportunity cost, reversibility, risk/inversion/pre-mortem, second-order effects, benchmarks, MVP, critical path, Cynefin, Kanban, evidence and rollback. See `.github/ISSUE_TEMPLATE/feature-evaluation.yml` for issue intake.
+Substantial new features and architecture changes should use the CR-034 Feature Decision Packet. That means mapping CR IDs, W5x5x5 positive/inverse questions, first principles, values, cost and time horizons, opportunity cost, reversibility, risk/inversion/pre-mortem, second-order effects, benchmarks, MVP, critical path, Cynefin, Kanban, evidence and rollback. See [`.github/ISSUE_TEMPLATE/feature-evaluation.yml`](.github/ISSUE_TEMPLATE/feature-evaluation.yml) for issue intake.
 
 The framework decides **how to understand and sequence work**, not whether a retained capability silently disappears because it is difficult or costly.
 
 ## Scope preservation
 
-The canonical conversation-derived requirements CR-001 through CR-034 are preserved in [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and `platform/chat-requirements.json`. Contributors must not silently remove or materially weaken those requirements. Scope changes require an explicit project decision and corresponding planning updates.
+The canonical conversation-derived requirements CR-001 through CR-034 are preserved in [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and [`platform/chat-requirements.json`](platform/chat-requirements.json). Contributors must not silently remove or materially weaken those requirements. Scope changes require an explicit project decision and corresponding planning updates.
 
 ## Brand state
 
