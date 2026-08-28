@@ -65,13 +65,14 @@ export class GridelyxBedrockRuntime {
   }
 
   registerBuiltIns() {
-    this.on("ping", () => ({ product: "Gridelyx Studio", bridge: 1 }));
+    this.on("ping", () => ({ product: "Gridelyx Studio", bridge: 2 }));
     this.on("capabilities", () => ({
       scripting: true,
       scriptEvents: true,
       nativeMemory: false,
       editorExtension: "preview",
       dedicatedServerNetwork: "optional-preview",
+      protocol: "GLXB/2",
     }));
     this.on("announce", (payload) => {
       const text = typeof payload?.text === "string" ? payload.text : String(payload ?? "");
