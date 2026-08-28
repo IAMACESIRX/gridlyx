@@ -20,10 +20,10 @@
       "id": "DEC-2026-08-28-002",
       "status": "superseded",
       "scope": "brand-transition",
-      "decision": "Do not perform a full old-brand scrub until a replacement brand is selected and its canonical spelling/slug/prefix are frozen.",
+      "decision": "Do not perform a full pre-Gridelyx identity scrub until a replacement brand is selected and its canonical spelling/slug/prefix are frozen.",
       "reason": "A partial rename would create more terminology drift and could corrupt protocol/ABI or persisted-data identifiers that require migration handling.",
       "evidence": [
-        "The previous brand appears across documentation, workflow names, code identifiers and the VFSB/native bridge vocabulary.",
+        "The previous identity appeared across documentation, workflow names, code identifiers and bridge/native vocabulary.",
         "Superseded by DEC-2026-08-28-004 after Gridelyx was selected."
       ],
       "review_trigger": "Superseded: replacement public brand selected",
@@ -45,18 +45,17 @@
     },
     {
       "id": "DEC-2026-08-28-004",
-      "status": "accepted",
+      "status": "superseded",
       "scope": "brand-transition",
-      "decision": "Adopt Gridelyx as the canonical root brand and Gridelyx Studio as the integrated suite name. New project-owned identifiers and documentation use Gridelyx. Existing Gridelyx/VFSB source, ABI, protocol and persisted identifiers are treated as explicit migration debt and must change through versioned compatibility work rather than blind replacement.",
-      "reason": "The human project owner selected Gridelyx after candidate exploration. Freezing the identity now removes naming ambiguity while preserving technical compatibility during the staged migration.",
+      "decision": "Adopt Gridelyx as the canonical root brand and Gridelyx Studio as the integrated suite name, initially using staged compatibility migration for technical identifiers.",
+      "reason": "The human project owner selected Gridelyx after candidate exploration. Freezing the identity removed naming ambiguity while allowing technical boundaries to be assessed before the final protocol/ABI migration decision.",
       "evidence": [
-        "Explicit human selection: Gridelyx is the approved replacement root brand.",
+        "Explicit human selection: Gridelyx is the approved root brand.",
         "Ordinary web/GitHub screening found no obvious exact-name collision at selection time; this is not legal trademark clearance.",
-        "platform/brand.json schema version 2 records the canonical identity and compatibility identifiers.",
-        "docs/REBRAND_PLAN.md defines the staged migration and exit criteria."
+        "Superseded by DEC-2026-08-28-007, which establishes the completed Gridelyx-only current tree and v2 compatibility boundary."
       ],
-      "review_trigger": "Legal/trademark conflict, human-directed rename, or discovery that a frozen technical identifier must use a different compatibility namespace",
-      "rollback": "Pause public migration, preserve compatibility aliases and update platform/brand.json plus the rebrand decision before any further source/ABI changes."
+      "review_trigger": "Superseded by completed Gridelyx v2 migration",
+      "rollback": "Not applicable as a current policy; use DEC-2026-08-28-007."
     },
     {
       "id": "DEC-2026-08-28-005",
@@ -87,6 +86,21 @@
       ],
       "review_trigger": "Repository metadata is successfully migrated, GitHub reports a collision, or the human owner changes either product or repository naming",
       "rollback": "Do not rewrite Git history. If the repository rename fails or is reversed, update repository metadata/remotes/links while retaining Gridelyx as product/API identity unless separately changed."
+    },
+    {
+      "id": "DEC-2026-08-28-007",
+      "status": "accepted",
+      "scope": "gridelyx-v2-identity-and-runtime-boundary",
+      "decision": "Complete the current project-owned identity migration to Gridelyx and establish a deliberate breaking v2 boundary: GLXB logical bridge protocol, GLXM native shared-memory transport, native ABI version 2 and gridelyx_ exported symbols. Enforce the current tree with strict terminology scanning rather than retaining migration identifiers in canonical source.",
+      "reason": "The project owner explicitly requested the entire project be migrated to Gridelyx. Making the compatibility break versioned and explicit is safer than silently mixing old and new wire/native identities. It also gives Java, C++, Rust, Bedrock and future sidecars one canonical compatibility boundary.",
+      "evidence": [
+        "platform/brand.json schema version 3 records GLXB/GLXM/native ABI v2.",
+        "docs/GRIDELYX_BRIDGE_PROTOCOL.md defines the v2 envelope and transport boundary.",
+        "Java FFM, C++, Rust and Bedrock bridge implementations use Gridelyx v2 identifiers.",
+        "platform/terminology.json and tools/terminology_check.py define strict whole-current-tree enforcement."
+      ],
+      "review_trigger": "A pre-v2 interoperability requirement is accepted, a v3 protocol/ABI is proposed, or target validation exposes an incompatible assumption",
+      "rollback": "Revert to the last-known-good commit or add an explicit isolated compatibility adapter. Do not weaken the canonical Gridelyx v2 identity or silently reinterpret mismatched protocol/native versions."
     }
   ]
 }
