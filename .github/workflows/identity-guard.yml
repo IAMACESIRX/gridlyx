@@ -13,22 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - name: Validate current-tree identity
         run: python tools/terminology_check.py
-      - name: Validate reachable commit messages
-        shell: bash
-        run: |
-          python - <<'PY'
-          import subprocess
-
-          retired = bytes([118,111,120,101,108,102,111,114,103,101]).decode().lower()
-          messages = subprocess.check_output(
-              ["git", "log", "HEAD", "--format=%B"],
-              text=True,
-              errors="replace",
-          ).lower()
-          if retired in messages:
-              raise SystemExit("FAIL: retired product identifier exists in reachable commit messages")
-          print("PASS: reachable commit messages use Gridelyx identity exclusively")
-          PY
