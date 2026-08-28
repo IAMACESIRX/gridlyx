@@ -33,6 +33,11 @@ REQUIRED = [
     "tools/sync_labels.py",
 ]
 
+EXPECTED_JSON_SCHEMAS = {
+    "platform/label-taxonomy.json": 2,
+    "platform/portfolio-board.json": 1,
+}
+
 
 def fail(message: str) -> None:
     raise SystemExit(f"FAIL: {message}")
@@ -62,13 +67,13 @@ def main() -> int:
         if marker.lower() not in marketing.lower():
             fail(f"documentation-driven marketing missing marker: {marker}")
 
-    for json_path in ("platform/label-taxonomy.json", "platform/portfolio-board.json"):
+    for json_path, expected_schema in EXPECTED_JSON_SCHEMAS.items():
         try:
             data = json.loads((ROOT / json_path).read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
             fail(f"invalid JSON in {json_path}: {exc}")
-        if data.get("schema_version") != 1:
-            fail(f"{json_path} must use schema_version 1")
+        if data.get("schema_version") != expected_schema:
+            fail(f"{json_path} must use schema_version {expected_schema}")
 
     hero = (ROOT / "docs/assets/gridelyx-hero.svg").read_text(encoding="utf-8")
     if "<svg" not in hero or "GRIDELYX STUDIO" not in hero:
