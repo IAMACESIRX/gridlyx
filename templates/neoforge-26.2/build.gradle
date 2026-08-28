@@ -198,6 +198,15 @@ tasks.register('gridelyxSmokeTest', JavaExec) {
     dependsOn tasks.named('advancedClasses')
 }
 
+tasks.register('gridelyxModuleSmokeTest', JavaExec) {
+    group = 'verification'
+    description = 'Runs the Gridelyx H3 versioned-module activation and retirement smoke test.'
+    onlyIf { advancedEnabled.get() }
+    classpath = sourceSets.advanced.runtimeClasspath
+    mainClass = "${mod_group_id}.advanced.validation.VersionedModuleRuntimeSmokeTest"
+    dependsOn tasks.named('advancedClasses')
+}
+
 tasks.register('polyglotSmokeTest', JavaExec) {
     group = 'verification'
     description = 'Runs the isolated GraalVM polyglot smoke test when explicitly enabled.'
