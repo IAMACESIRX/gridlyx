@@ -8,6 +8,10 @@
 - Contributor workflow: `docs/community/CONTRIBUTOR_ONBOARDING.md`
 - Architecture orientation: `docs/community/ARCHITECTURE_TOUR.md`
 - Testing and evidence: `docs/community/TESTING_AND_EVIDENCE.md`
+- Feature/architecture decisions: `docs/FEATURE_DECISION_FRAMEWORK.md`
+- Project values: `docs/PROJECT_VALUES.md`
+- Development/critical-path map: `docs/DEVELOPMENT_MAP.md`
+- Benchmarking: `docs/BENCHMARKING_MATRIX.md`
 - Terms and project vocabulary: `docs/community/GLOSSARY.md`
 - Dependencies/programs/toolchains: `docs/DEPENDENCIES_AND_TOOLCHAIN.md`
 - Capability-to-prerequisite matrix: `docs/CAPABILITY_DEPENDENCY_MATRIX.md`
@@ -20,10 +24,18 @@
 
 A feature appearing in architecture or source does not automatically mean it is release-ready. Gridelyx uses R0-R6 readiness and target-specific validation. Community-facing claims should link to concrete evidence and distinguish planned, framework, tested and target-validated states.
 
+## Feature decision rule
+
+Substantial new features and architecture changes should use the CR-034 Feature Decision Packet. That means mapping CR IDs, W5x5x5 positive/inverse questions, first principles, values, cost and time horizons, opportunity cost, reversibility, risk/inversion/pre-mortem, second-order effects, benchmarks, MVP, critical path, Cynefin, Kanban, evidence and rollback. See `.github/ISSUE_TEMPLATE/feature-evaluation.yml` for issue intake.
+
+The framework decides **how to understand and sequence work**, not whether a retained capability silently disappears because it is difficult or costly.
+
 ## Scope preservation
 
-The canonical conversation-derived requirements are preserved in `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json`. Contributors must not silently remove or materially weaken those requirements. Scope changes require an explicit project decision and corresponding planning updates.
+The canonical conversation-derived requirements CR-001 through CR-034 are preserved in `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json`. Contributors must not silently remove or materially weaken those requirements. Scope changes require an explicit project decision and corresponding planning updates.
 
 ## Brand migration note
 
 Gridelyx is the current product identity. Legacy Gridelyx/VFSB identifiers may still appear inside source/protocol/native compatibility surfaces while the staged migration is completed. Treat them as migration state, not current naming guidance; see `docs/REBRAND_PLAN.md`.
+
+The requested GitHub repository target is `IAMACESIRX/gridlyx`; product/API identity remains Gridelyx/gridelyx. Actual repository metadata migration is tracked separately until verified.
