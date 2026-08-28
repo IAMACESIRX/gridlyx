@@ -16,26 +16,32 @@ For humans:
 4. `docs/community/ARCHITECTURE_TOUR.md` — subsystem map.
 5. `docs/community/TESTING_AND_EVIDENCE.md` — what counts as evidence.
 6. `docs/DEPENDENCIES_AND_TOOLCHAIN.md` — required/optional tools and programs.
+7. `docs/FEATURE_DECISION_FRAMEWORK.md` — mandatory substantial-feature analysis process.
+8. `docs/DEVELOPMENT_MAP.md` — critical path, work lanes, horizons and Kanban state.
+9. `docs/BENCHMARKING_MATRIX.md` — comparison targets and benchmark workflow.
 
 For AI/agent work:
 
 1. `AGENTS.md`
 2. `AI_HANDOFF.md`
 3. `docs/CHAT_REQUIREMENTS_TRACEABILITY.md`
-4. `platform/chat-requirements.json`
-5. `platform/toolchain-requirements.json`
-6. `ai/context-map.json`
-7. `ai/work-state.json`, decision ledger and assumption ledger
+4. `docs/FEATURE_DECISION_FRAMEWORK.md`
+5. `platform/chat-requirements.json`
+6. `platform/feature-analysis.schema.json`
+7. `platform/toolchain-requirements.json`
+8. `ai/context-map.json`
+9. `ai/work-state.json`, decision ledger and assumption ledger
 
 ## Canonical identity
 
 - Root brand: **Gridelyx**
 - Integrated suite: **Gridelyx Studio**
-- Product slug target: `gridelyx`
+- Product/API slug target: `gridelyx`
+- Requested GitHub repository slug: `gridlyx`
 - Protocol prefix target: `GLYX`
 - Executable target: `gridelyx`
 
-Machine-readable identity: `platform/brand.json`.
+Machine-readable identity: `platform/brand.json`. Requested GitHub metadata: `platform/repository-metadata.json`.
 
 The previous Gridelyx branding is retired. Existing `VFSB`, `gridelyx_*` and `Gridelyx*` technical identifiers are temporary compatibility/migration debt and are governed by `docs/REBRAND_PLAN.md`. They are not the current product identity.
 
@@ -114,7 +120,7 @@ Frameworks exist for:
 - multiplayer revisions, consensus and replication culling;
 - volumetric client-preview streams.
 
-Planned extensions explicitly include Terraria-style liquid cells, arbitrary paint/overlay matrices and progression-locked world-transmutation states.
+Planned extensions explicitly include Terraria-style Dynamic Liquid Simulation Cells, arbitrary block/face paint and sub-voxel overlay matrices, and progression-locked/reversible world-transmutation states.
 
 ### Creator, geometry and sandbox systems
 
@@ -198,17 +204,41 @@ Gridelyx Production retains:
 
 See `docs/MACHINIMA_PRODUCTION.md`.
 
+## Advanced feature planning and decision system
+
+Substantial Gridelyx features use the **Feature Decision Packet** in `docs/FEATURE_DECISION_FRAMEWORK.md`. It includes:
+
+- W5x5x5 repeated Who/What/When/Where/How/Why questioning plus inverse Who-not/What-isn't/When-isn't/Where-isn't/How-not/Why-isn't analysis;
+- task decomposition and project-values checks;
+- cost/time/money/energy diagnostics;
+- 10-minute, 10-hour, 10-day, 10-month, 1-year, 5-year and 10-year horizons;
+- opportunity cost and regret minimisation;
+- reversible vs difficult-to-reverse decisions;
+- risk registers, inversion and pre-mortems;
+- second-order thinking and overlap/Venn analysis;
+- Eisenhower classification;
+- first-principles modelling and structured brainstorming;
+- current benchmark verification and reverse-engineering of operational patterns;
+- Feynman explanations, MVPs and 30/60-minute research timeboxes;
+- asymmetric-risk assessment and working backward;
+- Pareto/80-20 analysis, Critical Path Method, Cynefin and Kanban.
+
+This machinery guides sequencing and architecture. It does not erase a retained feature merely because its cost is high. Machine contract: `platform/feature-analysis.schema.json`; issue intake: `.github/ISSUE_TEMPLATE/feature-evaluation.yml`.
+
 ## Project control and whole-chat scope
 
 The complete retained conversation scope is not left in chat history. It is recorded in:
 
-- `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` — human-readable CR-001…CR-033 ledger;
+- `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` — human-readable CR-001…CR-034 ledger;
 - `platform/chat-requirements.json` — machine-readable requirements/evidence paths;
 - `tools/chat_requirements_check.py` — CI validation;
 - `docs/TODO.md` — live implementation ledger;
 - `docs/ROADMAP.md` — staged sequencing;
+- `docs/DEVELOPMENT_MAP.md` — critical path, lanes, horizons and Kanban;
 - `docs/FEATURE_MAP.md` — evidence/readiness state;
-- `docs/PROJECT_PLAN.md` — governance/program plan.
+- `docs/PROJECT_PLAN.md` — governance/program plan;
+- `docs/PROJECT_VALUES.md` — decision invariants;
+- `docs/FEATURE_DECISION_FRAMEWORK.md` — feature evaluation method.
 
 A future contributor/AI may not silently remove a requested capability merely because it is difficult or not supported by a normal mod API. The integration level and validation burden change; the requirement remains until explicitly superseded.
 
@@ -243,6 +273,8 @@ The repository tracks exact manifests/hashes for the supplied MDK, NeoForge inst
 python tools/continuity_check.py
 python tools/chat_requirements_check.py
 python tools/toolchain_requirements_check.py
+python tools/feature_planning_check.py
+python tools/terminology_check.py
 python tools/studio_check.py
 python tools/validate_platform.py
 python tools/diagnose.py --static
