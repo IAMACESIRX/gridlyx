@@ -14,21 +14,44 @@ For non-trivial work:
 
 1. Read `AI_HANDOFF.md`.
 2. Read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and identify affected CR IDs.
-3. Read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`.
-4. Inspect `platform/brand.json`, `platform/chat-requirements.json`, `platform/toolchain-requirements.json`, work state, decision ledger and assumption ledger.
-5. Use the relevant domain in `ai/context-map.json` instead of scanning unrelated trees.
-6. Read `platform/versions.json`, provider manifests and relevant `references/index/` entries before guessing external APIs.
-7. For broad tasks, use `tools/repo_index.py` and `tools/ai_context_pack.py`.
-8. Treat implementation, schemas, CI/runtime evidence and explicit human corrections as stronger than AI summaries/generated indexes.
-9. Update planning/readiness/decision/assumption/dependency state when a change alters project truth.
+3. Read `docs/FEATURE_DECISION_FRAMEWORK.md` for substantial feature/architecture work.
+4. Read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`.
+5. Inspect `platform/brand.json`, `platform/repository-metadata.json`, `platform/chat-requirements.json`, `platform/toolchain-requirements.json`, work state, decision ledger and assumption ledger.
+6. Use the relevant domain in `ai/context-map.json` instead of scanning unrelated trees.
+7. Read `platform/versions.json`, provider manifests and relevant `references/index/` entries before guessing external APIs.
+8. For broad tasks, use `tools/repo_index.py` and `tools/ai_context_pack.py`.
+9. Treat implementation, schemas, CI/runtime evidence and explicit human corrections as stronger than AI summaries/generated indexes.
+10. Update planning/readiness/decision/assumption/dependency state when a change alters project truth.
 
 ## Brand rule
 
 **Gridelyx** is the canonical root brand; **Gridelyx Studio** is the integrated suite. New project-owned names use Gridelyx. Existing Gridelyx/VFSB source, ABI, protocol, persisted and filename identifiers are migration compatibility state governed by `docs/REBRAND_PLAN.md`. Do not introduce new retired-brand identifiers and do not blindly rename compatibility boundaries without migration tests.
 
+Product/API slug remains `gridelyx`; the requested GitHub repository slug is `gridlyx` and is recorded separately in `platform/repository-metadata.json`.
+
 ## Requirements preservation
 
-`docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json` are the retained whole-chat scope. A future agent may not remove or materially weaken a requirement because it is difficult, outside normal Minecraft APIs, or not currently target-validated. Such discoveries change the integration level, schedule and evidence burden. Scope removal needs explicit human approval recorded in the decision ledger.
+`docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json` are the retained whole-chat scope, currently CR-001 through CR-034. A future agent may not remove or materially weaken a requirement because it is difficult, outside normal Minecraft APIs, expensive, lower priority or not currently target-validated. Such discoveries change integration level, schedule and evidence burden. Scope removal needs explicit human approval recorded in the decision ledger.
+
+## Feature decision protocol
+
+Substantial features and architecture changes use `docs/FEATURE_DECISION_FRAMEWORK.md` and `docs/templates/FEATURE_EVALUATION_TEMPLATE.md`.
+
+Required analysis includes:
+
+- W5x5x5 repeated Who/What/When/Where/How/Why and inverse Who-not/What-isn't/When-isn't/Where-isn't/How-not/Why-isn't interrogation;
+- task decomposition and project-values alignment;
+- cost/resource diagnostics and 10m/10h/10d/10mo/1y/5y/10y horizon analysis;
+- opportunity cost, regret minimisation and reversible/irreversible classification;
+- risk register, inversion, second-order effects and pre-mortem;
+- Eisenhower, overlap/Venn, brainstorming and first-principles analysis;
+- benchmarking with current verification before relying on external behaviour;
+- Feynman explanation, MVP and timeboxing;
+- asymmetric risk, working backward and Pareto/80-20;
+- Critical Path Method, Cynefin and Kanban state;
+- required evidence, rollback/migration and unresolved assumptions.
+
+This is diagnostic/planning machinery. It must not be used to silently discard a retained feature because its cost is high. Machine contract: `platform/feature-analysis.schema.json`.
 
 ## Source-of-truth discipline
 
@@ -45,7 +68,7 @@ Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRE
 - `bridges/` — neutral sidecar/language bridge examples and protocols.
 - `ai/` — compact navigation/handoff/work state/continuity controls, not duplicated source truth.
 - `references/index/` — compact reference knowledge; `vault/` — exact recovery/deep-inspection material and should not be scanned by default.
-- `platform/` — versions, brand, capabilities, whole-chat requirements and toolchain manifests.
+- `platform/` — versions, brand/repository metadata, capabilities, requirements, feature-analysis and toolchain manifests.
 
 ## Dependency/toolchain rules
 
@@ -131,10 +154,12 @@ Never commit credentials, tokens or personal data. Treat generated source, mods 
 python tools/continuity_check.py
 python tools/chat_requirements_check.py
 python tools/toolchain_requirements_check.py
+python tools/feature_planning_check.py
+python tools/terminology_check.py
 ```
 
 These prove control-plane consistency, not Minecraft runtime compatibility.
 
 ## Definition of done
 
-A change is done only when relevant formatting/lint/build/test gates pass, evidence/readiness and requirements/dependency paths are synchronized, and the architecture remains replaceable, bounded, diagnosable, version-aware, recoverable and provenance-aware. Interface presence alone is not runtime support.
+A change is done only when relevant formatting/lint/build/test gates pass, evidence/readiness and requirements/dependency/planning paths are synchronized, and the architecture remains replaceable, bounded, diagnosable, version-aware, recoverable and provenance-aware. Interface presence alone is not runtime support.
