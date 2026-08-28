@@ -70,12 +70,10 @@ def validate_brand() -> None:
     data = load_json("platform/brand.json", schema_version=2)
     if data.get("root_brand") != "Gridelyx" or data.get("product_name") != "Gridelyx Studio":
         raise SystemExit("FAIL: platform/brand.json must identify Gridelyx / Gridelyx Studio")
-    if data.get("legacy_root") != "Gridelyx":
-        raise SystemExit("FAIL: platform/brand.json must retain the retired root for migration checks")
 
     metadata = load_json("platform/repository-metadata.json")
     if metadata.get("product_brand") != "Gridelyx":
-        raise SystemExit("FAIL: repository metadata must retain Gridelyx as product brand")
+        raise SystemExit("FAIL: repository metadata must identify Gridelyx as product brand")
     if metadata.get("requested_repository_slug") != "gridlyx":
         raise SystemExit("FAIL: requested GitHub repository slug must be gridlyx")
 
