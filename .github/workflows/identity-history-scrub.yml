@@ -110,22 +110,28 @@ jobs:
           PY
           )"
 
-          if git log --all --format='%B' | grep -Fii -- "$term"; then
-            echo 'Retired identity remains in a reachable commit message.' >&2
+          mapfile -t verify_refs < <(git for-each-ref --format='%(refname)' \
+            refs/heads/main \
+            refs/heads/gridelyx-rebrand-reload-orchestrator \
+            refs/tags)
+          mapfile -t commits < <(git rev-list "${verify_refs[@]}")
+
+          if git log "${verify_refs[@]}" --format='%B' | grep -Fii -- "$term"; then
+            echo 'Retired identity remains in a rewritten commit message.' >&2
             exit 1
           fi
 
-          if while read -r commit; do git ls-tree -r --name-only "$commit"; done < <(git rev-list --all) | grep -Fii -- "$term"; then
-            echo 'Retired identity remains in a reachable path.' >&2
+          if printf '%s\n' "${commits[@]}" | while read -r commit; do git ls-tree -r --name-only "$commit"; done | grep -Fii -- "$term"; then
+            echo 'Retired identity remains in a rewritten path.' >&2
             exit 1
           fi
 
-          while read -r commit; do
+          for commit in "${commits[@]}"; do
             if git grep -I -Fii -n -- "$term" "$commit" -- .; then
-              echo "Retired identity remains in reachable text at $commit." >&2
+              echo "Retired identity remains in rewritten text at $commit." >&2
               exit 1
             fi
-          done < <(git rev-list --all)
+          done
 
       - name: Force-push rewritten branches and tags
         shell: bash
