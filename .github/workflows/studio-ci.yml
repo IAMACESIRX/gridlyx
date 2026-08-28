@@ -6,9 +6,11 @@ on:
       - 'studio/**'
       - 'ai/**'
       - 'platform/brand.json'
+      - 'platform/repository-metadata.json'
       - 'platform/terminology.json'
       - 'platform/chat-requirements.json'
       - 'platform/toolchain-requirements.json'
+      - 'platform/feature-analysis.schema.json'
       - 'AI_HANDOFF.md'
       - 'AGENTS.md'
       - 'COMMUNITY.md'
@@ -19,6 +21,11 @@ on:
       - 'docs/PROJECT_OVERVIEW.md'
       - 'docs/PROJECT_STRUCTURE.md'
       - 'docs/CHAT_REQUIREMENTS_TRACEABILITY.md'
+      - 'docs/FEATURE_DECISION_FRAMEWORK.md'
+      - 'docs/PROJECT_VALUES.md'
+      - 'docs/DEVELOPMENT_MAP.md'
+      - 'docs/BENCHMARKING_MATRIX.md'
+      - 'docs/templates/**'
       - 'docs/DEPENDENCIES_AND_TOOLCHAIN.md'
       - 'docs/CAPABILITY_DEPENDENCY_MATRIX.md'
       - 'docs/REBRAND_PLAN.md'
@@ -29,9 +36,11 @@ on:
       - 'docs/ACQUISITION_AND_RESOLUTION.md'
       - 'docs/MACHINIMA_PRODUCTION.md'
       - 'docs/AI_CONTEXT_SYSTEM.md'
+      - '.github/ISSUE_TEMPLATE/**'
       - 'tools/continuity_check.py'
       - 'tools/chat_requirements_check.py'
       - 'tools/toolchain_requirements_check.py'
+      - 'tools/feature_planning_check.py'
       - 'tools/terminology_check.py'
       - 'tools/repo_index.py'
       - 'tools/ai_context_pack.py'
@@ -42,9 +51,11 @@ on:
       - 'studio/**'
       - 'ai/**'
       - 'platform/brand.json'
+      - 'platform/repository-metadata.json'
       - 'platform/terminology.json'
       - 'platform/chat-requirements.json'
       - 'platform/toolchain-requirements.json'
+      - 'platform/feature-analysis.schema.json'
       - 'AI_HANDOFF.md'
       - 'AGENTS.md'
       - 'COMMUNITY.md'
@@ -52,9 +63,11 @@ on:
       - 'CODE_OF_CONDUCT.md'
       - 'SUPPORT.md'
       - 'docs/**'
+      - '.github/ISSUE_TEMPLATE/**'
       - 'tools/continuity_check.py'
       - 'tools/chat_requirements_check.py'
       - 'tools/toolchain_requirements_check.py'
+      - 'tools/feature_planning_check.py'
       - 'tools/terminology_check.py'
       - 'tools/repo_index.py'
       - 'tools/ai_context_pack.py'
@@ -77,6 +90,8 @@ jobs:
         run: python tools/chat_requirements_check.py
       - name: Validate dependency and toolchain inventory
         run: python tools/toolchain_requirements_check.py
+      - name: Validate advanced feature planning controls
+        run: python tools/feature_planning_check.py
       - name: Validate staged Gridelyx terminology migration
         run: python tools/terminology_check.py
       - name: Validate Studio architecture and provider policy
