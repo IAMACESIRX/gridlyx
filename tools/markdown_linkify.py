@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
-"""Convert resolvable Markdown-document references into clickable relative links.
+"""Convert resolvable documentation link targets into explicit clickable Markdown links.
 
-The linkifier is intentionally Markdown-aware enough to avoid mutating fenced code,
-existing Markdown links/images, HTML href/src attributes, or URL text. It supports
-both inline-code path references (for example `` `SECURITY.md` ``) and ordinary
-text references (for example ``docs/FEATURE_MAP.md``).
+The linkifier is intentionally conservative. It rewrites prose references only and
+skips fenced code, existing Markdown links/images, HTML href/src attributes, and
+Markdown autolinks. Supported targets include:
+
+- repository files and directories, regardless of extension;
+- inline-code repository paths;
+- raw http:// and https:// URLs;
+- raw www. addresses;
+- inline-code web addresses.
+
+Visible text is preserved. For example `` `tools/check.py` `` becomes
+``[`tools/check.py`](tools/check.py)`` and ``https://example.com`` becomes
+``[https://example.com](https://example.com)``.
 
 Usage:
     python tools/markdown_linkify.py --fix
@@ -15,22 +24,25 @@ from __future__ import annotations
 
 import argparse
 import os
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 import re
 import sys
 from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# A repository document reference. Keep this deliberately conservative: project
-# Markdown paths do not need spaces, query strings, or URL schemes.
-MD_PATH_RE = re.compile(
-    r"(?P<path>(?:\.\.?/|[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+\.md(?:#[A-Za-z0-9_.%/-]+)?)"
+ANCHOR = r"(?:#[A-Za-z0-9_.%:/?&=+~-]+)?"
+REPO_REF_BODY = (
+    r"(?:"
+    r"(?:\.\.?/)?(?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+/?"
+    r"|(?:\.\.?/)?[A-Za-z0-9_.-]+/"
+    r"|[A-Za-z0-9_.-]+\.[A-Za-z0-9_.-]+"
+    r")"
 )
-INLINE_CODE_MD_RE = re.compile(
-    r"`(?P<path>(?:\.\.?/|[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+\.md(?:#[A-Za-z0-9_.%/-]+)?)`"
-)
-LINK_DEST_MD_RE = re.compile(r"\[[^\]]*\]\((?P<dest>[^)]+\.md(?:#[^)\s]+)?)\)")
+REPO_REF_RE = re.compile(rf"(?P<path>{REPO_REF_BODY}{ANCHOR})")
+INLINE_CODE_REPO_REF_RE = re.compile(rf"`(?P<path>{REPO_REF_BODY}{ANCHOR})`")
+INLINE_CODE_URL_RE = re.compile(r"`(?P<url>(?:https?://|www\.)[^`\s]+)`", re.IGNORECASE)
+RAW_URL_RE = re.compile(r"(?P<url>(?:https?://|www\.)[^\s<>`]+)", re.IGNORECASE)
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
 
 SKIP_DIRS = {
@@ -43,6 +55,8 @@ SKIP_DIRS = {
     "target",
     "vault/objects",
 }
+
+TRAILING_URL_PUNCTUATION = ".,;:!?"
 
 
 def markdown_files() -> list[Path]:
@@ -63,15 +77,11 @@ def split_anchor(text: str) -> tuple[str, str]:
     return path, "#" + anchor
 
 
-def resolve_target(source: Path, written: str) -> Path | None:
+def resolve_repo_target(source: Path, written: str) -> Path | None:
     raw_path, _ = split_anchor(unquote(written))
     if not raw_path:
         return None
 
-    # First respect normal Markdown semantics: resolve from the source file's
-    # directory. If that does not exist, accept a repository-root path. This
-    # keeps existing human-written root-style references useful while emitting
-    # a correct relative href.
     candidates = [source.parent / raw_path, ROOT / raw_path]
     for candidate in candidates:
         try:
@@ -79,7 +89,7 @@ def resolve_target(source: Path, written: str) -> Path | None:
             resolved.relative_to(ROOT)
         except ValueError:
             continue
-        if resolved.is_file() and resolved.suffix.lower() == ".md":
+        if resolved.exists() and (resolved.is_file() or resolved.is_dir()):
             return resolved
     return None
 
@@ -88,6 +98,8 @@ def relative_href(source: Path, target: Path, anchor: str) -> str:
     relative = os.path.relpath(target, start=source.parent).replace(os.sep, "/")
     if relative == ".":
         relative = target.name
+    if target.is_dir() and not relative.endswith("/"):
+        relative += "/"
     return relative + anchor
 
 
@@ -95,15 +107,12 @@ def protected_spans(line: str) -> list[tuple[int, int]]:
     """Return spans that should never be rewritten on this line."""
     spans: list[tuple[int, int]] = []
 
-    # Existing Markdown links and images.
     for match in re.finditer(r"!?\[[^\]]*\]\([^)]*\)", line):
         spans.append(match.span())
 
-    # Autolinks / raw URLs.
-    for match in re.finditer(r"https?://[^\s<>]+|<https?://[^>]+>", line):
+    for match in re.finditer(r"<https?://[^>]+>|<www\.[^>]+>", line, re.IGNORECASE):
         spans.append(match.span())
 
-    # HTML href/src attributes.
     for match in re.finditer(r"(?:href|src)\s*=\s*[\"'][^\"']+[\"']", line, re.IGNORECASE):
         spans.append(match.span())
 
@@ -114,15 +123,46 @@ def inside_any(start: int, end: int, spans: list[tuple[int, int]]) -> bool:
     return any(start < protected_end and end > protected_start for protected_start, protected_end in spans)
 
 
-def linkify_inline_code(source: Path, line: str) -> str:
+def split_url_suffix(url: str) -> tuple[str, str]:
+    suffix = ""
+    while url and url[-1] in TRAILING_URL_PUNCTUATION:
+        suffix = url[-1] + suffix
+        url = url[:-1]
+    return url, suffix
+
+
+def url_href(written: str) -> str:
+    return written if written.lower().startswith(("http://", "https://")) else "https://" + written
+
+
+def linkify_inline_code_urls(line: str) -> str:
     spans = protected_spans(line)
     output: list[str] = []
     cursor = 0
-    for match in INLINE_CODE_MD_RE.finditer(line):
+    for match in INLINE_CODE_URL_RE.finditer(line):
+        if inside_any(match.start(), match.end(), spans):
+            continue
+        written, suffix = split_url_suffix(match.group("url"))
+        if not written:
+            continue
+        output.append(line[cursor : match.start()])
+        output.append(f"[`{written}`]({url_href(written)}){suffix}")
+        cursor = match.end()
+    if cursor == 0:
+        return line
+    output.append(line[cursor:])
+    return "".join(output)
+
+
+def linkify_inline_code_repo_refs(source: Path, line: str) -> str:
+    spans = protected_spans(line)
+    output: list[str] = []
+    cursor = 0
+    for match in INLINE_CODE_REPO_REF_RE.finditer(line):
         if inside_any(match.start(), match.end(), spans):
             continue
         written = match.group("path")
-        target = resolve_target(source, written)
+        target = resolve_repo_target(source, written)
         if target is None:
             continue
         _, anchor = split_anchor(written)
@@ -136,26 +176,48 @@ def linkify_inline_code(source: Path, line: str) -> str:
     return "".join(output)
 
 
-def linkify_plain_text(source: Path, line: str) -> str:
+def linkify_raw_urls(line: str) -> str:
     spans = protected_spans(line)
-
-    # Protect inline-code spans after the dedicated inline-code pass. This also
-    # protects non-path code examples from accidental path matching.
     for match in re.finditer(r"`[^`]*`", line):
         spans.append(match.span())
 
     output: list[str] = []
     cursor = 0
-    for match in MD_PATH_RE.finditer(line):
+    for match in RAW_URL_RE.finditer(line):
         if inside_any(match.start(), match.end(), spans):
             continue
 
-        # Avoid treating an email/domain/URL fragment as a repository path.
+        written, suffix = split_url_suffix(match.group("url"))
+        if not written:
+            continue
+
+        output.append(line[cursor : match.start()])
+        output.append(f"[{written}]({url_href(written)}){suffix}")
+        cursor = match.end()
+
+    if cursor == 0:
+        return line
+    output.append(line[cursor:])
+    return "".join(output)
+
+
+def linkify_plain_repo_refs(source: Path, line: str) -> str:
+    spans = protected_spans(line)
+
+    for match in re.finditer(r"`[^`]*`", line):
+        spans.append(match.span())
+
+    output: list[str] = []
+    cursor = 0
+    for match in REPO_REF_RE.finditer(line):
+        if inside_any(match.start(), match.end(), spans):
+            continue
+
         if match.start() > 0 and line[match.start() - 1] in "@:/":
             continue
 
         written = match.group("path")
-        target = resolve_target(source, written)
+        target = resolve_repo_target(source, written)
         if target is None:
             continue
 
@@ -185,32 +247,52 @@ def transform(source: Path, text: str) -> str:
             output.append(line)
             continue
 
-        newline = linkify_inline_code(source, line)
-        newline = linkify_plain_text(source, newline)
+        newline = linkify_inline_code_urls(line)
+        newline = linkify_inline_code_repo_refs(source, newline)
+        newline = linkify_raw_urls(newline)
+        newline = linkify_plain_repo_refs(source, newline)
         output.append(newline)
 
     return "".join(output)
 
 
-def validate_markdown_links(source: Path, text: str) -> list[str]:
+def validate_generated_repo_links(source: Path, text: str) -> list[str]:
+    """Validate local Markdown destinations that look like repository references."""
     errors: list[str] = []
     in_fence = False
+    link_re = re.compile(r"!?\[[^\]]*\]\((?P<dest>[^)]+)\)")
+
     for line_number, line in enumerate(text.splitlines(), start=1):
         if FENCE_RE.match(line):
             in_fence = not in_fence
             continue
         if in_fence:
             continue
-        for match in LINK_DEST_MD_RE.finditer(line):
+
+        for match in link_re.finditer(line):
             destination = match.group("dest").strip()
-            if destination.startswith(("http://", "https://")):
+            if not destination or destination.startswith("#"):
                 continue
-            target = resolve_target(source, destination)
-            if target is None:
+            if destination.lower().startswith(("http://", "https://", "mailto:", "tel:")):
+                continue
+
+            raw_path, _ = split_anchor(unquote(destination))
+            candidate = (source.parent / raw_path).resolve(strict=False)
+            try:
+                candidate.relative_to(ROOT)
+            except ValueError:
+                continue
+
+            if candidate.exists():
+                continue
+
+            # Only flag destinations that clearly resemble repository paths.
+            if "/" in raw_path or "." in Path(raw_path).name:
                 errors.append(
                     f"{source.relative_to(ROOT).as_posix()}:{line_number}: "
-                    f"broken Markdown document link: {destination}"
+                    f"broken repository link: {destination}"
                 )
+
     return errors
 
 
@@ -234,20 +316,21 @@ def main() -> int:
             if args.fix:
                 path.write_text(transformed, encoding="utf-8")
 
-        errors.extend(validate_markdown_links(path, transformed if args.fix else original))
+        validation_text = transformed if args.fix else original
+        errors.extend(validate_generated_repo_links(path, validation_text))
 
     if args.check and changed:
-        print("Markdown references are not fully clickable:")
+        print("Documentation contains non-clickable resolvable link targets:")
         for rel in changed:
             print(f"  - {rel}")
 
     if errors:
-        print("Markdown link validation errors:")
+        print("Documentation link validation errors:")
         for error in errors:
             print(f"  - {error}")
 
     if args.fix:
-        print(f"Linkified Markdown references in {len(changed)} file(s).")
+        print(f"Linkified documentation targets in {len(changed)} file(s).")
         for rel in changed:
             print(f"  - {rel}")
         return 1 if errors else 0
