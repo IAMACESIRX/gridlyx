@@ -2,7 +2,7 @@
 
 ## Current identity state
 
-The canonical root brand is **Gridelyx** and the integrated suite is **Gridelyx Studio**. `platform/brand.json` is authoritative. Gridelyx/VFSB technical identifiers that still exist are migration compatibility state only; consult `docs/REBRAND_PLAN.md` before renaming source, ABI, wire or persisted identifiers.
+The canonical root brand is **Gridelyx** and the integrated suite is **Gridelyx Studio**. `platform/brand.json` is authoritative. Product/API slug remains `gridelyx`; the requested GitHub repository slug is `gridlyx`, tracked in `platform/repository-metadata.json`. Gridelyx/VFSB technical identifiers that still exist are migration compatibility state only; consult `docs/REBRAND_PLAN.md` before renaming source, ABI, wire or persisted identifiers.
 
 ## Mission
 
@@ -12,7 +12,7 @@ The project is **not constrained to conventional modding extension points**. Req
 
 ## Canonical retained scope
 
-Read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json` before broad design work. They preserve CR-001 through CR-033, including:
+Read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json` before broad design work. They preserve CR-001 through CR-034, including:
 
 - reproducible Java/NeoForge R&D and multi-JAR workspaces;
 - quality/CI/Codespaces/Copilot/CodeQL/build locks;
@@ -43,9 +43,23 @@ Read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.js
 - rendering/volumetrics/PoseStack/IK;
 - additive deep integration/patch manager;
 - Gridelyx rebrand migration;
-- complete dependency/toolchain inventory.
+- complete dependency/toolchain inventory;
+- W5x5x5/decision/risk/cost/long-horizon feature-planning system.
 
-Never silently drop one of these because it is difficult or outside normal mod APIs.
+Never silently drop one of these because it is difficult, expensive or outside normal mod APIs.
+
+## Feature-planning protocol
+
+For a substantial feature or architecture decision read:
+
+- `docs/FEATURE_DECISION_FRAMEWORK.md`;
+- `docs/PROJECT_VALUES.md`;
+- `docs/DEVELOPMENT_MAP.md`;
+- `docs/BENCHMARKING_MATRIX.md`;
+- `docs/templates/FEATURE_EVALUATION_TEMPLATE.md`;
+- `platform/feature-analysis.schema.json`.
+
+The packet must cover W5x5x5 positive/inverse questions, task decomposition, values, cost, 10m/10h/10d/10mo/1y/5y/10y horizons, opportunity cost, regret/reversibility, risk/inversion/pre-mortem, second-order effects, Eisenhower, overlap/Venn analysis, brainstorming, first principles, verified benchmarks, Feynman explanation, MVP/timebox, asymmetric risk, working backward, Pareto, Critical Path, Cynefin, Kanban, validation and rollback. This framework guides sequencing; it is not an automatic scope veto.
 
 ## Current architecture
 
@@ -54,9 +68,10 @@ Never silently drop one of these because it is difficult or outside normal mod A
 - **Bedrock:** `bedrock/` + `native/bedrock/` + `platform/bedrock-capabilities.json`.
 - **Native/IPC:** `native/`, `bridges/`, FFM/Panama/shared-memory framing.
 - **Studio/launcher core:** `studio/core` plus provider/loader manifests and schemas.
-- **Project control:** `docs/PROJECT_PLAN.md`, `ROADMAP.md`, `FEATURE_MAP.md`, `TODO.md`, requirements ledger.
+- **Project control:** `docs/PROJECT_PLAN.md`, `ROADMAP.md`, `DEVELOPMENT_MAP.md`, `FEATURE_MAP.md`, `TODO.md`, requirements ledger.
 - **AI continuity:** `ai/AI_ORGANISATION.md`, drift controls, work/decision/assumption ledgers, context map.
 - **Dependencies/toolchain:** `docs/DEPENDENCIES_AND_TOOLCHAIN.md`, `platform/toolchain-requirements.json`.
+- **Feature analysis:** `docs/FEATURE_DECISION_FRAMEWORK.md`, `platform/feature-analysis.schema.json`.
 - **Community:** `COMMUNITY.md`, `CONTRIBUTING.md`, `SUPPORT.md`, `CODE_OF_CONDUCT.md`, `docs/community/`.
 
 ## Source-of-truth order
@@ -65,9 +80,9 @@ When information conflicts:
 
 1. explicit current human direction/corrections;
 2. implementation, schemas and reproducible runtime evidence;
-3. locked platform/version/brand/provider/toolchain manifests;
+3. locked platform/version/brand/provider/toolchain/feature-analysis manifests;
 4. accepted architecture/decision records;
-5. requirements ledger, project plan, roadmap, feature map and TODO;
+5. requirements ledger, project plan, roadmap, development map, feature map and TODO;
 6. handoff/context/index material;
 7. generated summaries and speculative notes.
 
@@ -92,21 +107,25 @@ Never resolve contradictions by averaging incompatible summaries.
 15. Deep integration must not bypass authentication, entitlement, DRM, anti-cheat or platform security controls.
 16. Tool installation is not runtime validation; dependency state and feature state remain separate.
 17. Do not claim the exact remote reference-vault binary payload is complete while `vault/REMOTE_BINARY_IMPORT_PENDING.md` exists.
+18. Cost/priority analysis is diagnostic; it cannot silently erase retained CR scope.
+19. Difficult-to-reverse decisions require stronger evidence and explicit migration/recovery analysis.
 
 ## Active engineering priorities
 
-1. Preserve the Gridelyx identity/requirements/toolchain continuity gates.
+1. Preserve Gridelyx identity, requirements, toolchain and feature-planning continuity gates.
 2. Complete safe Gridelyx→Gridelyx public/source/protocol/ABI migration in staged phases.
 3. Implement the desktop launcher/runtime acquisition path end-to-end.
 4. Extend loader/content resolution through the provider/adapter model.
-5. Integrate live creator runtime: world editing, assets/models, microgeometry, physics, scripting, AI/IDE and non-Java extensions.
-6. Implement/validate dynamic liquids, paint layers and progression transmutation.
-7. Validate Java/Bedrock parity explicitly.
-8. Build the managed deep-integration/patch path with immutable base/provenance/rollback.
-9. Harden hotload, rollback and process-isolated fault containment.
-10. Promote replay/timeline/camera foundations into the complete production suite.
-11. Pin presently-unpinned Python/Rust/CMake/compiler/Go/.NET release toolchain policies.
-12. Complete exact remote reference-vault import if the repository is intended to contain those large supplied bytes.
+5. Produce the first real cross-loader Polyloader/UAL compatibility proof.
+6. Integrate live creator runtime: world editing, assets/models, microgeometry, physics, scripting, AI/IDE and non-Java extensions.
+7. Implement/validate dynamic liquids, paint layers and progression transmutation.
+8. Validate Java/Bedrock parity explicitly.
+9. Build the managed deep-integration/patch path with immutable base/provenance/rollback.
+10. Harden hotload, rollback and process-isolated fault containment.
+11. Promote replay/timeline/camera foundations into the complete production suite.
+12. Pin presently-unpinned Python/Rust/CMake/compiler/Go/.NET release toolchain policies.
+13. Complete exact remote reference-vault import if the repository is intended to contain those large supplied bytes.
+14. Apply Feature Decision Packets to major implementation issues as they move from Backlog to Ready.
 
 ## Session start protocol
 
@@ -115,12 +134,13 @@ For non-trivial work:
 1. read `AGENTS.md`;
 2. read this handoff;
 3. read `docs/CHAT_REQUIREMENTS_TRACEABILITY.md`;
-4. read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`;
-5. inspect `platform/brand.json`, `platform/chat-requirements.json` and `platform/toolchain-requirements.json`;
-6. inspect work-state, decision and assumption ledgers;
-7. use `ai/context-map.json` for task-specific canonical source;
-8. inspect versions/providers/upstream references before guessing external APIs;
-9. check GitHub issues/TODO for overlapping tracked work.
+4. for substantial feature/architecture work, read `docs/FEATURE_DECISION_FRAMEWORK.md` and `docs/DEVELOPMENT_MAP.md`;
+5. read `ai/AI_ORGANISATION.md` and `ai/DRIFT_MITIGATION.md`;
+6. inspect `platform/brand.json`, `platform/repository-metadata.json`, `platform/chat-requirements.json`, `platform/feature-analysis.schema.json` and `platform/toolchain-requirements.json`;
+7. inspect work-state, decision and assumption ledgers;
+8. use `ai/context-map.json` for task-specific canonical source;
+9. inspect versions/providers/upstream references before guessing external APIs;
+10. check GitHub issues/TODO for overlapping tracked work.
 
 ## Session end protocol
 
@@ -134,6 +154,7 @@ A meaningful session leaves:
 - new/closed assumptions;
 - architecture/brand/protocol decisions and rollback routes;
 - dependency/toolchain changes;
+- Feature Decision Packet/critical-path/Kanban changes when relevant;
 - exact next work or blocker.
 
 Update work-state when a task crosses sessions/agents. Update decision/assumption ledgers when project truth changes. Update both requirements ledgers when scope/evidence paths move.
@@ -160,6 +181,8 @@ Do not use “supported” without target/version/loader/evidence scope when tha
 python tools/continuity_check.py
 python tools/chat_requirements_check.py
 python tools/toolchain_requirements_check.py
+python tools/feature_planning_check.py
+python tools/terminology_check.py
 python tools/studio_check.py
 python tools/repo_index.py --check
 python tools/validate_platform.py
@@ -175,6 +198,9 @@ Then run applicable Java advanced/native/Bedrock/GameTest/client tests. L5-L8 ch
 OBJECTIVE:
 BRANCH / COMMIT:
 SCOPE / CR IDS:
+KANBAN STATE:
+FEATURE DECISION PACKET:
+CRITICAL-PATH EFFECT:
 AUTHORITATIVE FILES:
 COMPLETED:
 VERIFIED:
@@ -182,6 +208,7 @@ NOT VERIFIED:
 DECISIONS:
 OPEN ASSUMPTIONS:
 DEPENDENCIES / TOOLCHAIN CHANGES:
+RISKS / RECOVERY:
 BLOCKERS:
 RECOVERY POINT:
 NEXT ACTIONS:
