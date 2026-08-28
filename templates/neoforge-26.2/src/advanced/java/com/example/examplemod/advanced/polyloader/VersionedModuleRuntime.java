@@ -54,11 +54,7 @@ public final class VersionedModuleRuntime implements AutoCloseable {
         URLClassLoader loader = new URLClassLoader(new URL[] {source.toUri().toURL()}, parent);
         GridelyxHotloadModule candidate;
         try {
-            candidate = ServiceLoader.load(GridelyxHotloadModule.class, loader)
-                    .findFirst()
-                    .orElseThrow(() -> new StructuralReloadRequiredException(
-                            ActivationStrategy.RUNTIME_EPOCH_HANDOFF,
-                            "JAR does not expose the GridelyxHotloadModule service contract"));
+            candidate = loadCandidate(loader);
         } catch (Exception | LinkageError failure) {
             closeQuietly(loader, failure);
             throw failure;
@@ -142,6 +138,22 @@ public final class VersionedModuleRuntime implements AutoCloseable {
 
     public synchronized int activeModuleCount() {
         return activeByPath.size();
+    }
+
+    private static GridelyxHotloadModule loadCandidate(URLClassLoader loader)
+            throws StructuralReloadRequiredException {
+        List<ServiceLoader.Provider<GridelyxHotloadModule>> providers = ServiceLoader
+                .load(GridelyxHotloadModule.class, loader)
+                .stream()
+                .filter(provider -> provider.type().getClassLoader() == loader)
+                .toList();
+        if (providers.size() != 1) {
+            throw new StructuralReloadRequiredException(
+                    ActivationStrategy.RUNTIME_EPOCH_HANDOFF,
+                    "JAR must expose exactly one GridelyxHotloadModule provider; found "
+                            + providers.size());
+        }
+        return providers.getFirst().get();
     }
 
     private static Path logicalKey(Path jar) {
