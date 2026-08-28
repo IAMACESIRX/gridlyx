@@ -5,7 +5,7 @@
   "type": "object",
   "required": ["schemaVersion", "id", "name", "edition", "gameVersion", "memoryMiB", "toolkit"],
   "properties": {
-    "schemaVersion": {"const": 2},
+    "schemaVersion": {"const": 1},
     "id": {"type": "string", "minLength": 1},
     "name": {"type": "string", "minLength": 1},
     "edition": {"enum": ["java", "bedrock"]},
