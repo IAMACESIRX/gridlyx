@@ -1,0 +1,118 @@
+name: Gridelyx feature / architecture evaluation
+description: Propose or shape a substantial Gridelyx capability using the required decision framework.
+title: "[Feature] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for substantial features/architecture. Read `docs/FEATURE_DECISION_FRAMEWORK.md` and map the proposal to retained CR IDs. This form is an intake summary; attach or link a complete Feature Decision Packet when the work becomes Ready.
+  - type: input
+    id: cr_ids
+    attributes:
+      label: Retained requirement IDs
+      description: Existing CR IDs, or state that a new CR is required.
+      placeholder: CR-016, CR-029
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired user/system outcome
+      description: Working-backward success statement, including failure/recovery behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: w5
+    attributes:
+      label: W5x5x5 summary
+      description: Summarize the deepest findings from Who/What/When/Where/How/Why and the inverse Who-not/What-isn't/When-isn't/Where-isn't/How-not/Why-isn't interrogation.
+    validations:
+      required: true
+  - type: textarea
+    id: first_principles
+    attributes:
+      label: First-principles model
+      description: What remains true independent of a particular Minecraft/loader API?
+    validations:
+      required: true
+  - type: textarea
+    id: breakdown
+    attributes:
+      label: Task breakdown and prerequisites
+      description: Small work units, dependencies, parallel work and critical-path effect.
+    validations:
+      required: true
+  - type: textarea
+    id: benchmarks
+    attributes:
+      label: Benchmarks / comparable systems
+      description: Current reference systems to verify, plus what to emulate, exceed, reject or generalize.
+  - type: textarea
+    id: tradeoffs
+    attributes:
+      label: Pros, cons, cost and opportunity cost
+      description: Include time/money/energy/maintenance/compatibility burden; this is diagnostic, not an automatic scope veto.
+    validations:
+      required: true
+  - type: textarea
+    id: horizons
+    attributes:
+      label: 10m / 10h / 10d / 10mo / 1y / 5y / 10y
+      description: What changes at each horizon and what is displaced or unlocked?
+    validations:
+      required: true
+  - type: textarea
+    id: risk
+    attributes:
+      label: Risk, inversion and pre-mortem
+      description: How could this fail spectacularly, what second-order effects follow, and what controls prevent them?
+    validations:
+      required: true
+  - type: dropdown
+    id: reversibility
+    attributes:
+      label: Reversibility
+      options:
+        - Reversible / safe-to-fail
+        - Difficult to reverse / migration-sensitive
+        - Unknown / needs analysis
+    validations:
+      required: true
+  - type: dropdown
+    id: cynefin
+    attributes:
+      label: Cynefin classification
+      options:
+        - Clear
+        - Complicated
+        - Complex
+        - Chaotic
+        - Confused
+    validations:
+      required: true
+  - type: dropdown
+    id: eisenhower
+    attributes:
+      label: Eisenhower classification
+      options:
+        - Urgent + important
+        - Important + not urgent
+        - Urgent + lower importance
+        - Neither urgent nor important
+    validations:
+      required: true
+  - type: textarea
+    id: mvp
+    attributes:
+      label: MVP / first timebox / evidence
+      description: Smallest vertical slice, 30/60-minute first evidence box, success measure and validation lane.
+    validations:
+      required: true
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Rollback / recovery / migration
+      description: State how the change can be disabled, reverted or migrated.
+    validations:
+      required: true
