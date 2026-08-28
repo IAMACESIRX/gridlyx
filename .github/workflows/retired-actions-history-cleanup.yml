@@ -46,20 +46,20 @@ jobs:
                   return json.loads(payload) if payload else None
 
           deleted = 0
-          page = 1
           while True:
-              url = f'https://api.github.com/repos/{repo}/actions/runs?per_page=100&page={page}'
-              data = request(url)
+              data = request(f'https://api.github.com/repos/{repo}/actions/runs?per_page=100&page=1')
               runs = data.get('workflow_runs', []) if data else []
-              if not runs:
-                  break
+              candidates = []
               for run in runs:
                   run_id = int(run['id'])
                   if run_id == current:
                       continue
                   created = dt.datetime.fromisoformat(run['created_at'].replace('Z', '+00:00'))
-                  if created >= cutoff:
-                      continue
+                  if created < cutoff:
+                      candidates.append(run_id)
+              if not candidates:
+                  break
+              for run_id in candidates:
                   try:
                       request(
                           f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
@@ -69,7 +69,15 @@ jobs:
                   except urllib.error.HTTPError as exc:
                       if exc.code != 404:
                           raise
-              page += 1
 
-          print(f'Deleted {deleted} workflow runs predating {cutoff.isoformat()}.')
+          remaining = request(f'https://api.github.com/repos/{repo}/actions/runs?per_page=100&page=1')
+          old = []
+          for run in remaining.get('workflow_runs', []):
+              created = dt.datetime.fromisoformat(run['created_at'].replace('Z', '+00:00'))
+              if created < cutoff:
+                  old.append(run['id'])
+          if old:
+              raise SystemExit(f'FAIL: pre-scrub workflow runs remain visible on page 1: {old}')
+
+          print(f'Deleted {deleted} workflow runs predating {cutoff.isoformat()}; page 1 is clean.')
           PY
