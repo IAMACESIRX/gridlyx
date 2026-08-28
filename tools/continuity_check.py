@@ -67,11 +67,15 @@ def require_unique(records: list[dict], key: str, label: str) -> None:
 
 
 def validate_brand() -> None:
-    data = load_json("platform/brand.json", schema_version=2)
+    data = load_json("platform/brand.json", schema_version=3)
     if data.get("root_brand") != "Gridelyx" or data.get("product_name") != "Gridelyx Studio":
         raise SystemExit("FAIL: platform/brand.json must identify Gridelyx / Gridelyx Studio")
-    if data.get("legacy_root") != "Gridelyx":
-        raise SystemExit("FAIL: platform/brand.json must retain the retired root for migration checks")
+    if data.get("bridge_magic") != "GLXB" or data.get("bridge_protocol_version") != 2:
+        raise SystemExit("FAIL: platform/brand.json must identify GLXB protocol version 2")
+    if data.get("native_transport_magic") != "GLXM" or data.get("native_abi_version") != 2:
+        raise SystemExit("FAIL: platform/brand.json must identify GLXM/native ABI version 2")
+    if data.get("native_symbol_prefix") != "gridelyx_":
+        raise SystemExit("FAIL: platform/brand.json must identify the gridelyx_ native prefix")
 
     metadata = load_json("platform/repository-metadata.json")
     if metadata.get("product_brand") != "Gridelyx":
@@ -164,7 +168,7 @@ def main() -> int:
     validate_ledgers()
     validate_context_map()
     validate_handoff()
-    print("PASS: Gridelyx AI continuity, brand, retained scope, feature planning and drift-control structure is coherent")
+    print("PASS: Gridelyx AI continuity, brand v2 boundary, retained scope, feature planning and drift-control structure is coherent")
     return 0
 
 
