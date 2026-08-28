@@ -24,7 +24,7 @@ Dependencies and external programs are documented in `../DEPENDENCIES_AND_TOOLCH
 ## Current umbrella issues
 
 - `#25` — retained-scope implementation tracker for CR-001 through CR-034.
-- `#26` — staged Gridelyx/VFSB compatibility migration to Gridelyx.
+- `#26` — Gridelyx identity/protocol migration record and v2 follow-up tracking.
 - `#27` — external toolchain versioning and reproducibility matrix.
 - `#28` — requested GitHub repository rename to `gridlyx` and canonical description.
 
