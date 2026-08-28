@@ -18,6 +18,25 @@ public final class ExampleMod {
         ModRegistries.register(modBus);
         CreativeTabAnchor.register(modBus);
         modBus.addListener(ModDataGenerators::gatherData);
+        startGridelyxAdvancedRuntime();
         LOGGER.info("{} initialised", MOD_ID);
+    }
+
+    /**
+     * The normal template JAR does not contain the optional advanced source set. Reflection keeps that artifact
+     * dependency-free while allowing advancedJar to attach the Gridelyx runtime automatically when present.
+     */
+    private static void startGridelyxAdvancedRuntime() {
+        try {
+            Class<?> bootstrap = Class.forName(
+                    "com.example.examplemod.advanced.runtime.GridelyxRuntimeBootstrap",
+                    true,
+                    ExampleMod.class.getClassLoader());
+            bootstrap.getMethod("startIfEnabled").invoke(null);
+        } catch (ClassNotFoundException ignored) {
+            // Expected for the normal non-advanced template JAR.
+        } catch (ReflectiveOperationException | LinkageError failure) {
+            LOGGER.error("Gridelyx advanced runtime bootstrap failed", failure);
+        }
     }
 }
