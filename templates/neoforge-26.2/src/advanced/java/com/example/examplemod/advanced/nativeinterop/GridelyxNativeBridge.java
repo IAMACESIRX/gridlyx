@@ -11,8 +11,8 @@ import java.util.Objects;
 import java.util.zip.CRC32;
 
 public final class GridelyxNativeBridge implements AutoCloseable {
-    public static final int ABI_VERSION = 1;
-    public static final int PROTOCOL_VERSION = 1;
+    public static final int ABI_VERSION = 2;
+    public static final int PROTOCOL_VERSION = 2;
 
     private final Arena arena = Arena.ofShared();
     private final NativeExtensionAbi abi;
