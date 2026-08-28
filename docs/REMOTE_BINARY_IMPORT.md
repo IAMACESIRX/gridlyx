@@ -1,6 +1,6 @@
 # Completing the Exact Private Reference Vault
 
-The GitHub API connection used to initialise this repository can write source/text files but cannot stream the supplied ~632 MB binary payload. The repository therefore records the exact expected bytes in `vault/manifest.json` and keeps [`vault/REMOTE_BINARY_IMPORT_PENDING.md`](../vault/REMOTE_BINARY_IMPORT_PENDING.md) until the binary import is complete.
+The GitHub API connection used to initialise this repository can write source/text files but cannot stream the supplied ~632 MB binary payload. The repository therefore records the exact expected bytes in [`vault/manifest.json`](../vault/manifest.json) and keeps [`vault/REMOTE_BINARY_IMPORT_PENDING.md`](../vault/REMOTE_BINARY_IMPORT_PENDING.md) until the binary import is complete.
 
 The JDK and LWJGL archives are intentionally split into 24 MiB ordinary Git blobs. This stays below GitHub's single-file hard limit while keeping the private repository self-contained and independent of a third-party download remaining available forever.
 
@@ -24,10 +24,10 @@ git push origin main
 
 The importer identifies artifacts by exact SHA-256 and byte length, not merely by filename. It therefore tolerates harmless filename differences such as browser-added `(1)` suffixes but rejects changed bytes.
 
-`hydrate_references.py` then:
+[`hydrate_references.py`](../tools/hydrate_references.py) then:
 
 1. reconstructs and verifies the exact supplied MDK ZIP;
-2. extracts it to `references/upstream/mdk-26.2/` as an immutable readable snapshot;
+2. extracts it to [`references/upstream/mdk-26.2/`](../references/upstream/mdk-26.2/) as an immutable readable snapshot;
 3. restores the official Gradle wrapper JAR and launch scripts into the live mod template;
 4. regenerates archive, JDK-source and LWJGL-source/type indexes.
 
