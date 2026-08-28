@@ -10,6 +10,8 @@ Canonical dependency/tool inventory: `DEPENDENCIES_AND_TOOLCHAIN.md` and `../pla
 
 Canonical feature-analysis system: `FEATURE_DECISION_FRAMEWORK.md`, `DEVELOPMENT_MAP.md` and `../platform/feature-analysis.schema.json`.
 
+Canonical stakeholder/documentation layer: `STAKEHOLDER_DASHBOARD.md`, `ARCHITECTURE_DIAGRAMS.md`, `../mkdocs.yml` and `DOCUMENTATION_DRIVEN_MARKETING.md`.
+
 ## Brand state
 
 The selected root brand is **Gridelyx** and the integrated suite is **Gridelyx Studio**. Previous Gridelyx terminology is retired project branding. Existing `VFSB`/`gridelyx_*` protocol, ABI, persisted or source identifiers are temporary compatibility/migration debt and must be changed through the versioned rebrand plan rather than blind replacement.
@@ -160,6 +162,10 @@ Retain a machine-readable and human-readable inventory for every core/subsystem/
 
 Retain the Gridelyx Feature Decision Packet process for substantial features. It includes repeated five-level interrogation of **Who, What, When, Where, How and Why**, plus inverse **Who not, What isn't, When isn't, Where isn't, How not and Why isn't**; five analysis perspectives and evidence depths; task decomposition; project-values alignment; cost/time/money/energy diagnostics; 10-minute, 10-hour, 10-day, 10-month, 1-year, 5-year and 10-year horizons; opportunity cost; regret minimisation; reversible-vs-irreversible decisions; risk registers; inversion; second-order thinking; Eisenhower classification; Venn/overlap analysis; structured brainstorming; first-principles thinking; benchmarking; Feynman explanation; MVP; 30/60-minute research timeboxes; pre-mortem; asymmetric-risk analysis; working backward; Pareto/80-20; Critical Path Method; Cynefin; and Kanban. This framework guides sequencing and architecture but does not automatically delete retained features because they are expensive or difficult.
 
+### CR-035 — Stakeholder visibility, diagrams, technical documentation site, API docs and release communications — implemented
+
+Retain a presentation/documentation layer that makes Gridelyx legible without weakening evidence discipline: a **3-bullet value proposition**; Shields.io badges for stable project parameters and real dynamic evidence; a version-controlled hero/concept graphic; visual architecture mapping; Kanban-style stakeholder views; diagrams as code; a buildable technical documentation site; interactive OpenAPI/Swagger documentation; deterministic changelogs; optional AI-assisted release notes constrained to deterministic evidence and human review; machine-readable label/filter taxonomy; user-journey mapping; impact-effort diagnostics; documentation-driven marketing with claim-to-proof rules; and CI that validates/builds these surfaces. Presentation state must remain synchronized with CR requirements, R0-R6 evidence, dependencies and target capability manifests.
+
 ## Coverage rule
 
 Every capability requested in this development conversation must have either:
@@ -171,4 +177,4 @@ Difficulty, absence of a normal mod/API surface, or lack of current validation d
 
 ## Synchronization rule
 
-When implementation/planning paths move, update this file and `../platform/chat-requirements.json`. When tool requirements change, update `DEPENDENCIES_AND_TOOLCHAIN.md` and `../platform/toolchain-requirements.json`. When feature-planning policy changes, update `FEATURE_DECISION_FRAMEWORK.md`, `DEVELOPMENT_MAP.md`, the feature-analysis schema and issue template. When readiness changes, update `FEATURE_MAP.md`/target manifests only after evidence exists. Broad AI work must consult this ledger through `../ai/context-map.json`.
+When implementation/planning paths move, update this file and `../platform/chat-requirements.json`. When tool requirements change, update `DEPENDENCIES_AND_TOOLCHAIN.md` and `../platform/toolchain-requirements.json`. When feature-planning policy changes, update `FEATURE_DECISION_FRAMEWORK.md`, `DEVELOPMENT_MAP.md`, the feature-analysis schema and issue template. When stakeholder/documentation surfaces change, update `STAKEHOLDER_DASHBOARD.md`, diagrams, docs-site/API/release communication files and `tools/docs_check.py` as applicable. When readiness changes, update `FEATURE_MAP.md`/target manifests only after evidence exists. Broad AI work must consult this ledger through `../ai/context-map.json`.
