@@ -32,4 +32,4 @@ An interface or source file is not enough. Use the R0-R6 evidence model and run 
 
 ## Naming
 
-Use **Gridelyx** as the root brand and **Gridelyx Studio** for the integrated suite. Legacy Gridelyx/VFSB identifiers are compatibility migration state; do not copy them into new code unless implementing an explicit migration/alias boundary.
+Use **Gridelyx** as the root brand and **Gridelyx Studio** for the integrated suite. Current project-owned code, protocols, ABI surfaces, schemas, documentation and paths use Gridelyx naming; the canonical bridge/native compatibility boundary is version 2.
