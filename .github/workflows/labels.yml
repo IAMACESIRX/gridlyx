@@ -1,11 +1,21 @@
 name: Sync Gridelyx Labels
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'platform/label-taxonomy.json'
+      - 'tools/sync_labels.py'
+      - '.github/workflows/labels.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
   issues: write
+
+concurrency:
+  group: gridelyx-label-sync-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   sync-labels:
