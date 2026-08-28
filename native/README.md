@@ -1,21 +1,54 @@
-# Gridelyx Studio Native Workspace
+# Gridelyx Native Workspace
 
-The native workspace contains Gridelyx Studio's versioned C ABI, cross-process shared-memory transport, Rust acceleration lane and Bedrock native companion.
+The native workspace contains Gridelyx's trusted native ABI/IPC implementation, cross-process shared-memory transport, Rust acceleration lane and Bedrock native companion.
 
-Java 25 binds the C ABI through the Foreign Function & Memory API. The canonical exported prefix is `gridelyx_`; the native library artifact is `gridelyx_native`.
+## ABI migration state
+
+Canonical future native identity is defined in `platform/brand.json`:
+
+- library: `gridelyx_native`;
+- symbol prefix: `gridelyx_`;
+- future bridge magic: `GLXB`.
+
+The **currently implemented version-1 compatibility ABI still exports `gridelyx_*` symbols from `gridelyx_native` and transports `VFSB` frames**. These identifiers are migration compatibility debt only. Issue #26 governs their versioned transition; do not blindly rename them without Java/C++/Rust/Bedrock interoperability and rollback tests.
+
+Java 25 binds the C ABI through the Foreign Function & Memory API (Project Panama/FFM).
 
 ## Shared-memory contract
 
-`gridelyx_shm_create` and `gridelyx_shm_open` expose a named mapped region containing an internal publication header followed by a caller-writable payload region. Java or another producer writes a complete `VFSB` frame into the payload and calls `gridelyx_shm_publish`. The native side updates frame metadata and advances an atomic publication sequence only after the payload has been written.
+The compatibility functions `gridelyx_shm_create` / `gridelyx_shm_open` expose a named mapped region containing a publication header followed by a caller-writable payload region. A producer writes a complete binary bridge frame and publishes it. The native side advances publication state only after the payload is ready.
 
-Consumers call `gridelyx_shm_snapshot`, copy the payload, then re-check `gridelyx_shm_sequence`. A changed sequence means the producer published a newer revision during the copy and the consumer must retry.
+Consumers snapshot/copy the payload and verify publication sequence. If the sequence changes during the read, the consumer retries rather than accepting a torn revision.
+
+Canonical logical protocol documentation: `docs/GRIDELYX_BRIDGE_PROTOCOL.md`.
 
 ## Bedrock companion
 
-`native/bedrock` is a consumer host with a versioned `BedrockAdapter` interface. Its default adapter only validates and logs Gridelyx frames. It deliberately contains no hard-coded Bedrock addresses, signatures, process injection or binary patching.
+`native/bedrock` hosts a versioned `BedrockAdapter` boundary. The default adapter validates/logs frames and does not contain hard-coded Bedrock addresses, process injection or executable patching.
 
-A platform/version-specific Bedrock adapter can be developed behind that boundary when an appropriate supported or explicitly validated integration surface is available. The stable Add-On and Editor integrations remain independent of that adapter.
+Platform/version-specific Bedrock adapters can be developed behind that boundary when a supported or explicitly validated deeper integration surface exists. Stable Add-On/Editor paths remain independent of those adapters.
+
+## Other native use cases
+
+Gridelyx native components may also support, behind explicit capability and version gates:
+
+- high-throughput geometry/voxel/volumetric processing;
+- shared-memory scene/world/telemetry streams;
+- renderer buffer preparation and native acceleration;
+- external simulation or AI workers;
+- production/capture pipelines;
+- exact target adapters when Java/Bedrock public surfaces are insufficient.
+
+Native code must not silently become the authority for world/server state merely because it is faster.
 
 ## Safety
 
-Native code is trusted process code. An invalid pointer, ABI mismatch or incorrect FFM descriptor can terminate or corrupt the JVM or native process. Keep the ABI narrow, versioned and independently tested. Untrusted AI-generated/native code belongs in a separate process fault domain.
+Native code is trusted process code. An invalid pointer, ABI mismatch, ownership error or incorrect FFM descriptor can terminate/corrupt a process. Therefore:
+
+- keep ABI surfaces narrow and versioned;
+- validate length, version, sequence and ownership;
+- test Java/C++/Rust compatibility independently;
+- isolate untrusted/generated/native extensions in a separate process when possible;
+- fingerprint exact deeper-integration targets;
+- retain last-known-good/rollback paths;
+- never use native integration to bypass authentication, entitlement, DRM, anti-cheat or platform security controls.
