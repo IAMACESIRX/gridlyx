@@ -17,8 +17,9 @@
 #endif
 
 namespace {
-constexpr std::uint32_t kMagic = 0x5646534DU; // VFSM
-constexpr std::uint32_t kProtocolVersion = 1U;
+constexpr std::uint32_t kMagic = 0x474C584DU; // GLXM
+constexpr std::uint32_t kProtocolVersion = 2U;
+constexpr std::uint32_t kAbiVersion = 2U;
 
 struct alignas(8) SharedHeader {
     std::uint32_t magic;
@@ -118,7 +119,7 @@ void destroy_handle(gridelyx_shm_handle* handle) {
 } // namespace
 
 std::uint32_t gridelyx_abi_version() {
-    return 1U;
+    return kAbiVersion;
 }
 
 std::uint32_t gridelyx_protocol_version() {
