@@ -23,82 +23,103 @@ def load(path: Path) -> dict:
     return value
 
 
+def contains_excluded_part(path: Path, excluded: set[str]) -> bool:
+    try:
+        relative = path.relative_to(ROOT)
+    except ValueError:
+        return True
+    return any(part in excluded for part in relative.parts)
+
+
 def main() -> int:
     terminology = load(MANIFEST)
     brand = load(BRAND)
-    if terminology.get("schema_version") != 1:
-        fail("platform/terminology.json schema_version must be 1")
+    if terminology.get("schema_version") != 2:
+        fail("platform/terminology.json schema_version must be 2")
 
     canonical = terminology.get("canonical")
     if not isinstance(canonical, dict):
         fail("platform/terminology.json canonical must be an object")
-    if canonical.get("root_brand") != brand.get("root_brand"):
-        fail("terminology root_brand disagrees with platform/brand.json")
-    if canonical.get("suite_name") != brand.get("product_name"):
-        fail("terminology suite_name disagrees with platform/brand.json")
+    required_pairs = {
+        "root_brand": "root_brand",
+        "suite_name": "product_name",
+        "bridge_magic": "bridge_magic",
+        "native_symbol_prefix": "native_symbol_prefix",
+    }
+    for terminology_key, brand_key in required_pairs.items():
+        if canonical.get(terminology_key) != brand.get(brand_key):
+            fail(f"terminology {terminology_key} disagrees with platform/brand.json {brand_key}")
     if canonical.get("root_brand") != "Gridelyx":
         fail("canonical root brand must be Gridelyx")
 
-    retired = terminology.get("retired_brand_terms")
     enforcement = terminology.get("enforcement")
-    legacy = terminology.get("known_legacy_technical_identifiers")
-    if not isinstance(retired, list) or not retired:
-        fail("retired_brand_terms must be a non-empty list")
     if not isinstance(enforcement, dict):
         fail("enforcement must be an object")
-    if not isinstance(legacy, list):
-        fail("known_legacy_technical_identifiers must be a list")
+    if enforcement.get("mode") != "strict":
+        fail("terminology enforcement mode must be strict")
+    if enforcement.get("whole_current_tree") is not True:
+        fail("whole_current_tree enforcement must be enabled")
 
-    missing_legacy: list[str] = []
-    for entry in legacy:
-        if not isinstance(entry, dict):
-            fail("every known legacy identifier must be an object")
-        for field in ("identifier", "class", "status", "evidence"):
-            if not entry.get(field):
-                fail(f"legacy identifier missing {field}: {entry!r}")
-        if not (ROOT / entry["evidence"]).exists():
-            missing_legacy.append(f"{entry['identifier']}:{entry['evidence']}")
-    if missing_legacy:
-        fail("legacy compatibility evidence path(s) missing: " + ", ".join(missing_legacy))
+    codepoints = enforcement.get("retired_identifier_codepoints")
+    if not isinstance(codepoints, list) or not codepoints or not all(isinstance(value, int) for value in codepoints):
+        fail("retired_identifier_codepoints must be a non-empty integer list")
+    retired = "".join(chr(value) for value in codepoints).lower()
 
-    strict_files = enforcement.get("strict_public_files")
-    markers = enforcement.get("allowed_retired_context_markers")
-    if not isinstance(strict_files, list) or not strict_files:
-        fail("strict_public_files must be a non-empty list")
-    if not isinstance(markers, list) or not markers:
-        fail("allowed_retired_context_markers must be a non-empty list")
+    excluded_values = enforcement.get("excluded_directories", [])
+    suffix_values = enforcement.get("binary_or_generated_suffixes", [])
+    if not isinstance(excluded_values, list) or not isinstance(suffix_values, list):
+        fail("terminology exclusions must be arrays")
+    excluded = {str(value) for value in excluded_values}
+    binary_suffixes = {str(value).lower() for value in suffix_values}
 
-    violations: list[str] = []
-    missing_gridelyx: list[str] = []
-    for relative in strict_files:
-        path = ROOT / relative
-        if not path.exists():
-            violations.append(f"missing strict public file: {relative}")
+    path_violations: list[str] = []
+    text_violations: list[str] = []
+    for path in ROOT.rglob("*"):
+        if contains_excluded_part(path, excluded):
             continue
-        text = path.read_text(encoding="utf-8")
-        if "gridelyx" not in text.lower():
-            missing_gridelyx.append(relative)
-        for number, line in enumerate(text.splitlines(), 1):
-            lowered = line.lower()
-            hit = next((term for term in retired if term.lower() in lowered), None)
-            if hit is None:
-                continue
-            if not any(marker.lower() in lowered for marker in markers):
-                violations.append(f"{relative}:{number}: retired term {hit!r} lacks migration/legacy context")
+        relative = path.relative_to(ROOT)
+        if enforcement.get("scan_path_names") is True and retired in str(relative).lower():
+            path_violations.append(str(relative))
+        if not path.is_file() or path.suffix.lower() in binary_suffixes:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        for line_number, line in enumerate(text.splitlines(), 1):
+            if retired in line.lower():
+                text_violations.append(f"{relative}:{line_number}")
 
-    if missing_gridelyx:
-        fail("strict public files missing Gridelyx identity: " + ", ".join(missing_gridelyx))
-    if violations:
-        fail("; ".join(violations))
+    if path_violations:
+        fail("retired identifier remains in project-owned path(s): " + ", ".join(path_violations))
+    if text_violations:
+        preview = ", ".join(text_violations[:30])
+        extra = len(text_violations) - 30
+        if extra > 0:
+            preview += f", ... (+{extra} more)"
+        fail("retired identifier remains in current-tree text: " + preview)
 
-    mode = enforcement.get("mode")
-    if mode not in {"staged", "strict"}:
-        fail("terminology enforcement mode must be staged or strict")
+    legacy = terminology.get("known_legacy_technical_identifiers")
+    if legacy != []:
+        fail("known_legacy_technical_identifiers must be empty after the Gridelyx v2 migration")
 
-    print(
-        "PASS: Gridelyx public terminology is enforced; "
-        f"{len(legacy)} legacy technical identifiers remain explicitly classified under {mode} migration"
-    )
+    required_gridelyx_files = [
+        "README.md",
+        "AGENTS.md",
+        "AI_HANDOFF.md",
+        "docs/PROJECT_OVERVIEW.md",
+        "docs/GRIDELYX_BRIDGE_PROTOCOL.md",
+        "platform/brand.json",
+    ]
+    missing_identity: list[str] = []
+    for relative in required_gridelyx_files:
+        path = ROOT / relative
+        if not path.is_file() or "gridelyx" not in path.read_text(encoding="utf-8", errors="ignore").lower():
+            missing_identity.append(relative)
+    if missing_identity:
+        fail("canonical Gridelyx identity missing from: " + ", ".join(missing_identity))
+
+    print("PASS: current project-owned tree uses Gridelyx identity exclusively and protocol/native v2 is canonical")
     return 0
 
 
