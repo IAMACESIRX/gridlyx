@@ -58,9 +58,11 @@ jobs:
       - name: Compile and test advanced engines
         working-directory: templates/neoforge-26.2
         run: ./gradlew --no-daemon -Penable_advanced_engines=true spotlessCheck check build
-      - name: Gridelyx reload and rollback smoke tests
+      - name: Gridelyx reload, rollback and H3 module smoke tests
         working-directory: templates/neoforge-26.2
-        run: ./gradlew --no-daemon -Penable_advanced_engines=true gridelyxSmokeTest
+        run: |
+          ./gradlew --no-daemon -Penable_advanced_engines=true \
+            gridelyxSmokeTest gridelyxModuleSmokeTest
       - name: Gridelyx polyglot and bridge smoke tests
         working-directory: templates/neoforge-26.2
         run: ./gradlew --no-daemon -Penable_advanced_engines=true -Penable_polyglot_engines=true polyglotSmokeTest
