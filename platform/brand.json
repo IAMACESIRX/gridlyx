@@ -14,10 +14,8 @@
   "bedrock_plane": "Gridelyx Bedrock Runtime",
   "bridge_protocol_version": 1,
   "bridge_magic": "VFSB",
-  "bridge_magic_status": "legacy_compatibility_identifier_pending_protocol_migration",
+  "bridge_magic_status": "version_1_protocol_identifier_pending_version_2_migration",
   "future_bridge_magic": "GLXB",
-  "legacy_brand": "Gridelyx Studio",
-  "legacy_root": "Gridelyx",
-  "migration_status": "identity_frozen_migration_in_progress",
-  "canonical_name_policy": "Use Gridelyx as the root brand and Gridelyx Studio for the integrated suite. New project-owned names must use Gridelyx. Existing Gridelyx/VFSB source, ABI, protocol and persisted identifiers are migration debt only and must be changed through the versioned compatibility plan rather than blind replacement."
+  "migration_status": "gridelyx_identity_scrub_complete_protocol_v2_pending",
+  "canonical_name_policy": "Use Gridelyx as the root brand and Gridelyx Studio for the integrated suite. Project-owned paths, text, metadata and commit messages must not contain the retired product identifier. Protocol identifiers are versioned separately and migrate through explicit compatibility boundaries."
 }
