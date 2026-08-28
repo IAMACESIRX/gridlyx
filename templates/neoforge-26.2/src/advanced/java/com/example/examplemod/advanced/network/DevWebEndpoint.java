@@ -7,8 +7,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -23,8 +24,8 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 
 public final class DevWebEndpoint implements AutoCloseable {
-    private final EventLoopGroup boss = new NioEventLoopGroup(1);
-    private final EventLoopGroup workers = new NioEventLoopGroup();
+    private final EventLoopGroup boss = new MultiThreadIoEventLoopGroup(1, NioIoHandler.newFactory());
+    private final EventLoopGroup workers = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
     private final RequestHandler handler;
     private Channel channel;
 
