@@ -44,6 +44,7 @@ def collect_uuids(manifest: dict) -> list[str]:
 def main() -> None:
     required = [
         "platform/brand.json",
+        "platform/terminology.json",
         "platform/bedrock-capabilities.json",
         "docs/BEDROCK_ARCHITECTURE.md",
         "docs/GRIDELYX_BRIDGE_PROTOCOL.md",
@@ -71,12 +72,16 @@ def main() -> None:
     brand = load_json("platform/brand.json")
     if brand.get("product_name") != "Gridelyx Studio":
         fail("canonical product name is not Gridelyx Studio")
+    if brand.get("bedrock_plane") != "Gridelyx Bedrock Runtime":
+        fail("canonical Bedrock plane name is not Gridelyx Bedrock Runtime")
     if brand.get("native_symbol_prefix") != "gridelyx_":
-        fail("native ABI prefix is not gridelyx_")
+        fail("canonical future native ABI prefix is not gridelyx_")
+    if brand.get("bridge_magic_status") != "legacy_compatibility_identifier_pending_protocol_migration":
+        fail("legacy bridge magic must remain explicitly classified during migration")
 
     capabilities = load_json("platform/bedrock-capabilities.json")
     if capabilities.get("plane") != "gridelyx-bedrock":
-        fail("Bedrock capability manifest has wrong plane")
+        fail("Bedrock capability manifest has wrong Gridelyx plane")
     if capabilities.get("baseline", {}).get("minecraft_server") != "2.9.0":
         fail("stable Bedrock @minecraft/server baseline is not 2.9.0")
 
@@ -122,6 +127,9 @@ def main() -> None:
         if forbidden in path.read_text(encoding="utf-8", errors="ignore"):
             fail(f"legacy MADK native symbol remains in {path.relative_to(ROOT)}")
 
+    # These Gridelyx-prefixed symbols are explicitly legacy compatibility ABI during the
+    # staged Gridelyx migration. They remain required until Issue #26 lands a versioned ABI
+    # transition with interoperability/rollback evidence.
     header = (ROOT / "native/cpp/include/gridelyx_native.h").read_text(encoding="utf-8")
     for symbol in (
         "gridelyx_abi_version",
@@ -131,9 +139,9 @@ def main() -> None:
         "gridelyx_shm_snapshot",
     ):
         if symbol not in header:
-            fail(f"missing native bridge symbol {symbol}")
+            fail(f"missing legacy compatibility native bridge symbol {symbol}")
 
-    print("PASS: Gridelyx Studio Bedrock manifests, native bridge and branding invariants")
+    print("PASS: Gridelyx Studio Bedrock manifests, capability plane, native compatibility bridge and brand invariants")
 
 
 if __name__ == "__main__":
