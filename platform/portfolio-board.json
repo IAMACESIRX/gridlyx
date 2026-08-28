@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "purpose": "Bird's-eye Gridelyx portfolio state for stakeholders and AI. Detailed truth remains in CR requirements, roadmap, TODO, evidence and issues.",
+  "columns": ["backlog", "ready", "doing", "verifying", "done"],
+  "items": [
+    {"id":"PORT-001","title":"Terraria liquid simulation cells","cr_ids":["CR-015"],"column":"backlog","area":"world"},
+    {"id":"PORT-002","title":"Historical Minecraft/version-family matrix","cr_ids":["CR-011"],"column":"backlog","area":"polyloader"},
+    {"id":"PORT-003","title":"Professional production passes","cr_ids":["CR-027"],"column":"backlog","area":"production"},
+    {"id":"PORT-004","title":"Launcher and runtime acquisition MVP","cr_ids":["CR-025"],"column":"ready","area":"launcher"},
+    {"id":"PORT-005","title":"First real Polyloader adapter pair","cr_ids":["CR-010","CR-011"],"column":"ready","area":"polyloader"},
+    {"id":"PORT-006","title":"Transactional Java live-world adapter","cr_ids":["CR-013","CR-014"],"column":"ready","area":"world"},
+    {"id":"PORT-007","title":"Gridelyx terminology and compatibility migration","cr_ids":["CR-032"],"column":"doing","area":"project-control","issue":26},
+    {"id":"PORT-008","title":"Toolchain reproducibility hardening","cr_ids":["CR-033"],"column":"doing","area":"project-control","issue":27},
+    {"id":"PORT-009","title":"Documentation, stakeholder visibility and release communication layer","cr_ids":["CR-035"],"column":"doing","area":"project-control"},
+    {"id":"PORT-010","title":"GitHub repository rename to gridlyx","cr_ids":["CR-032","CR-035"],"column":"doing","area":"project-control","issue":28},
+    {"id":"PORT-011","title":"Advanced Java and Bedrock target integration","cr_ids":["CR-024","CR-029"],"column":"verifying","area":"rendering"},
+    {"id":"PORT-012","title":"CR retained-scope and AI continuity control plane","cr_ids":["CR-007","CR-009","CR-034"],"column":"done","area":"project-control"},
+    {"id":"PORT-013","title":"Community onboarding baseline","cr_ids":["CR-031"],"column":"done","area":"project-control"}
+  ],
+  "synchronization_rule": "Update this board when portfolio-level status changes, but never infer R0-R6 readiness from Kanban state."
+}
