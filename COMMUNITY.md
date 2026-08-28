@@ -34,8 +34,8 @@ The framework decides **how to understand and sequence work**, not whether a ret
 
 The canonical conversation-derived requirements CR-001 through CR-034 are preserved in `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` and `platform/chat-requirements.json`. Contributors must not silently remove or materially weaken those requirements. Scope changes require an explicit project decision and corresponding planning updates.
 
-## Brand migration note
+## Brand state
 
-Gridelyx is the current product identity. Legacy Gridelyx/VFSB identifiers may still appear inside source/protocol/native compatibility surfaces while the staged migration is completed. Treat them as migration state, not current naming guidance; see `docs/REBRAND_PLAN.md`.
+Gridelyx is the current and exclusive project-owned identity. Native and bridge compatibility now begins at the canonical Gridelyx v2 boundary documented in `docs/GRIDELYX_BRIDGE_PROTOCOL.md`; current source should not introduce superseded product identifiers.
 
 The requested GitHub repository target is `IAMACESIRX/gridlyx`; product/API identity remains Gridelyx/gridelyx. Actual repository metadata migration is tracked separately until verified.
