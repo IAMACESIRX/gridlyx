@@ -6,14 +6,15 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
@@ -25,6 +26,7 @@ import java.util.function.Consumer;
  */
 public final class ReloadOrchestrator implements AutoCloseable {
     private static final int DEFAULT_HISTORY_LIMIT = 256;
+    private static final long SHUTDOWN_TIMEOUT_SECONDS = 5L;
 
     private final ExternalHotloadCore hotloadCore;
     private final ClassHotSwapService classHotSwapService;
@@ -91,7 +93,11 @@ public final class ReloadOrchestrator implements AutoCloseable {
 
     public CompletableFuture<ReloadResult> submit(ExternalHotloadCore.ReloadEvent event) {
         Objects.requireNonNull(event);
-        return CompletableFuture.supplyAsync(() -> process(event), activationExecutor);
+        return CompletableFuture.supplyAsync(() -> process(event), activationExecutor)
+                .thenApply(result -> {
+                    publish(result);
+                    return result;
+                });
     }
 
     /** Visible for deterministic validation and non-watcher callers. */
@@ -106,23 +112,36 @@ public final class ReloadOrchestrator implements AutoCloseable {
     }
 
     private void accept(ExternalHotloadCore.ReloadEvent event) {
-        submit(event).thenAccept(this::publish);
+        submit(event);
     }
 
     private ReloadResult process(ExternalHotloadCore.ReloadEvent event) {
+        String detail = Objects.toString(event.detail(), "");
         if (event.kind() == ExternalHotloadCore.ReloadKind.REJECTED) {
-            return result(event, Status.REJECTED, null, "watcher", event.detail(), null);
+            return result(event, Status.REJECTED, null, "watcher", detail, null);
         }
         if (event.kind() == ExternalHotloadCore.ReloadKind.ERROR) {
-            return result(event, Status.FAILED, null, "watcher", event.detail(), event.detail());
+            return result(event, Status.FAILED, null, "watcher", detail, detail);
         }
         if (event.path() == null) {
-            return result(event, Status.REJECTED, null, "orchestrator", "Reload event has no path", null);
+            return result(
+                    event,
+                    Status.REJECTED,
+                    null,
+                    "orchestrator",
+                    "Reload event has no path",
+                    null);
         }
 
         Path path = event.path().toAbsolutePath().normalize();
         if (!path.startsWith(workspaceRoot)) {
-            return result(event, Status.REJECTED, null, "orchestrator", "Path is outside the approved workspace", null);
+            return result(
+                    event,
+                    Status.REJECTED,
+                    null,
+                    "orchestrator",
+                    "Path is outside the approved workspace",
+                    null);
         }
 
         ReloadTargetBindings.ChangeKind change = changeKind(event);
@@ -141,44 +160,71 @@ public final class ReloadOrchestrator implements AutoCloseable {
     }
 
     private ReloadResult reloadData(
-            ExternalHotloadCore.ReloadEvent event, Path path, ReloadTargetBindings.ChangeKind change) throws Exception {
+            ExternalHotloadCore.ReloadEvent event,
+            Path path,
+            ReloadTargetBindings.ChangeKind change) throws Exception {
         if (!bindings.hasDataReload()) {
             return escalate(event, "No transactional data target binding is installed", null);
         }
         bindings.reloadData(path, change);
-        return applied(event, ActivationStrategy.TRANSACTIONAL_RELOAD, "data", "Transactional data reload applied");
+        return applied(
+                event,
+                ActivationStrategy.TRANSACTIONAL_RELOAD,
+                "data",
+                "Transactional data reload applied");
     }
 
     private ReloadResult reloadAsset(
-            ExternalHotloadCore.ReloadEvent event, Path path, ReloadTargetBindings.ChangeKind change) throws Exception {
+            ExternalHotloadCore.ReloadEvent event,
+            Path path,
+            ReloadTargetBindings.ChangeKind change) throws Exception {
         if (!bindings.hasAssetReload()) {
             return escalate(event, "No asset target binding is installed", null);
         }
         bindings.reloadAsset(path, change);
-        return applied(event, ActivationStrategy.ASSET_SWAP, "asset", "Asset revision activated");
+        return applied(
+                event,
+                ActivationStrategy.ASSET_SWAP,
+                "asset",
+                "Asset revision activated");
     }
 
     private ReloadResult reloadScript(
-            ExternalHotloadCore.ReloadEvent event, Path path, ReloadTargetBindings.ChangeKind change) throws Exception {
+            ExternalHotloadCore.ReloadEvent event,
+            Path path,
+            ReloadTargetBindings.ChangeKind change) throws Exception {
         String moduleId = moduleId(path);
         if (change == ReloadTargetBindings.ChangeKind.DELETE) {
             scriptHost.unload(moduleId);
-            return applied(event, ActivationStrategy.SCOPED_BEHAVIOR_EPOCH, "polyglot-script", "Script module unloaded");
+            return applied(
+                    event,
+                    ActivationStrategy.SCOPED_BEHAVIOR_EPOCH,
+                    "polyglot-script",
+                    "Script module unloaded");
         }
         String language = scriptLanguage(path);
         if (language == null) {
             return escalate(event, "No embedded language binding for " + path.getFileName(), null);
         }
         scriptHost.reload(moduleId, language, path);
-        return applied(event, ActivationStrategy.SCOPED_BEHAVIOR_EPOCH, "polyglot-script", "Script epoch activated");
+        return applied(
+                event,
+                ActivationStrategy.SCOPED_BEHAVIOR_EPOCH,
+                "polyglot-script",
+                "Script epoch activated");
     }
 
     private ReloadResult reloadJava(
-            ExternalHotloadCore.ReloadEvent event, Path path, ReloadTargetBindings.ChangeKind change) throws Exception {
-        String file = path.getFileName().toString().toLowerCase();
+            ExternalHotloadCore.ReloadEvent event,
+            Path path,
+            ReloadTargetBindings.ChangeKind change) throws Exception {
+        String file = path.getFileName().toString().toLowerCase(Locale.ROOT);
         if (file.endsWith(".class") && change != ReloadTargetBindings.ChangeKind.DELETE) {
             if (!path.startsWith(classesRoot)) {
-                return escalate(event, "Class bytecode is outside the configured classes root", null);
+                return escalate(
+                        event,
+                        "Class bytecode is outside the configured classes root",
+                        null);
             }
             ClassHotSwapService.RedefinitionResult redefinition =
                     classHotSwapService.redefine(classesRoot, path, applicationClassLoader);
@@ -189,26 +235,42 @@ public final class ReloadOrchestrator implements AutoCloseable {
                         "instrumentation",
                         "Redefined " + redefinition.className());
             }
-            return escalate(event, "Class redefine could not absorb change: " + redefinition.error(), null);
+            return escalate(
+                    event,
+                    "Class redefine could not absorb change: " + redefinition.error(),
+                    null);
         }
 
         if (file.endsWith(".jar") && bindings.hasModuleReload()) {
             ActivationStrategy strategy = bindings.reloadModule(path, change);
-            return applied(event, strategy, "module", "Versioned module activation applied");
+            return applied(
+                    event,
+                    strategy,
+                    "module",
+                    "Versioned module activation applied");
         }
         return escalate(event, "Java change requires classloader/runtime replacement", null);
     }
 
     private ReloadResult reloadOther(
-            ExternalHotloadCore.ReloadEvent event, Path path, ReloadTargetBindings.ChangeKind change) throws Exception {
+            ExternalHotloadCore.ReloadEvent event,
+            Path path,
+            ReloadTargetBindings.ChangeKind change) throws Exception {
         if (!bindings.hasOtherReload()) {
             return escalate(event, "No target binding accepts this file type", null);
         }
         bindings.reloadOther(path, change);
-        return applied(event, ActivationStrategy.TRANSACTIONAL_RELOAD, "other", "Target-specific reload applied");
+        return applied(
+                event,
+                ActivationStrategy.TRANSACTIONAL_RELOAD,
+                "other",
+                "Target-specific reload applied");
     }
 
-    private ReloadResult escalate(ExternalHotloadCore.ReloadEvent event, String reason, Throwable originalFailure) {
+    private ReloadResult escalate(
+            ExternalHotloadCore.ReloadEvent event,
+            String reason,
+            Throwable originalFailure) {
         if (!bindings.hasEpochHandoff()) {
             return result(
                     event,
@@ -282,7 +344,7 @@ public final class ReloadOrchestrator implements AutoCloseable {
     }
 
     private ReloadTargetBindings.ChangeKind changeKind(ExternalHotloadCore.ReloadEvent event) {
-        String detail = event.detail() == null ? "" : event.detail();
+        String detail = Objects.toString(event.detail(), "");
         if (detail.contains("ENTRY_CREATE")) {
             return ReloadTargetBindings.ChangeKind.CREATE;
         }
@@ -300,7 +362,7 @@ public final class ReloadOrchestrator implements AutoCloseable {
     }
 
     private static String scriptLanguage(Path path) {
-        String file = path.getFileName().toString().toLowerCase();
+        String file = path.getFileName().toString().toLowerCase(Locale.ROOT);
         if (file.endsWith(".js") || file.endsWith(".mjs")) {
             return "js";
         }
@@ -320,13 +382,28 @@ public final class ReloadOrchestrator implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        activationExecutor.shutdownNow();
         Exception failure = null;
         try {
             hotloadCore.close();
         } catch (Exception exception) {
             failure = exception;
         }
+
+        activationExecutor.shutdown();
+        try {
+            if (!activationExecutor.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                activationExecutor.shutdownNow();
+            }
+        } catch (InterruptedException interruption) {
+            activationExecutor.shutdownNow();
+            Thread.currentThread().interrupt();
+            if (failure == null) {
+                failure = interruption;
+            } else {
+                failure.addSuppressed(interruption);
+            }
+        }
+
         try {
             scriptHost.close();
         } catch (RuntimeException exception) {
