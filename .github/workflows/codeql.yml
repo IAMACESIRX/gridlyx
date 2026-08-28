@@ -7,6 +7,7 @@ on:
     branches: [main]
   schedule:
     - cron: '21 16 * * 3'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,6 +15,9 @@ permissions:
 
 jobs:
   analyze-java:
+    # GitHub CodeQL code scanning on private repositories requires GitHub Code Security.
+    # Set the repository variable CODEQL_ENABLED=true only after Code Security is enabled.
+    if: ${{ vars.CODEQL_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -43,7 +47,7 @@ jobs:
           upload-database: false
       - name: Preserve CodeQL SARIF
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: codeql-java-sarif
           path: codeql-sarif
