@@ -1,13 +1,16 @@
 # Gridelyx feature and readiness map
 
-Status uses R0-R6 from `PROJECT_PLAN.md`. This is an evidence snapshot, not a marketing promise. Complete retained scope lives in `CHAT_REQUIREMENTS_TRACEABILITY.md`; dependencies/tools live in `DEPENDENCIES_AND_TOOLCHAIN.md` and `CAPABILITY_DEPENDENCY_MATRIX.md`.
+Status uses R0-R6 from `PROJECT_PLAN.md`. This is an evidence snapshot, not a marketing promise. Complete retained scope lives in `CHAT_REQUIREMENTS_TRACEABILITY.md`; dependencies/tools live in `DEPENDENCIES_AND_TOOLCHAIN.md` and `CAPABILITY_DEPENDENCY_MATRIX.md`; feature analysis and execution topology live in `FEATURE_DECISION_FRAMEWORK.md` and `DEVELOPMENT_MAP.md`.
 
 | Domain | Capability | Target | State | Notes |
 |---|---|---|---:|---|
-| Control | Whole-chat requirements traceability | Repository | R3 | Human + machine-readable **33-group** ledger and CI path checker are wired. |
+| Control | Whole-chat requirements traceability | Repository | R3 | Human + machine-readable **34-group** ledger and CI path checker are wired. |
 | Control | Dependency/toolchain inventory | Repository | R3 | Human/machine tool inventory, capability matrix and CI evidence-path checker are wired. |
+| Control | Advanced feature decision framework | Repository/project | R3 | W5x5x5, values, cost/horizons, risk, inversion, second-order, benchmarks, MVP, Pareto, critical path, Cynefin and Kanban are documented, templated, schema-backed and CI-gated. |
+| Control | Development/critical-path map | Repository/project | R2-R3 | Parallel lanes, milestone predecessors, Kanban states and 10m→10y horizons are explicit. |
 | Control | AI continuity/drift system | Repository | R3 | Handoff, AI roles, work state, decisions, assumptions, context routing and continuity CI. |
 | Brand | Gridelyx canonical identity | Repository/product | R2-R3 | Identity frozen in `platform/brand.json`; canonical public entrypoints updated. |
+| Brand | Requested GitHub repository slug/description | Repository metadata | R1 transition | Desired `IAMACESIRX/gridlyx` metadata is recorded; actual GitHub metadata mutation still pending. |
 | Brand | Retired terminology compatibility migration | Repository/runtime | R1-R2 transition | Staged terminology manifest/checker exists; source/ABI/protocol/persisted migration remains. |
 | Community | Contributor onboarding | Repository | R2 | Community, support, conduct, architecture and evidence guides are tracked. |
 | Studio | GUI-independent core model | Desktop/shared | R3 | Rust instance/provider/provenance/resolver core has automated tests. |
@@ -108,3 +111,6 @@ World/structure/liquid/paint/microgeometry/mesh/voxel/texture editors, in-game I
 
 ### Production workspace
 Replay library, scene/timeline, camera tracks, actor/animation curves, cues, shot/take manager, render settings, audio routing, capture queue and export jobs.
+
+### Planning / architecture workspace
+Feature Decision Packets, W5x5x5 analysis, benchmark evidence, cost/horizon/risk diagnostics, dependency/critical-path graphs, Cynefin classification and Kanban state for substantial work.
