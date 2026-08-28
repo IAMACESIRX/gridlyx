@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "product_brand": "Gridelyx",
+  "suite_name": "Gridelyx Studio",
+  "current_repository": "IAMACESIRX/minecraft-advanced-mod-development-kit",
+  "requested_repository_slug": "gridlyx",
+  "requested_repository_full_name": "IAMACESIRX/gridlyx",
+  "requested_description": "Gridelyx — Minecraft Advanced Mod Development Kit: cross-edition launcher, Polyloader/UAL, live creator and world-editing engine, Java/Bedrock bridge, AI development environment, sandbox physics, hotload, mod interoperability and machinima production suite.",
+  "rename_status": "requested_pending_repository_metadata_mutation",
+  "note": "Product/API brand remains Gridelyx. The requested GitHub repository slug uses gridlyx as explicitly requested. Renaming repository metadata must preserve GitHub redirects/remotes and must not rewrite Git history."
+}
