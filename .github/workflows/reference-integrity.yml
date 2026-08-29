@@ -1,38 +1,68 @@
-name: Upstream Acquisition Integrity
+name: Upstream Acquisition and AI Reference Integrity
 
 on:
   workflow_dispatch:
   push:
     paths:
       - 'vault/**'
+      - 'platform/versions.json'
+      - 'platform/reference-sources.json'
       - 'tools/hydrate_references.py'
+      - 'tools/hydrate_ai_references.py'
+      - 'tools/build_reference_indexes.py'
+      - 'tools/reference_sources_check.py'
       - 'tools/redistribution_guard.py'
+      - 'docs/AI_MODDING_REFERENCE_CORPUS.md'
+      - 'ai/skills/**'
       - '.gitignore'
       - '.github/actions/gridelyx-toolchain/**'
       - '.github/workflows/reference-integrity.yml'
-      - 'platform/versions.json'
   pull_request:
     paths:
       - 'vault/**'
+      - 'platform/versions.json'
+      - 'platform/reference-sources.json'
       - 'tools/hydrate_references.py'
+      - 'tools/hydrate_ai_references.py'
+      - 'tools/build_reference_indexes.py'
+      - 'tools/reference_sources_check.py'
       - 'tools/redistribution_guard.py'
+      - 'docs/AI_MODDING_REFERENCE_CORPUS.md'
+      - 'ai/skills/**'
       - '.gitignore'
       - '.github/actions/gridelyx-toolchain/**'
       - '.github/workflows/reference-integrity.yml'
-      - 'platform/versions.json'
 
 permissions:
   contents: read
 
 jobs:
-  verify-acquisition-policy:
+  verify-acquisition-policy-and-reference-corpus:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+
       - name: Verify no upstream binary payload is tracked
         run: python tools/redistribution_guard.py
+
       - name: Validate acquisition manifest without network access
         run: python tools/hydrate_references.py --check
+
+      - name: Validate AI reference manifest against canonical build locks
+        run: python tools/reference_sources_check.py
+
       - name: Prove pinned MDK can be acquired from its official public source
         run: python tools/hydrate_references.py --mdk
+
+      - name: Build deterministic MDK file index outside Git
+        run: python tools/build_reference_indexes.py --no-hydrate
+
+      - name: Hydrate high-value official AI reference corpus
+        run: python tools/hydrate_ai_references.py --core
+
+      - name: Build provenance-aware AI corpus index outside Git
+        run: python tools/build_reference_indexes.py --corpus
+
+      - name: Re-verify repository remains payload free
+        run: python tools/redistribution_guard.py
