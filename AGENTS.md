@@ -16,10 +16,10 @@ For non-trivial work:
 2. Read [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and identify affected CR IDs.
 3. Read [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md) for substantial feature/architecture work.
 4. Read [`ai/AI_ORGANISATION.md`](ai/AI_ORGANISATION.md) and [`ai/DRIFT_MITIGATION.md`](ai/DRIFT_MITIGATION.md).
-5. Inspect `platform/brand.json`, `platform/repository-metadata.json`, `platform/chat-requirements.json`, `platform/toolchain-requirements.json`, work state, decision ledger and assumption ledger.
-6. Use the relevant domain in `ai/context-map.json` instead of scanning unrelated trees.
-7. Read `platform/versions.json`, `vault/manifest.json`, provider manifests and relevant reference-policy docs before guessing external APIs or acquisition paths.
-8. For broad tasks, use `tools/repo_index.py` and `tools/ai_context_pack.py`.
+5. Inspect [`platform/brand.json`](platform/brand.json), [`platform/repository-metadata.json`](platform/repository-metadata.json), [`platform/chat-requirements.json`](platform/chat-requirements.json), [`platform/toolchain-requirements.json`](platform/toolchain-requirements.json), work state, decision ledger and assumption ledger.
+6. Use the relevant domain in [`ai/context-map.json`](ai/context-map.json) instead of scanning unrelated trees.
+7. Read [`platform/versions.json`](platform/versions.json), [`vault/manifest.json`](vault/manifest.json), provider manifests and relevant reference-policy docs before guessing external APIs or acquisition paths.
+8. For broad tasks, use [`tools/repo_index.py`](tools/repo_index.py) and [`tools/ai_context_pack.py`](tools/ai_context_pack.py).
 9. Treat implementation, schemas, CI/runtime evidence and explicit human corrections as stronger than AI summaries/generated indexes.
 10. Update planning/readiness/decision/assumption/dependency state when a change alters project truth.
 
@@ -27,11 +27,11 @@ For non-trivial work:
 
 **Gridelyx** is the canonical root brand; **Gridelyx Studio** is the integrated suite. New project-owned names use Gridelyx. Existing compatibility-boundary identifiers are governed by the current migration/compatibility contracts. Do not introduce retired-brand identifiers and do not blindly rename versioned compatibility boundaries without migration tests.
 
-Product/API slug remains `gridelyx`; the requested GitHub repository slug is `gridlyx` and is recorded separately in `platform/repository-metadata.json`.
+Product/API slug remains `gridelyx`; the requested GitHub repository slug is `gridlyx` and is recorded separately in [`platform/repository-metadata.json`](platform/repository-metadata.json).
 
 ## Requirements preservation
 
-[`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and `platform/chat-requirements.json` are the retained whole-chat scope. A future agent may not remove or materially weaken a requirement because it is difficult, outside normal Minecraft APIs, expensive, lower priority or not currently target-validated. Such discoveries change integration level, schedule and evidence burden. Scope removal needs explicit human approval recorded in the decision ledger.
+[`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and [`platform/chat-requirements.json`](platform/chat-requirements.json) are the retained whole-chat scope. A future agent may not remove or materially weaken a requirement because it is difficult, outside normal Minecraft APIs, expensive, lower priority or not currently target-validated. Such discoveries change integration level, schedule and evidence burden. Scope removal needs explicit human approval recorded in the decision ledger.
 
 ## Feature decision protocol
 
@@ -51,7 +51,7 @@ Required analysis includes:
 - Critical Path Method, Cynefin and Kanban state;
 - required evidence, rollback/migration and unresolved assumptions.
 
-This is diagnostic/planning machinery. It must not be used to silently discard a retained feature because its cost is high. Machine contract: `platform/feature-analysis.schema.json`.
+This is diagnostic/planning machinery. It must not be used to silently discard a retained feature because its cost is high. Machine contract: [`platform/feature-analysis.schema.json`](platform/feature-analysis.schema.json).
 
 ## Source-of-truth discipline
 
@@ -61,29 +61,29 @@ Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRE
 
 ## Repository ownership
 
-- `studio/` — launcher/instance/provider/resolver contracts and desktop orchestration boundaries.
-- `templates/` — canonical Java scaffolding/advanced runtime; `mods/` — independent distributable/generated workspaces.
-- `bedrock/` — supported Bedrock Add-On/Editor targets.
-- `native/` — trusted native ABI/companion code.
-- `bridges/` — neutral sidecar/language bridge examples and protocols.
-- `ai/` — compact navigation/handoff/work state/continuity controls, not duplicated source truth.
-- `references/` — Gridelyx-authored policy/navigation only; hydrated upstream checkouts and local indexes belong under ignored `.reference-cache/`.
-- `vault/` — metadata-only upstream acquisition manifest; it is **not** a binary vault.
-- `platform/` — versions, brand/repository metadata, capabilities, requirements, feature-analysis and toolchain manifests.
+- [`studio/`](studio/) — launcher/instance/provider/resolver contracts and desktop orchestration boundaries.
+- [`templates/`](templates/) — canonical Java scaffolding/advanced runtime; [`mods/`](mods/) — independent distributable/generated workspaces.
+- [`bedrock/`](bedrock/) — supported Bedrock Add-On/Editor targets.
+- [`native/`](native/) — trusted native ABI/companion code.
+- [`bridges/`](bridges/) — neutral sidecar/language bridge examples and protocols.
+- [`ai/`](ai/) — compact navigation/handoff/work state/continuity controls, not duplicated source truth.
+- [`references/`](references/) — Gridelyx-authored policy/navigation only; hydrated upstream checkouts and local indexes belong under ignored `.reference-cache/`.
+- [`vault/`](vault/) — metadata-only upstream acquisition manifest; it is **not** a binary vault.
+- [`platform/`](platform/) — versions, brand/repository metadata, capabilities, requirements, feature-analysis and toolchain manifests.
 
 ## Dependency/toolchain and public-repository rules
 
-[`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](docs/DEPENDENCIES_AND_TOOLCHAIN.md), `platform/toolchain-requirements.json` and `vault/manifest.json` are canonical.
+[`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](docs/DEPENDENCIES_AND_TOOLCHAIN.md), [`platform/toolchain-requirements.json`](platform/toolchain-requirements.json) and [`vault/manifest.json`](vault/manifest.json) are canonical.
 
 - Never invent a version for an unpinned tool.
 - Tool installation is not proof that a feature works.
 - Optional language/native/production tooling is capability-specific, not universally required.
 - **Never commit upstream JARs, class files, distribution archives, installers, native binaries, decompiled Minecraft source, Maven caches, JDK/Gradle distributions or hydrated upstream source trees.**
 - Minecraft/NeoForge development artifacts are resolved by the supported NeoForge/Gradle toolchain into local or runner caches.
-- JDK and Gradle are dynamically installed in CI through `.github/actions/gridelyx-toolchain/action.yml`; local developers may use compatible installed toolchains.
+- JDK and Gradle are dynamically installed in CI through [`/.github/actions/gridelyx-toolchain/action.yml`](.github/actions/gridelyx-toolchain/action.yml); local developers may use compatible installed toolchains.
 - LWJGL, ASM, GraalVM, JUnit, ArchUnit and other Java libraries are package-manager dependencies, not vendored reference bundles.
 - Optional NeoForge MDK comparison material is hydrated only to `.reference-cache/upstream/mdk-26.2` from the pinned official revision.
-- `.gitignore` is not the only control: `tools/redistribution_guard.py` must pass against the actual Git index.
+- `.gitignore` is not the only control: [`tools/redistribution_guard.py`](tools/redistribution_guard.py) must pass against the actual Git index.
 - Do not recreate the deleted `tools/vault.py`, `tools/import_binary_vault.py`, binary chunk scheme or `REMOTE_BINARY_IMPORT_PENDING.md` design unless the human owner explicitly reverses the public-repository policy.
 - Before release claims, presently unpinned Python/Rust/CMake/compiler/Go/.NET/encoder policies need supported-version evidence.
 
@@ -91,7 +91,7 @@ Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRE
 
 - The desktop application must start without Java merely to open the UI. Java is resolved per Java Edition instance.
 - “Any loader/version” means extensible versioned adapters. Never invent loader versions, Maven coordinates, launch arguments or metadata.
-- Prefer Mojang metadata for Minecraft/version/library/runtime truth; official loader metadata/Mavens for loaders; Modrinth and authorized CurseForge APIs for content.
+- Prefer [Mojang/Piston metadata](https://piston-meta.mojang.com/mc/game/version_manifest_v2.json) for Minecraft/version/library/runtime truth; official loader metadata/Mavens for loaders; [Modrinth](https://docs.modrinth.com/api/) and authorized [CurseForge APIs](https://docs.curseforge.com/rest-api/) for content.
 - CurseForge access must respect approved API/current terms and author third-party-distribution controls.
 - Never scrape around a provider outage/auth failure where a supported API/channel is required.
 - Every acquired artifact gets local SHA-256 where appropriate; verify upstream hashes/signatures when available and retain provenance.
@@ -102,7 +102,7 @@ Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRE
 
 ## Java/mod engineering workflow
 
-1. Identify/create the target `mods/<mod_id>` workspace.
+1. Identify/create the target `mods/<mod_id>` workspace using the conventions under [`mods/`](mods/) and [`templates/`](templates/).
 2. Keep ordinary gameplay code in `src/main`; use `src/advanced` for shared advanced mechanisms such as bytecode/native/GPU/IPC/network interception/runtime infrastructure.
 3. Use registries/datagen rather than duplicate hard-coded resource state where appropriate.
 4. Run static/platform diagnostics.
@@ -158,6 +158,8 @@ Never commit credentials, tokens or personal data. Treat generated source, mods 
 For public-repository dependency handling, provenance records may point at upstream artifacts but must not copy prohibited payloads into the source tree. Runtime/download caches stay outside Git.
 
 ## Required continuity gates
+
+The executable gates are [`tools/continuity_check.py`](tools/continuity_check.py), [`tools/chat_requirements_check.py`](tools/chat_requirements_check.py), [`tools/toolchain_requirements_check.py`](tools/toolchain_requirements_check.py), [`tools/feature_planning_check.py`](tools/feature_planning_check.py), [`tools/terminology_check.py`](tools/terminology_check.py), [`tools/hydrate_references.py`](tools/hydrate_references.py), and [`tools/redistribution_guard.py`](tools/redistribution_guard.py).
 
 ```bash
 python tools/continuity_check.py
