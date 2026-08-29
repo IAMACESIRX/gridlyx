@@ -47,9 +47,10 @@
       "acquisition": "optional-git-reference",
       "provider": "NeoForgeMDKs",
       "source_url": "https://github.com/NeoForgeMDKs/MDK-26.2-ModDevGradle.git",
+      "revision": "3a29a9e13f09e27050c0dd962b365a070fae990b",
       "local_destination": ".reference-cache/upstream/mdk-26.2",
       "repository_storage": "prohibited",
-      "notes": "The Gridelyx template is self-contained. This optional checkout exists only for comparison/provenance and is never copied into tracked repository paths."
+      "notes": "The Gridelyx template is self-contained. This optional pinned checkout exists only for comparison/provenance and is never copied into tracked repository paths."
     },
     {
       "id": "jdk",
