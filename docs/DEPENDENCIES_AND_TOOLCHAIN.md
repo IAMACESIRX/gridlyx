@@ -25,23 +25,23 @@ The acquisition/no-redistribution contract is machine-readable in [`../vault/man
 |---|---|---|
 | Minecraft Java target | `26.2` current canonical template | Resolved by the supported NeoForge ModDevGradle development toolchain from Mojang metadata/runtime services into local/runner caches. |
 | NeoForge | `26.2.0.67` | Resolved by ModDevGradle from official NeoForged infrastructure; installer/runtime JARs are not vendored. |
-| Java | Eclipse Temurin `25.0.4+7`, language level 25 | CI dynamically installs exact Temurin through `actions/setup-java`; local developers may use a compatible installed JDK. |
-| Gradle | `9.2.1` | CI dynamically installs the locked distribution through `gradle/actions/setup-gradle`; the repository launcher is a system-Gradle shim rather than a vendored wrapper JAR. |
-| ModDevGradle | `2.0.144` | Resolved from Gradle plugin repositories. |
-| ASM | `9.10.1` | Maven Central, advanced source set. |
-| LWJGL API reference | `3.4.1` | Maven-resolved compile-only/reference modules for advanced GPU work; no LWJGL distribution bundle is stored. |
-| GraalVM Polyglot | `25.3.4.1` | Maven/GraalVM artifacts for opt-in advanced JavaScript/Python scripting. |
-| Spotless | `8.10.0` | Gradle quality plugin. |
-| Google Java Format | `1.36.0` | Formatting policy/reference. |
-| Checkstyle | `14.0.0` | Gradle/Maven static style gate. |
-| JUnit | `6.1.3` | Maven-resolved logic/unit testing. |
-| ArchUnit | `1.4.2` | Maven-resolved architecture tests. |
+| Java | Eclipse Temurin `25.0.4+7`, language level 25 | CI dynamically installs exact Temurin through [`actions/setup-java`](https://github.com/actions/setup-java); local developers may use a compatible installed JDK. |
+| Gradle | `9.2.1` | CI dynamically installs the locked distribution through [`gradle/actions/setup-gradle`](https://github.com/gradle/actions/tree/main/setup-gradle); the repository launcher is a system-Gradle shim rather than a vendored wrapper JAR. |
+| ModDevGradle | `2.0.144` | Resolved from Gradle plugin repositories; see [NeoForged ModDevGradle documentation](https://docs.neoforged.net/toolchain/docs/plugins/mdg/). |
+| ASM | `9.10.1` | Maven Central, advanced source set; see [ASM](https://asm.ow2.io/). |
+| LWJGL API reference | `3.4.1` | Maven-resolved compile-only/reference modules for advanced GPU work; no LWJGL distribution bundle is stored. See [LWJGL](https://www.lwjgl.org/). |
+| GraalVM Polyglot | `25.3.4.1` | Maven/GraalVM artifacts for opt-in advanced JavaScript/Python scripting; see [GraalVM embedded languages](https://www.graalvm.org/latest/reference-manual/embed-languages/). |
+| Spotless | `8.10.0` | Gradle quality plugin; see [Spotless](https://github.com/diffplug/spotless). |
+| Google Java Format | `1.36.0` | Formatting policy/reference; see [google-java-format](https://github.com/google/google-java-format). |
+| Checkstyle | `14.0.0` | Gradle/Maven static style gate; see [Checkstyle](https://checkstyle.org/). |
+| JUnit | `6.1.3` | Maven-resolved logic/unit testing; see [JUnit](https://docs.junit.org/). |
+| ArchUnit | `1.4.2` | Maven-resolved architecture tests; see [ArchUnit](https://www.archunit.org/). |
 
 The authoritative locks are [`../platform/versions.json`](../platform/versions.json), [`../vault/manifest.json`](../vault/manifest.json) and [`../templates/neoforge-26.2/gradle.properties`](../templates/neoforge-26.2/gradle.properties).
 
 ## Dynamic GitHub Actions bootstrap
 
-Java build workflows use the repository-local composite action:
+Java build workflows use the repository-local composite action at [`../.github/actions/gridelyx-toolchain/action.yml`](../.github/actions/gridelyx-toolchain/action.yml):
 
 ```yaml
 - uses: actions/checkout@v7
@@ -52,8 +52,8 @@ The action:
 
 1. installs the exact Temurin JDK into the GitHub runner tool cache;
 2. installs Gradle `9.2.1` into the runner/tool cache;
-3. validates `vault/manifest.json` as acquisition-only metadata;
-4. runs the tracked-file redistribution guard;
+3. validates [`../vault/manifest.json`](../vault/manifest.json) as acquisition-only metadata;
+4. runs the tracked-file redistribution guard [`../tools/redistribution_guard.py`](../tools/redistribution_guard.py);
 5. confirms Java and Gradle are available.
 
 The subsequent Gradle invocation then resolves Minecraft, NeoForge and Java libraries on demand. Git does not supply those bytes.
@@ -62,7 +62,7 @@ The subsequent Gradle invocation then resolves Minecraft, NeoForge and Java libr
 
 ### Python
 
-Gridelyx repository tooling is Python 3 based (`tools/*.py`). An exact minimum Python version is not yet frozen; CI currently uses the Python available on GitHub-hosted runners. Before a release-support matrix is declared, pin and test a minimum supported Python version.
+Gridelyx repository tooling is Python 3 based; browse the [`../tools/`](../tools/) directory for the current `*.py` toolset. An exact minimum Python version is not yet frozen; CI currently uses the Python available on GitHub-hosted runners. Before a release-support matrix is declared, pin and test a minimum supported Python version.
 
 Used for:
 
@@ -77,17 +77,17 @@ Used for:
 
 ### Git and GitHub
 
-Git is required for normal source development and optional pinned upstream reference hydration. GitHub Actions hosts CI; GitHub Issues/PRs are the project-management workflow. GitHub CLI is optional rather than required by the source tree.
+[Git](https://git-scm.com/) is required for normal source development and optional pinned upstream reference hydration. [GitHub Actions](https://github.com/features/actions) hosts CI; GitHub Issues/PRs are the project-management workflow. [GitHub CLI](https://cli.github.com/) is optional rather than required by the source tree.
 
 ### Dev Containers / Docker
 
-The repository contains `.devcontainer/` for a reproducible interactive environment. A Docker-compatible container runtime and an editor/client supporting Dev Containers are optional developer conveniences, not runtime dependencies of Gridelyx itself.
+The repository contains [`../.devcontainer/`](../.devcontainer/) for a reproducible interactive environment. A [Docker](https://www.docker.com/)-compatible container runtime and an editor/client supporting [Dev Containers](https://containers.dev/) are optional developer conveniences, not runtime dependencies of Gridelyx itself.
 
 ## Native and desktop development lane
 
 ### Rust
 
-[`../studio/`](../studio/) and [`../native/rust/`](../native/rust/) use Cargo/Rust. The Studio workspace declares **Rust edition 2024**. The exact Rust toolchain release is not yet pinned; CI should remain the source of evidence until a supported release toolchain is frozen.
+[`../studio/`](../studio/) and [`../native/rust/`](../native/rust/) use [Cargo/Rust](https://www.rust-lang.org/). The Studio workspace declares **Rust edition 2024**. The exact Rust toolchain release is not yet pinned; CI should remain the source of evidence until a supported release toolchain is frozen.
 
 Required for:
 
@@ -97,12 +97,12 @@ Required for:
 
 ### C/C++ and CMake
 
-CMake plus a compatible C++ compiler is required for [`../native/cpp/`](../native/cpp/) and [`../native/bedrock/`](../native/bedrock/).
+[CMake](https://cmake.org/) plus a compatible C++ compiler is required for [`../native/cpp/`](../native/cpp/) and [`../native/bedrock/`](../native/bedrock/).
 
 Expected development compilers:
 
-- Windows: MSVC/Visual Studio Build Tools;
-- Linux: GCC or Clang;
+- Windows: [MSVC/Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/);
+- Linux: [GCC](https://gcc.gnu.org/) or [Clang](https://clang.llvm.org/);
 - macOS support requires a later validated Apple Clang lane.
 
 Exact minimum CMake/compiler versions are not yet pinned and must be added before release packaging claims are made.
@@ -112,8 +112,8 @@ Exact minimum CMake/compiler versions are not yet pinned and must be added befor
 These are **subsystem prerequisites**, not requirements to use every Gridelyx feature:
 
 - **Python 3** — Python bridge/AI sidecars;
-- **Go toolchain** — `bridges/go/` conformance/example programs;
-- **.NET SDK / C# compiler** — `bridges/csharp/` conformance/example programs;
+- **Go toolchain** — [`../bridges/go/`](../bridges/go/) conformance/example programs;
+- **.NET SDK / C# compiler** — [`../bridges/csharp/`](../bridges/csharp/) conformance/example programs;
 - **Rust/C++ toolchains** — native sidecars and ABI implementations;
 - **GraalVM Polyglot libraries** — embedded JavaScript/Python inside the Java advanced runtime.
 
@@ -137,14 +137,14 @@ The Java/native bridge uses project-owned FFM/Panama + native ABI code; an insta
 
 The launcher/resolver is designed to acquire files through legitimate/authorized channels rather than redistributing those provider payloads from the Gridelyx repository:
 
-- Mojang/Piston metadata — Minecraft versions, version JSON, libraries, assets and managed runtime metadata;
-- Fabric Meta;
-- Quilt Meta;
-- official Forge distribution/Maven;
-- official NeoForge Maven/services;
-- Modrinth API;
-- CurseForge approved third-party API with required API key and author distribution restrictions respected;
-- Eclipse Adoptium/Temurin channels for Java fallback;
+- [Mojang/Piston version metadata](https://piston-meta.mojang.com/mc/game/version_manifest_v2.json) — Minecraft versions, version JSON, libraries, assets and managed runtime metadata;
+- [Fabric Meta](https://meta.fabricmc.net/);
+- [Quilt Meta](https://meta.quiltmc.org/);
+- official [Forge Maven](https://maven.minecraftforge.net/);
+- official [NeoForge Maven](https://maven.neoforged.net/releases/);
+- [Modrinth API documentation](https://docs.modrinth.com/api/);
+- [CurseForge API documentation](https://docs.curseforge.com/rest-api/) with required API key and author distribution restrictions respected;
+- [Eclipse Adoptium/Temurin](https://adoptium.net/) channels for Java fallback;
 - explicit local import for user-owned/legacy files where permitted.
 
 Canonical provider policy: [`../studio/providers/providers.json`](../studio/providers/providers.json).
@@ -155,7 +155,7 @@ Microsoft/Minecraft account authentication is a planned launcher dependency and 
 
 ### FFmpeg or equivalent encoder
 
-A replaceable external encoder is planned for video/audio export. FFmpeg is the primary planned adapter, but it is **not bundled or assumed licensed for redistribution by this repository**. The eventual launcher must record the executable version, provenance and licence, invoke it with structured arguments, and make encoder absence a visible capability state.
+A replaceable external encoder is planned for video/audio export. [FFmpeg](https://ffmpeg.org/) is the primary planned adapter, but it is **not bundled or assumed licensed for redistribution by this repository**. The eventual launcher must record the executable version, provenance and licence, invoke it with structured arguments, and make encoder absence a visible capability state.
 
 ### Image/audio interchange tools
 
@@ -165,7 +165,7 @@ Image-sequence export is designed to work without requiring a specific NLE/DCC. 
 
 [`../tools/bytecode_diff.py`](../tools/bytecode_diff.py) and [`../tools/fork_mod.py`](../tools/fork_mod.py) support structural inspection/fork workflows. An external decompiler may be attached where configured, but decompiler output is not automatically redistributable source. Any specific decompiler added to a supported lane must be documented with version, licence and acquisition source.
 
-`javap` is supplied by the JDK and is the baseline bytecode/disassembly dependency.
+[`javap`](https://docs.oracle.com/en/java/javase/25/docs/specs/man/javap.html) is supplied by the JDK and is the baseline bytecode/disassembly dependency.
 
 ## AI / MCP dependencies
 
@@ -184,7 +184,7 @@ Secrets/API keys are external configuration and must not be stored in source, di
 
 There is no binary reference vault to complete or import.
 
-The metadata-only [`../vault/manifest.json`](../vault/manifest.json) records canonical upstream providers and version locks. The NeoForge 26.2 MDK can be hydrated as an optional pinned source reference with:
+The metadata-only [`../vault/manifest.json`](../vault/manifest.json) records canonical upstream providers and version locks. The NeoForge 26.2 MDK can be hydrated as an optional pinned source reference using [`../tools/hydrate_references.py`](../tools/hydrate_references.py):
 
 ```bash
 python tools/hydrate_references.py --mdk
