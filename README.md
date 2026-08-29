@@ -64,9 +64,10 @@ For AI/agent work:
 5. `platform/chat-requirements.json`
 6. `platform/feature-analysis.schema.json`
 7. `platform/toolchain-requirements.json`
-8. `ai/context-map.json`
-9. `platform/portfolio-board.json`
-10. `ai/work-state.json`, decision ledger and assumption ledger
+8. `vault/manifest.json`
+9. `ai/context-map.json`
+10. `platform/portfolio-board.json`
+11. `ai/work-state.json`, decision ledger and assumption ledger
 
 ## Canonical identity
 
@@ -79,7 +80,7 @@ For AI/agent work:
 
 Machine-readable identity: `platform/brand.json`. Requested GitHub metadata: `platform/repository-metadata.json`.
 
-The previous Gridelyx branding is retired. Existing `VFSB`, `gridelyx_*` and `Gridelyx*` technical identifiers are temporary compatibility/migration debt and are governed by [`docs/REBRAND_PLAN.md`](docs/REBRAND_PLAN.md). They are not the current product identity.
+Versioned compatibility identifiers may remain at explicit migration boundaries while old saves/protocols/ABIs are supported, but they do not change the canonical Gridelyx product identity. Compatibility changes require migration tests rather than blind text replacement.
 
 ## What Gridelyx is intended to provide
 
@@ -153,7 +154,7 @@ See [`docs/DOCUMENTATION_TOOLCHAIN.md`](docs/DOCUMENTATION_TOOLCHAIN.md) for the
 
 The complete retained conversation scope is not left in chat history. It is recorded in:
 
-- [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) — human-readable CR-001…CR-035 ledger;
+- [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) — human-readable CR ledger;
 - `platform/chat-requirements.json` — machine-readable requirements/evidence paths;
 - `tools/chat_requirements_check.py` — CI validation;
 - [`docs/TODO.md`](docs/TODO.md) — live implementation ledger;
@@ -183,7 +184,7 @@ Current locked Java lane:
 - JUnit `6.1.3`;
 - ArchUnit `1.4.2`;
 - ASM `9.10.1`;
-- LWJGL reference `3.4.1`;
+- LWJGL `3.4.1` reference modules;
 - GraalVM Polyglot `25.3.4.1`.
 
 Documentation lane:
@@ -195,9 +196,18 @@ Documentation lane:
 
 Additional subsystem tools include Python, Rust/Cargo, CMake/C++ compiler, optional Go/.NET bridge toolchains, optional Dev Containers, external encoder/decompiler adapters and Bedrock target runtimes. Their exact pin/support state is machine-readable in `platform/toolchain-requirements.json`.
 
-## Reference-vault status
+## Public dependency acquisition
 
-The repository tracks exact manifests/hashes for the supplied MDK, NeoForge installer, JDK and LWJGL reference artifacts. The large binary bytes are **not yet fully present on remote GitHub** while [`vault/REMOTE_BINARY_IMPORT_PENDING.md`](vault/REMOTE_BINARY_IMPORT_PENDING.md) exists. This is intentional and visible; use the documented vault import/hydration path to complete it.
+The public Gridelyx source repository stores **our source and acquisition metadata, not upstream runtime/toolchain payloads**.
+
+- GitHub Actions dynamically installs Temurin JDK 25 and Gradle 9.2.1 through [`.github/actions/gridelyx-toolchain/action.yml`](.github/actions/gridelyx-toolchain/action.yml).
+- NeoForge ModDevGradle resolves Minecraft, NeoForge, mappings and the development runtime into local/runner Gradle caches.
+- Gradle/Maven resolves LWJGL, ASM, GraalVM, JUnit, ArchUnit and other declared Java dependencies.
+- [`vault/manifest.json`](vault/manifest.json) records canonical providers, versions, resolver strategy and the optional pinned NeoForge MDK revision; it contains no upstream binary payload.
+- [`tools/hydrate_references.py`](tools/hydrate_references.py) can optionally clone that pinned MDK into ignored `.reference-cache/` for comparison/provenance.
+- [`tools/redistribution_guard.py`](tools/redistribution_guard.py) scans the actual Git index and rejects tracked JARs, class files, archives, native binaries, installers, chunked payloads and upstream reference trees.
+
+Acquiring an upstream dependency into a developer/runner/user cache is not the same as redistributing it from this repository. Provider licenses and terms still apply to each dependency.
 
 ## Core validation commands
 
@@ -208,6 +218,8 @@ python tools/toolchain_requirements_check.py
 python tools/feature_planning_check.py
 python tools/docs_check.py
 python tools/terminology_check.py
+python tools/hydrate_references.py --check
+python tools/redistribution_guard.py
 python tools/studio_check.py
 python tools/validate_platform.py
 python tools/diagnose.py --static
