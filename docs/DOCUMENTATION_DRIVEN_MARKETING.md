@@ -52,12 +52,12 @@ Words such as **planned**, **framework**, **experimental**, **validated** and **
 ## Reusable communication assets
 
 - `docs/assets/gridelyx-hero.svg` — hero / concept map.
-- `docs/STAKEHOLDER_DASHBOARD.md` — executive program status.
-- `docs/ARCHITECTURE_DIAGRAMS.md` — diagrams as code.
-- `docs/USER_JOURNEYS.md` — outcome-oriented journeys.
-- `docs/FEATURE_MAP.md` — readiness/evidence matrix.
+- [`docs/STAKEHOLDER_DASHBOARD.md`](STAKEHOLDER_DASHBOARD.md) — executive program status.
+- [`docs/ARCHITECTURE_DIAGRAMS.md`](ARCHITECTURE_DIAGRAMS.md) — diagrams as code.
+- [`docs/USER_JOURNEYS.md`](USER_JOURNEYS.md) — outcome-oriented journeys.
+- [`docs/FEATURE_MAP.md`](FEATURE_MAP.md) — readiness/evidence matrix.
 - `docs/api/` — interactive development API contract.
-- `CHANGELOG.md` and generated release notes — visible project momentum.
+- [`CHANGELOG.md`](../CHANGELOG.md) and generated release notes — visible project momentum.
 
 ## Release-content recipe
 

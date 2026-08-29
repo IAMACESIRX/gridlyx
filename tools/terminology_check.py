@@ -43,8 +43,7 @@ def main() -> int:
     required_pairs = {
         "root_brand": "root_brand",
         "suite_name": "product_name",
-        "slug": "product_slug",
-        "protocol_prefix": "protocol_prefix",
+        "bridge_magic": "bridge_magic",
         "native_symbol_prefix": "native_symbol_prefix",
     }
     for terminology_key, brand_key in required_pairs.items():
@@ -56,8 +55,10 @@ def main() -> int:
     enforcement = terminology.get("enforcement")
     if not isinstance(enforcement, dict):
         fail("enforcement must be an object")
-    if enforcement.get("mode") != "strict" or enforcement.get("whole_current_tree") is not True:
-        fail("strict whole-current-tree terminology enforcement must be enabled")
+    if enforcement.get("mode") != "strict":
+        fail("terminology enforcement mode must be strict")
+    if enforcement.get("whole_current_tree") is not True:
+        fail("whole_current_tree enforcement must be enabled")
 
     codepoints = enforcement.get("retired_identifier_codepoints")
     if not isinstance(codepoints, list) or not codepoints or not all(isinstance(value, int) for value in codepoints):
@@ -98,22 +99,27 @@ def main() -> int:
             preview += f", ... (+{extra} more)"
         fail("retired identifier remains in current-tree text: " + preview)
 
-    required_identity_files = [
+    legacy = terminology.get("known_legacy_technical_identifiers")
+    if legacy != []:
+        fail("known_legacy_technical_identifiers must be empty after the Gridelyx v2 migration")
+
+    required_gridelyx_files = [
         "README.md",
         "AGENTS.md",
         "AI_HANDOFF.md",
         "docs/PROJECT_OVERVIEW.md",
+        "docs/GRIDELYX_BRIDGE_PROTOCOL.md",
         "platform/brand.json",
     ]
     missing_identity: list[str] = []
-    for relative in required_identity_files:
+    for relative in required_gridelyx_files:
         path = ROOT / relative
         if not path.is_file() or "gridelyx" not in path.read_text(encoding="utf-8", errors="ignore").lower():
             missing_identity.append(relative)
     if missing_identity:
         fail("canonical Gridelyx identity missing from: " + ", ".join(missing_identity))
 
-    print("PASS: current project-owned tree uses Gridelyx identity exclusively")
+    print("PASS: current project-owned tree uses Gridelyx identity exclusively and protocol/native v2 is canonical")
     return 0
 
 

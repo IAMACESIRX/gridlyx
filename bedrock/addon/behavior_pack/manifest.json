@@ -4,27 +4,27 @@
     "name": "Gridelyx Studio Runtime",
     "description": "Loader-neutral Gridelyx Studio runtime adapter for Minecraft Bedrock.",
     "uuid": "eead9670-0ddf-427b-ac56-cebc94abe8f5",
-    "version": [1, 0, 0],
+    "version": [2, 0, 0],
     "min_engine_version": [1, 26, 40]
   },
   "modules": [
     {
       "type": "data",
       "uuid": "7a339386-1f62-4d69-8c4e-fe5f748dd157",
-      "version": [1, 0, 0]
+      "version": [2, 0, 0]
     },
     {
       "type": "script",
       "language": "javascript",
       "uuid": "321b9496-6707-437e-9169-3beec51ee3b0",
-      "version": [1, 0, 0],
+      "version": [2, 0, 0],
       "entry": "scripts/main.js"
     }
   ],
   "dependencies": [
     {
       "uuid": "4a14ab1c-ccab-4cd9-8a1a-acb1438daa53",
-      "version": [1, 0, 0]
+      "version": [2, 0, 0]
     },
     {
       "module_name": "@minecraft/server",
@@ -34,7 +34,7 @@
   "metadata": {
     "authors": ["Gridelyx Studio"],
     "generated_with": {
-      "gridelyx_studio": [1, 0, 0]
+      "gridelyx_studio": [2, 0, 0]
     }
   }
 }

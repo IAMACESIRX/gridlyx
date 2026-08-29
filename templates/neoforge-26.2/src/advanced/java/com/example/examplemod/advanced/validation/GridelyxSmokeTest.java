@@ -4,15 +4,21 @@ import com.example.examplemod.advanced.assets.DynamicModelRegistry;
 import com.example.examplemod.advanced.assets.DynamicTextureRegistry;
 import com.example.examplemod.advanced.assets.MeshAsset;
 import com.example.examplemod.advanced.assets.TextureAsset;
+import com.example.examplemod.advanced.polyloader.ActivationStrategy;
 import com.example.examplemod.advanced.polyloader.AsmInvocationTranslator;
 import com.example.examplemod.advanced.polyloader.CallTranslationRule;
 import com.example.examplemod.advanced.polyloader.ModArtifactAnalyzer;
 import com.example.examplemod.advanced.polyloader.ModArtifactProfile;
 import com.example.examplemod.advanced.polyloader.SideloadMode;
 import com.example.examplemod.advanced.polyloader.UnifiedAbstractionLayer;
+import com.example.examplemod.advanced.runtime.ClassHotSwapService;
+import com.example.examplemod.advanced.runtime.ExternalHotloadCore;
+import com.example.examplemod.advanced.runtime.ReloadOrchestrator;
+import com.example.examplemod.advanced.runtime.ReloadTargetBindings;
 import com.example.examplemod.advanced.sandbox.PreparedWorldTransaction;
 import com.example.examplemod.advanced.sandbox.ScriptSupervisor;
 import com.example.examplemod.advanced.sandbox.TransactionalWorldSandbox;
+import com.example.examplemod.advanced.scripting.PolyglotScriptHost;
 import com.example.examplemod.advanced.worldedit.SectionDelta;
 import com.example.examplemod.advanced.worldedit.SectionKey;
 import com.example.examplemod.advanced.worldedit.WorldMutationSink;
@@ -21,12 +27,15 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import org.objectweb.asm.ClassReader;
@@ -38,6 +47,10 @@ import org.objectweb.asm.Opcodes;
 public final class GridelyxSmokeTest {
     private GridelyxSmokeTest() {}
 
+    public static void main(String[] args) throws Exception {
+        run();
+    }
+
     public static void run() throws Exception {
         testUnifiedAbstractionLayer();
         testAsmTranslation();
@@ -45,6 +58,7 @@ public final class GridelyxSmokeTest {
         testDynamicAssets();
         testScriptDeadline();
         testTransactionalRollback();
+        testReloadOrchestrator();
         System.out.println("PASS: Gridelyx runtime smoke test");
     }
 
@@ -213,6 +227,68 @@ public final class GridelyxSmokeTest {
         require(sink.currentRevision(first) == 2L, "first section rollback revision is incorrect");
         require(sink.currentRevision(second) == 2L, "mutate-then-throw section was not rolled back");
         require(sink.reconciled(), "rollback did not request lighting reconciliation");
+    }
+
+    private static void testReloadOrchestrator() throws Exception {
+        Path workspace = Files.createTempDirectory("gridelyx-reload-");
+        Path classes = Files.createDirectories(workspace.resolve("classes"));
+        Path dataFile = Files.createDirectories(workspace.resolve("data/gridelyx/test"))
+                .resolve("recipes.json");
+        Files.writeString(dataFile, "{}");
+        AtomicInteger dataReloads = new AtomicInteger();
+        AtomicInteger epochHandoffs = new AtomicInteger();
+
+        ReloadTargetBindings bindings = ReloadTargetBindings.builder()
+                .dataReload((path, change) -> dataReloads.incrementAndGet())
+                .runtimeEpochHandoff((event, reason) -> epochHandoffs.incrementAndGet())
+                .build();
+
+        ExternalHotloadCore core = new ExternalHotloadCore();
+        core.addRoot(workspace);
+        try (ReloadOrchestrator orchestrator = new ReloadOrchestrator(
+                core,
+                new ClassHotSwapService(),
+                new PolyglotScriptHost(),
+                bindings,
+                workspace,
+                classes,
+                GridelyxSmokeTest.class.getClassLoader())) {
+            ReloadOrchestrator.ReloadResult dataResult = orchestrator.reloadNow(new ExternalHotloadCore.ReloadEvent(
+                    dataFile,
+                    ExternalHotloadCore.ReloadKind.DATA,
+                    Instant.now(),
+                    "ENTRY_MODIFY"));
+            require(dataResult.status() == ReloadOrchestrator.Status.APPLIED, "data reload was not applied");
+            require(
+                    dataResult.strategy() == ActivationStrategy.TRANSACTIONAL_RELOAD,
+                    "data reload selected the wrong activation strategy");
+            require(dataReloads.get() == 1, "data target binding was not invoked exactly once");
+
+            Path deletedClass = classes.resolve("example/Deleted.class");
+            ReloadOrchestrator.ReloadResult classResult = orchestrator.reloadNow(new ExternalHotloadCore.ReloadEvent(
+                    deletedClass,
+                    ExternalHotloadCore.ReloadKind.JAVA_BYTECODE,
+                    Instant.now(),
+                    "ENTRY_DELETE"));
+            require(classResult.status() == ReloadOrchestrator.Status.ESCALATED, "class deletion did not escalate");
+            require(
+                    classResult.strategy() == ActivationStrategy.RUNTIME_EPOCH_HANDOFF,
+                    "structural class change did not select runtime epoch handoff");
+            require(epochHandoffs.get() == 1, "runtime epoch target binding was not invoked exactly once");
+        } finally {
+            deleteTree(workspace);
+        }
+    }
+
+    private static void deleteTree(Path root) throws IOException {
+        if (!Files.exists(root)) {
+            return;
+        }
+        try (var paths = Files.walk(root)) {
+            for (Path path : paths.sorted(Comparator.reverseOrder()).toList()) {
+                Files.deleteIfExists(path);
+            }
+        }
     }
 
     private static PreparedWorldTransaction.MutationPair mutation(SectionKey key, int value) {

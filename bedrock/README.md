@@ -14,7 +14,7 @@ This directory is the Bedrock target plane for **Gridelyx Studio**. It shares ne
 
 ### 3. Native companion bridge
 
-Java and native tools exchange versioned Gridelyx binary frames through the shared-memory ABI in `native/cpp`. The **current version-1 compatibility transport still uses legacy `VFSB` magic and `gridelyx_*` native symbols**. These are migration identifiers only; canonical future identifiers are `GLXB`, `gridelyx_native` and `gridelyx_*` as recorded in `platform/brand.json`.
+Java and native tools exchange versioned Gridelyx binary frames through the shared-memory ABI in `native/cpp`. The canonical logical bridge uses **GLXB protocol v2**, the shared-memory transport uses **GLXM**, and the native ABI exports `gridelyx_*` symbols from `gridelyx_native` at ABI version 2.
 
 `native/bedrock` consumes frames behind a `BedrockAdapter` boundary. The default companion does not patch or inject into the closed-source Bedrock executable.
 
@@ -29,11 +29,11 @@ Gridelyx UAL / AI / scripts
           |
           +--> Bedrock Script Adapter --> behavior/resource packs
           |
-          +--> binary bridge --> Panama/FFM --> native compatibility ABI
-                                                |
-                                                +--> Bedrock companion
-                                                     |
-                                                     +--> versioned adapter
+          +--> GLXB v2 bridge --> Panama/FFM --> Gridelyx native ABI v2
+                                             |
+                                             +--> Bedrock companion
+                                                  |
+                                                  +--> versioned adapter
 ```
 
 The bridge is a transport, not a claim that Java objects or Minecraft Java Edition classes can be projected directly into Bedrock's C++ object model.
@@ -67,6 +67,6 @@ Run:
 python tools/bedrock_check.py
 ```
 
-Canonical bridge documentation: `docs/GRIDELYX_BRIDGE_PROTOCOL.md`.
+Canonical bridge documentation: [`docs/GRIDELYX_BRIDGE_PROTOCOL.md`](../docs/GRIDELYX_BRIDGE_PROTOCOL.md).
 
-Deep-integration policy: `docs/DEEP_INTEGRATION_ARCHITECTURE.md`.
+Deep-integration policy: [`docs/DEEP_INTEGRATION_ARCHITECTURE.md`](../docs/DEEP_INTEGRATION_ARCHITECTURE.md).

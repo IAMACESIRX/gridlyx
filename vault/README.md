@@ -1,10 +1,28 @@
-# Immutable Artifact Vault
+# Upstream Acquisition Manifest
 
-Do not hand-edit files in this directory.
+This directory contains **metadata only**. Gridelyx does not use Git as a binary vault for Minecraft, NeoForge, the JDK, LWJGL, Gradle distributions, installer JARs, or other third-party runtime/development payloads.
 
-`manifest.json` records the exact supplied bytes. Artifacts above the repository-safe threshold are split into deterministic 24 MiB parts. Reconstruction is a byte concatenation followed by SHA-256 verification.
+[`manifest.json`](manifest.json) records the canonical versions, official providers, resolver strategy, optional pinned reference source, and the project rule that upstream binaries must not be stored in the repository.
+
+Build and run behavior:
+
+1. GitHub Actions installs the locked Temurin JDK and Gradle dynamically.
+2. NeoForge ModDevGradle resolves Minecraft, NeoForge, mappings, and the development runtime into local Gradle caches.
+3. Maven dependencies such as LWJGL, ASM, GraalVM Polyglot, JUnit and ArchUnit are resolved from their configured repositories.
+4. Optional upstream source/reference material is hydrated only into `.reference-cache/`, which is ignored by Git.
+5. [`tools/redistribution_guard.py`](../tools/redistribution_guard.py) rejects tracked JARs, archives, native binaries, class files and upstream reference trees.
+
+Validation uses [`tools/hydrate_references.py`](../tools/hydrate_references.py) and [`tools/redistribution_guard.py`](../tools/redistribution_guard.py):
 
 ```bash
-python tools/vault.py verify --all
-python tools/vault.py reconstruct --all --output .reference-cache/raw
+python tools/hydrate_references.py --check
+python tools/redistribution_guard.py
 ```
+
+Optional pinned MDK reference checkout also uses [`tools/hydrate_references.py`](../tools/hydrate_references.py):
+
+```bash
+python tools/hydrate_references.py --mdk
+```
+
+No command in the supported workflow copies the acquired upstream payloads back into tracked repository paths.

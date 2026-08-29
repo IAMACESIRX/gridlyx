@@ -1,0 +1,27 @@
+name: Gridelyx Dynamic Toolchain
+
+description: Install the locked Java and Gradle toolchains and enforce acquisition-only upstream dependencies.
+
+runs:
+  using: composite
+  steps:
+    - name: Install Eclipse Temurin JDK 25
+      uses: actions/setup-java@v6
+      with:
+        distribution: temurin
+        java-version: '25.0.4+7.0.LTS'
+        architecture: x64
+
+    - name: Install locked Gradle
+      uses: gradle/actions/setup-gradle@v6
+      with:
+        gradle-version: '9.2.1'
+        cache-provider: basic
+
+    - name: Validate acquisition-only dependency policy
+      shell: bash
+      run: |
+        python tools/hydrate_references.py --check
+        python tools/redistribution_guard.py
+        java -version
+        gradle --version

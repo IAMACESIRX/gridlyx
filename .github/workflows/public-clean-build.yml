@@ -1,0 +1,102 @@
+name: Gridelyx Public Clean Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/actions/gridelyx-toolchain/**'
+      - '.github/workflows/public-clean-build.yml'
+      - 'templates/neoforge-26.2/**'
+      - 'platform/versions.json'
+      - 'platform/master-build.lock.json'
+      - 'platform/toolchain-requirements.json'
+      - 'vault/manifest.json'
+      - 'tools/hydrate_references.py'
+      - 'tools/redistribution_guard.py'
+      - 'tools/validate_platform.py'
+      - 'tools/build_lock.py'
+  push:
+    branches: [main, master]
+    paths:
+      - '.github/actions/gridelyx-toolchain/**'
+      - '.github/workflows/public-clean-build.yml'
+      - 'templates/neoforge-26.2/**'
+      - 'platform/versions.json'
+      - 'platform/master-build.lock.json'
+      - 'platform/toolchain-requirements.json'
+      - 'vault/manifest.json'
+      - 'tools/hydrate_references.py'
+      - 'tools/redistribution_guard.py'
+      - 'tools/validate_platform.py'
+      - 'tools/build_lock.py'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gridelyx-public-clean-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  clean-room-java:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GRADLE_USER_HOME: ${{ runner.temp }}/gridelyx-empty-gradle-home
+    steps:
+      - name: Checkout Gridelyx source only
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Prove tracked tree contains no redistributed upstream payloads
+        run: python tools/redistribution_guard.py
+
+      - name: Install locked Java and Gradle dynamically
+        uses: ./.github/actions/gridelyx-toolchain
+
+      - name: Start from an empty Gradle dependency cache
+        shell: bash
+        run: |
+          rm -rf "$GRADLE_USER_HOME"
+          mkdir -p "$GRADLE_USER_HOME"
+          test ! -d .reference-cache
+          test ! -d reference-cache
+
+      - name: Validate source and acquisition contracts
+        run: |
+          python tools/hydrate_references.py --check
+          python tools/redistribution_guard.py
+          python tools/build_lock.py --check
+          python tools/validate_platform.py
+
+      - name: Resolve upstream development dependencies and build from scratch
+        working-directory: templates/neoforge-26.2
+        run: |
+          gradle --no-daemon --refresh-dependencies \
+            -Penable_advanced_engines=true \
+            spotlessCheck check build \
+            gridelyxSmokeTest gridelyxModuleSmokeTest
+
+      - name: Resolve optional polyglot runtime from package repositories
+        working-directory: templates/neoforge-26.2
+        run: |
+          gradle --no-daemon --refresh-dependencies \
+            -Penable_advanced_engines=true \
+            -Penable_polyglot_engines=true \
+            polyglotSmokeTest
+
+      - name: Re-prove source tree stayed payload-free
+        run: |
+          python tools/redistribution_guard.py
+          git status --short
+
+      - name: Upload Gridelyx-owned build evidence only
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: gridelyx-clean-build-evidence-${{ github.sha }}
+          if-no-files-found: warn
+          path: |
+            templates/neoforge-26.2/build/reports/**
+            templates/neoforge-26.2/build/test-results/**

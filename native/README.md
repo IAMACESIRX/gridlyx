@@ -2,25 +2,26 @@
 
 The native workspace contains Gridelyx's trusted native ABI/IPC implementation, cross-process shared-memory transport, Rust acceleration lane and Bedrock native companion.
 
-## ABI migration state
+## Canonical ABI state
 
-Canonical future native identity is defined in `platform/brand.json`:
+The current native identity is defined in `platform/brand.json`:
 
 - library: `gridelyx_native`;
 - symbol prefix: `gridelyx_`;
-- future bridge magic: `GLXB`.
-
-The **currently implemented version-1 compatibility ABI still exports `gridelyx_*` symbols from `gridelyx_native` and transports `VFSB` frames**. These identifiers are migration compatibility debt only. Issue #26 governs their versioned transition; do not blindly rename them without Java/C++/Rust/Bedrock interoperability and rollback tests.
+- logical bridge magic: `GLXB`;
+- shared-memory transport magic: `GLXM`;
+- native ABI version: `2`;
+- bridge protocol version: `2`.
 
 Java 25 binds the C ABI through the Foreign Function & Memory API (Project Panama/FFM).
 
 ## Shared-memory contract
 
-The compatibility functions `gridelyx_shm_create` / `gridelyx_shm_open` expose a named mapped region containing a publication header followed by a caller-writable payload region. A producer writes a complete binary bridge frame and publishes it. The native side advances publication state only after the payload is ready.
+The `gridelyx_shm_create` / `gridelyx_shm_open` functions expose a named mapped region containing a publication header followed by a caller-writable payload region. A producer writes a complete Gridelyx binary bridge frame and publishes it. The native side advances publication state only after the payload is ready.
 
 Consumers snapshot/copy the payload and verify publication sequence. If the sequence changes during the read, the consumer retries rather than accepting a torn revision.
 
-Canonical logical protocol documentation: `docs/GRIDELYX_BRIDGE_PROTOCOL.md`.
+Canonical logical protocol documentation: [`docs/GRIDELYX_BRIDGE_PROTOCOL.md`](../docs/GRIDELYX_BRIDGE_PROTOCOL.md).
 
 ## Bedrock companion
 

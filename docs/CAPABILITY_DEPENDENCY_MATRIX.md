@@ -1,6 +1,6 @@
 # Gridelyx capability dependency matrix
 
-This matrix answers a different question from `DEPENDENCIES_AND_TOOLCHAIN.md`: **what does each major Gridelyx capability need in order to build, exercise or validate?**
+This matrix answers a different question from [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md): **what does each major Gridelyx capability need in order to build, exercise or validate?**
 
 `Required` means needed for that subsystem's development/validation lane, not necessarily needed by every Gridelyx user. `Optional` means the subsystem can exist without it but gains an adapter or output path when present.
 
@@ -55,7 +55,7 @@ Secrets are never repository dependencies and must not be committed.
 
 When a change introduces a new compiler, runtime, executable, provider, Maven/Gradle dependency, native library, Bedrock package, network service or AI model/provider, the same change must update:
 
-1. `DEPENDENCIES_AND_TOOLCHAIN.md`;
+1. [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md);
 2. `../platform/toolchain-requirements.json` if it is a project/subsystem tool;
 3. this capability matrix if it changes a major capability lane;
 4. licensing/provenance records where applicable;

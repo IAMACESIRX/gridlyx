@@ -1,6 +1,6 @@
 # Gridelyx TODO and validation ledger
 
-This is the live implementation ledger. Capability maturity is summarized in `FEATURE_MAP.md`; staged sequencing is in `ROADMAP.md`; dependency order and Kanban topology are in `DEVELOPMENT_MAP.md`. Complete retained scope is in `CHAT_REQUIREMENTS_TRACEABILITY.md` / `../platform/chat-requirements.json`. Tool and program prerequisites are in `DEPENDENCIES_AND_TOOLCHAIN.md`, `CAPABILITY_DEPENDENCY_MATRIX.md` and `../platform/toolchain-requirements.json`.
+This is the live implementation ledger. Capability maturity is summarized in [`FEATURE_MAP.md`](FEATURE_MAP.md); staged sequencing is in [`ROADMAP.md`](ROADMAP.md); dependency order and Kanban topology are in [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md). Complete retained scope is in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md) / `../platform/chat-requirements.json`. Tool and program prerequisites are in [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md), [`CAPABILITY_DEPENDENCY_MATRIX.md`](CAPABILITY_DEPENDENCY_MATRIX.md) and `../platform/toolchain-requirements.json`.
 
 ## Whole-chat requirements, identity and dependency control
 
@@ -354,7 +354,7 @@ This is the live implementation ledger. Capability maturity is summarized in `FE
 
 ## Community / governance
 
-- [x] `COMMUNITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SUPPORT.md`, security routing.
+- [x] [`COMMUNITY.md`](../COMMUNITY.md), [`CONTRIBUTING.md`](../CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](../CODE_OF_CONDUCT.md), [`SUPPORT.md`](../SUPPORT.md), security routing.
 - [x] Getting-started, contributor onboarding, architecture tour, testing/evidence and glossary docs.
 - [x] Feature-evaluation GitHub issue form tied to CR-034.
 - [ ] Maintainer/reviewer ownership map when contributor base grows.

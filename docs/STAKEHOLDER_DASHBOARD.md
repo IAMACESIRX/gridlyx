@@ -1,6 +1,6 @@
 # Gridelyx stakeholder dashboard
 
-This page is the bird's-eye view. It summarizes the program without replacing the evidence-bearing sources: `FEATURE_MAP.md`, `ROADMAP.md`, `TODO.md`, `DEVELOPMENT_MAP.md` and `CHAT_REQUIREMENTS_TRACEABILITY.md`.
+This page is the bird's-eye view. It summarizes the program without replacing the evidence-bearing sources: [`FEATURE_MAP.md`](FEATURE_MAP.md), [`ROADMAP.md`](ROADMAP.md), [`TODO.md`](TODO.md), [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md) and [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md).
 
 ## 3-bullet value proposition
 
@@ -10,7 +10,7 @@ This page is the bird's-eye view. It summarizes the program without replacing th
 
 ## Portfolio Kanban
 
-> Kanban is a workflow view, not a substitute for dependency order or evidence. `docs/DEVELOPMENT_MAP.md` owns the critical-path interpretation.
+> Kanban is a workflow view, not a substitute for dependency order or evidence. [`docs/DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md) owns the critical-path interpretation.
 
 | Backlog | Ready / framed | Doing | Verifying | Done / control-plane complete |
 |---|---|---|---|---|
@@ -49,17 +49,17 @@ production + release hardening
 | Scope retention | CR ledger is machine-checked; implementation remains multi-phase | `platform/chat-requirements.json` |
 | Product identity | Gridelyx / Gridelyx Studio frozen; legacy ABI migration remains | `platform/brand.json` |
 | Java canonical lane | Minecraft 26.2 / NeoForge 26.2.0.67 / Java 25 | `platform/versions.json` |
-| Cross-edition target | Java + Bedrock behind capability adapters | `FEATURE_MAP.md` |
+| Cross-edition target | Java + Bedrock behind capability adapters | [`FEATURE_MAP.md`](FEATURE_MAP.md) |
 | AI continuity | deterministic context map/index + handoff and decision ledgers | `ai/` |
-| Large reference payload | manifest/control ready; remote binary import still pending while marker exists | `vault/REMOTE_BINARY_IMPORT_PENDING.md` |
+| Large reference payload | manifest/control ready; remote binary import still pending while marker exists | [`vault/REMOTE_BINARY_IMPORT_PENDING.md`](../vault/REMOTE_BINARY_IMPORT_PENDING.md) |
 | Repository rename | requested `IAMACESIRX/gridlyx`; GitHub metadata action tracked separately | `platform/repository-metadata.json` |
 
 ## Stakeholder filters
 
-- **Vision:** `PROJECT_OVERVIEW.md`, hero graphic, architecture diagrams.
-- **Delivery:** `ROADMAP.md`, `DEVELOPMENT_MAP.md`, this Kanban.
-- **Evidence:** `FEATURE_MAP.md`, CI, testing documents.
-- **Cost/risk:** `FEATURE_DECISION_FRAMEWORK.md`, Feature Decision Packets, impact-effort matrix.
+- **Vision:** [`PROJECT_OVERVIEW.md`](PROJECT_OVERVIEW.md), hero graphic, architecture diagrams.
+- **Delivery:** [`ROADMAP.md`](ROADMAP.md), [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md), this Kanban.
+- **Evidence:** [`FEATURE_MAP.md`](FEATURE_MAP.md), CI, testing documents.
+- **Cost/risk:** [`FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md), Feature Decision Packets, impact-effort matrix.
 - **Technical depth:** architecture subsystem documents and source.
-- **Community:** `COMMUNITY.md` and `docs/community/`.
-- **Release communication:** `RELEASE_NOTES_AND_CHANGELOGS.md`, `CHANGELOG.md`.
+- **Community:** [`COMMUNITY.md`](../COMMUNITY.md) and `docs/community/`.
+- **Release communication:** [`RELEASE_NOTES_AND_CHANGELOGS.md`](RELEASE_NOTES_AND_CHANGELOGS.md), [`CHANGELOG.md`](../CHANGELOG.md).

@@ -1,38 +1,60 @@
-# Completing the Exact Private Reference Vault
+# Dynamic Upstream Acquisition
 
-The GitHub API connection used to initialise this repository can write source/text files but cannot stream the supplied ~632 MB binary payload. The repository therefore records the exact expected bytes in `vault/manifest.json` and keeps `vault/REMOTE_BINARY_IMPORT_PENDING.md` until the binary import is complete.
+Gridelyx no longer uses a private binary-import workflow. The repository is intended to be publishable without embedding third-party development/runtime payloads.
 
-The JDK and LWJGL archives are intentionally split into 24 MiB ordinary Git blobs. This stays below GitHub's single-file hard limit while keeping the private repository self-contained and independent of a third-party download remaining available forever.
+## Normal GitHub Actions flow
 
-## Windows / PowerShell
+After checkout, use the repository-local dynamic toolchain action [`.github/actions/gridelyx-toolchain/action.yml`](../.github/actions/gridelyx-toolchain/action.yml):
 
-Clone the private repository and point the importer at the folder containing the four original files supplied to the platform:
-
-```powershell
-git clone https://github.com/IAMACESIRX/minecraft-advanced-mod-development-kit.git
-cd minecraft-advanced-mod-development-kit
-py tools/import_binary_vault.py "C:\path\to\the\four\original\files"
-py tools/hydrate_references.py
-py tools/vault.py verify --all
-py tools/validate_platform.py
-
-git add vault references/upstream references/index templates/neoforge-26.2/gradle/wrapper/gradle-wrapper.jar templates/neoforge-26.2/gradlew templates/neoforge-26.2/gradlew.bat
-git add -u vault/REMOTE_BINARY_IMPORT_PENDING.md
-git commit -m "Import exact supplied Minecraft R&D reference vault"
-git push origin main
+```yaml
+- uses: actions/checkout@v7
+- uses: ./.github/actions/gridelyx-toolchain
 ```
 
-The importer identifies artifacts by exact SHA-256 and byte length, not merely by filename. It therefore tolerates harmless filename differences such as browser-added `(1)` suffixes but rejects changed bytes.
+That action installs the locked Eclipse Temurin JDK and Gradle release into GitHub's runner/tool caches and validates the no-redistribution policy.
 
-`hydrate_references.py` then:
+The subsequent Gradle build performs the remaining dependency acquisition from [`templates/neoforge-26.2/`](../templates/neoforge-26.2/):
 
-1. reconstructs and verifies the exact supplied MDK ZIP;
-2. extracts it to `references/upstream/mdk-26.2/` as an immutable readable snapshot;
-3. restores the official Gradle wrapper JAR and launch scripts into the live mod template;
-4. regenerates archive, JDK-source and LWJGL-source/type indexes.
+```bash
+cd templates/neoforge-26.2
+./gradlew --no-daemon build
+```
 
-Once the pending marker is removed, the `Reference Vault Integrity` workflow verifies every artifact and every chunk by SHA-256.
+[`net.neoforged.moddev`](https://docs.neoforged.net/toolchain/docs/plugins/mdg/) resolves the Minecraft/NeoForge development runtime and mappings. Normal Gradle dependency resolution obtains the declared Java libraries. None of those upstream payloads are copied into tracked repository paths.
 
-## Storage trade-off
+## Local developer flow
 
-This deliberately makes the repository relatively large. That is a design choice for permanent private ownership of the supplied R&D references. If clone weight later becomes a problem, the same manifest can be migrated to Git LFS or private release/package storage without changing the AI-facing reference indexes or mod workspace architecture.
+A developer may use a compatible local JDK/Gradle installation or install the versions recorded in [`platform/versions.json`](../platform/versions.json). The template's launcher shim invokes the system Gradle executable, which then populates the developer's normal Gradle caches.
+
+Validate the repository policy at any time with [`tools/hydrate_references.py`](../tools/hydrate_references.py) and [`tools/redistribution_guard.py`](../tools/redistribution_guard.py):
+
+```bash
+python tools/hydrate_references.py --check
+python tools/redistribution_guard.py
+```
+
+For an optional, pinned NeoForge MDK comparison checkout:
+
+```bash
+python tools/hydrate_references.py --mdk
+```
+
+That clone is stored beneath `.reference-cache/` and is intentionally not copied into the tracked template or [`references/upstream/`](../references/upstream/) tree.
+
+## What must never be committed
+
+Do not commit:
+
+- Minecraft client/server JARs or decompiled source trees;
+- NeoForge installer/runtime JARs;
+- JDK or Gradle distribution archives;
+- LWJGL distribution/native bundles;
+- Maven-resolved dependency JARs;
+- binary chunks or reconstructed upstream archives;
+- hydrated upstream reference checkouts.
+
+The [`.gitignore`](../.gitignore) blocks these normal cases, and [`tools/redistribution_guard.py`](../tools/redistribution_guard.py) independently scans the Git index so a force-added prohibited payload still fails validation.
+
+## Why this model
+
+This keeps Gridelyx source reproducible while making the distinction between **dependency acquisition** and **dependency redistribution** explicit. The repository records where a dependency comes from and which version is expected; the upstream provider or package resolver supplies the actual bytes to each developer/CI runner.

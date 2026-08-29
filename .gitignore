@@ -10,10 +10,27 @@
 **/.project
 **/.settings/
 
-# Local reference reconstruction/cache
+# Dynamically acquired upstream references/toolchains/caches
 .reference-cache/
 reference-cache/
 .native-cache/
+.toolchain-cache/
+
+# Never vendor resolved third-party/game/runtime binaries.
+# The redistribution guard enforces this against tracked files as well.
+*.jar
+*.class
+*.zip
+*.7z
+*.rar
+*.tgz
+*.tar.gz
+*.dll
+*.so
+*.dylib
+*.exe
+*.msi
+*.part-*
 
 # Diagnostics/profilers
 **/*.hprof

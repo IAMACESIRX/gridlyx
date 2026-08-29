@@ -21,11 +21,11 @@ This repository contains both validated foundations and experimental R&D. When a
 - Loader/version compatibility: use the compatibility issue form.
 - New capability: use the feature request form.
 - Live world editor issue: use the world-editor issue form.
-- Security vulnerability: follow `SECURITY.md`; do not disclose exploitable details publicly before triage.
+- Security vulnerability: follow [`SECURITY.md`](SECURITY.md); do not disclose exploitable details publicly before triage.
 
 ## Experimental features
 
-For framework-level or planned features, support means architecture/design triage rather than a promise that the target capability already works. Check `docs/FEATURE_MAP.md`, `docs/TODO.md` and `docs/CHAT_REQUIREMENTS_TRACEABILITY.md` before assuming a requested feature is at interactive validation maturity.
+For framework-level or planned features, support means architecture/design triage rather than a promise that the target capability already works. Check [`docs/FEATURE_MAP.md`](docs/FEATURE_MAP.md), [`docs/TODO.md`](docs/TODO.md) and [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) before assuming a requested feature is at interactive validation maturity.
 
 ## Diagnostics
 

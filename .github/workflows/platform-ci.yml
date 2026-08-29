@@ -32,17 +32,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
-      - name: Set up exact Temurin JDK 25
-        uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: '25.0.4+7.0.LTS'
-          architecture: x64
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v6
-        with:
-          gradle-version: '9.2.1'
-          cache-provider: basic
+      - name: Install locked toolchain dynamically
+        uses: ./.github/actions/gridelyx-toolchain
       - name: Check Gradle execution privilege
         run: test -x templates/neoforge-26.2/gradlew
       - name: Validate master Gradle lock
@@ -70,7 +61,7 @@ jobs:
       - name: Run opted-in headless GameTests
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_gametests }}
         run: python tools/headless_validate.py ${{ inputs.advanced && '--advanced' || '' }}
-      - name: Upload compiled mod JARs and reports
+      - name: Upload compiled Gridelyx artifacts and reports
         if: always()
         uses: actions/upload-artifact@v7
         with:

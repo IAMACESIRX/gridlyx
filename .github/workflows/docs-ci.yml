@@ -3,30 +3,28 @@ name: Gridelyx Documentation CI
 on:
   push:
     paths:
-      - 'README.md'
-      - 'CHANGELOG.md'
+      - '**/*.md'
       - 'mkdocs.yml'
       - 'requirements-docs.txt'
-      - 'docs/**'
       - 'platform/label-taxonomy.json'
       - 'platform/portfolio-board.json'
       - 'platform/toolchain-requirements.json'
       - 'tools/docs_check.py'
+      - 'tools/markdown_linkify.py'
       - 'tools/generate_changelog.py'
       - 'tools/generate_release_notes.py'
       - 'tools/sync_labels.py'
       - '.github/workflows/docs-ci.yml'
   pull_request:
     paths:
-      - 'README.md'
-      - 'CHANGELOG.md'
+      - '**/*.md'
       - 'mkdocs.yml'
       - 'requirements-docs.txt'
-      - 'docs/**'
       - 'platform/label-taxonomy.json'
       - 'platform/portfolio-board.json'
       - 'platform/toolchain-requirements.json'
       - 'tools/docs_check.py'
+      - 'tools/markdown_linkify.py'
       - 'tools/generate_changelog.py'
       - 'tools/generate_release_notes.py'
       - 'tools/sync_labels.py'
@@ -44,6 +42,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.x'
+      - name: Validate clickable documentation link targets
+        run: python tools/markdown_linkify.py --check
       - name: Validate project presentation contracts
         run: |
           python tools/docs_check.py

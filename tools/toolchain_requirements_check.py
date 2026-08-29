@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "platform/toolchain-requirements.json"
+ACQUISITION = ROOT / "vault/manifest.json"
 DOC = ROOT / "docs/DEPENDENCIES_AND_TOOLCHAIN.md"
 MATRIX = ROOT / "docs/CAPABILITY_DEPENDENCY_MATRIX.md"
 
@@ -17,11 +18,19 @@ def fail(message: str) -> None:
 def main() -> int:
     try:
         data = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        acquisition = json.loads(ACQUISITION.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        fail(f"platform/toolchain-requirements.json: {exc}")
+        fail(str(exc))
 
     if not isinstance(data, dict) or data.get("schema_version") != 1:
         fail("toolchain manifest must be a schema_version 1 object")
+    if acquisition.get("schema_version") != 2:
+        fail("upstream acquisition manifest must use schema_version 2")
+    policy = acquisition.get("policy", {})
+    if policy.get("mode") != "acquire-at-build-or-run-time":
+        fail("upstream acquisition manifest must use acquire-at-build-or-run-time mode")
+    if policy.get("repository_must_not_redistribute_upstream_binaries") is not True:
+        fail("upstream acquisition manifest must prohibit repository binary redistribution")
 
     tools = data.get("tools")
     libraries = data.get("libraries")
@@ -55,6 +64,8 @@ def main() -> int:
 
     if len(tool_ids) != len(set(tool_ids)):
         fail("duplicate tool ids")
+    if "upstream-acquisition" not in tool_ids:
+        fail("toolchain manifest must include the upstream-acquisition control-plane entry")
 
     library_ids: list[str] = []
     for library in libraries:
@@ -82,17 +93,34 @@ def main() -> int:
     except OSError as exc:
         fail(str(exc))
 
-    for marker in ("Gridelyx", "Java", "Rust", "CMake", "Bedrock", "reference vault"):
+    for marker in (
+        "Gridelyx",
+        "Java",
+        "Rust",
+        "CMake",
+        "Bedrock",
+        "acquisition",
+        "redistribution_guard.py",
+    ):
         if marker.lower() not in doc.lower():
             fail(f"dependency documentation missing marker: {marker}")
 
-    for marker in ("Gridelyx", "CR-001", "CR-015", "CR-021", "CR-024", "CR-030", "CR-033", "No hidden dependencies rule"):
+    for marker in (
+        "Gridelyx",
+        "CR-001",
+        "CR-015",
+        "CR-021",
+        "CR-024",
+        "CR-030",
+        "CR-033",
+        "No hidden dependencies rule",
+    ):
         if marker.lower() not in matrix.lower():
             fail(f"capability dependency matrix missing marker: {marker}")
 
     print(
         f"PASS: {len(tools)} tool/program requirements, {len(libraries)} locked libraries, "
-        "and the Gridelyx capability dependency matrix are documented"
+        "and acquisition-only upstream policy are documented"
     )
     return 0
 

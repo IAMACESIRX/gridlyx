@@ -68,6 +68,8 @@ neoForge {
         }
         configureEach {
             systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'gridelyx.hotload.enabled',
+                    project.findProperty('enable_public_hotload') ?: project.findProperty('enable_dev_hotload') ?: 'false'
             logLevel = org.slf4j.event.Level.DEBUG
         }
     }
@@ -185,6 +187,24 @@ tasks.register('agentJar', Jar) {
                 'Can-Redefine-Classes': 'true',
                 'Can-Retransform-Classes': 'true')
     }
+}
+
+tasks.register('gridelyxSmokeTest', JavaExec) {
+    group = 'verification'
+    description = 'Runs Gridelyx advanced runtime, routing and rollback smoke validation.'
+    onlyIf { advancedEnabled.get() }
+    classpath = sourceSets.advanced.runtimeClasspath
+    mainClass = "${mod_group_id}.advanced.validation.GridelyxSmokeTest"
+    dependsOn tasks.named('advancedClasses')
+}
+
+tasks.register('gridelyxModuleSmokeTest', JavaExec) {
+    group = 'verification'
+    description = 'Runs the Gridelyx H3 versioned-module activation and retirement smoke test.'
+    onlyIf { advancedEnabled.get() }
+    classpath = sourceSets.advanced.runtimeClasspath
+    mainClass = "${mod_group_id}.advanced.validation.VersionedModuleRuntimeSmokeTest"
+    dependsOn tasks.named('advancedClasses')
 }
 
 tasks.register('polyglotSmokeTest', JavaExec) {

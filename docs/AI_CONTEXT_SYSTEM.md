@@ -6,9 +6,9 @@ An AI should not need to ingest the entire repository blindly for every task. Gr
 
 ## Canonical AI entry order
 
-1. `AGENTS.md` — safety, engineering and validation contract.
-2. `AI_HANDOFF.md` — current product state, active workstreams and continuation rules.
-3. `ai/CONTEXT.md` — compact architecture vocabulary and invariants.
+1. [`AGENTS.md`](../AGENTS.md) — safety, engineering and validation contract.
+2. [`AI_HANDOFF.md`](../AI_HANDOFF.md) — current product state, active workstreams and continuation rules.
+3. [`ai/CONTEXT.md`](../ai/CONTEXT.md) — compact architecture vocabulary and invariants.
 4. `ai/context-map.json` — maps task domains to canonical files.
 5. Generated `build/ai/repo-index.json` — file metadata/hash/area index.
 6. Generated task context pack from `tools/ai_context_pack.py`.
@@ -49,7 +49,7 @@ python tools/ai_context_pack.py "Bedrock VFSB native bridge"
 
 ## Handoff discipline
 
-`AI_HANDOFF.md` should contain only durable continuation information:
+[`AI_HANDOFF.md`](../AI_HANDOFF.md) should contain only durable continuation information:
 
 - product definition;
 - current architecture boundaries;
@@ -59,7 +59,7 @@ python tools/ai_context_pack.py "Bedrock VFSB native bridge"
 - validation commands;
 - source/provenance constraints.
 
-Do not dump conversation transcripts into handoff files. Decisions belong in `docs/DECISIONS.md`/ADRs; tasks belong in `docs/TODO.md`; capabilities belong in `docs/FEATURE_MAP.md`.
+Do not dump conversation transcripts into handoff files. Decisions belong in [`docs/DECISIONS.md`](DECISIONS.md)/ADRs; tasks belong in [`docs/TODO.md`](TODO.md); capabilities belong in [`docs/FEATURE_MAP.md`](FEATURE_MAP.md).
 
 ## Fact/status vocabulary
 

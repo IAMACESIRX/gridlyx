@@ -4,20 +4,20 @@
     "name": "Gridelyx Studio Editor Preview",
     "description": "Preview-only Bedrock Editor extension entrypoint for Gridelyx Studio.",
     "uuid": "554c8d77-8cec-4f2f-bd22-9e13e054435e",
-    "version": [1, 0, 0],
+    "version": [2, 0, 0],
     "min_engine_version": [1, 26, 50]
   },
   "modules": [
     {
       "type": "data",
       "uuid": "9d4f92ef-c2a0-4fa1-a75a-8c1dc25bfa2c",
-      "version": [1, 0, 0]
+      "version": [2, 0, 0]
     },
     {
       "type": "script",
       "language": "javascript",
       "uuid": "3a74fd27-24c3-4377-8cde-83f3c7cd1674",
-      "version": [1, 0, 0],
+      "version": [2, 0, 0],
       "entry": "scripts/main.js"
     }
   ],

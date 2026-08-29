@@ -39,8 +39,10 @@ def properties(path: Path) -> dict[str, str]:
     return result
 
 
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def git_blob_sha1(path: Path) -> str:
+    content = path.read_bytes()
+    header = f"blob {len(content)}\0".encode("ascii")
+    return hashlib.sha1(header + content).hexdigest()
 
 
 def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]) -> None:
@@ -77,10 +79,14 @@ def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]
     if not props.get("mod_license"):
         error(errors, f"{label}: mod_license is empty")
 
-    build_path = project / "build.gradle"
-    build = build_path.read_text(encoding="utf-8", errors="replace")
-    if sha256(build_path) != BUILD_LOCK["sha256"]:
-        error(errors, f"{label}: build.gradle differs from the locked master build")
+    if BUILD_LOCK.get("schema_version") != 2 or not BUILD_LOCK.get("git_blob_sha1"):
+        error(errors, "platform/master-build.lock.json must use schema_version 2 with git_blob_sha1")
+    else:
+        build_path = project / "build.gradle"
+        if git_blob_sha1(build_path) != BUILD_LOCK["git_blob_sha1"]:
+            error(errors, f"{label}: build.gradle differs from the locked master build")
+
+    build = (project / "build.gradle").read_text(encoding="utf-8", errors="replace")
     required_build_tokens = [
         f"net.neoforged.moddev' version '{LOCK['moddevgradle']}'",
         "id 'checkstyle'",
@@ -92,6 +98,8 @@ def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]
         "junit-jupiter",
         "com.tngtech.archunit:archunit",
         "org.graalvm.polyglot:polyglot",
+        "gridelyxSmokeTest",
+        "gridelyxModuleSmokeTest",
         "polyglotSmokeTest",
     ]
     for token in required_build_tokens:
@@ -108,7 +116,7 @@ def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]
 
     wrapper = project / "gradle/wrapper/gradle-wrapper.properties"
     if wrapper.exists() and f"gradle-{LOCK['gradle']}-bin.zip" not in wrapper.read_text(encoding="utf-8"):
-        error(errors, f"{label}: Gradle wrapper drift")
+        error(errors, f"{label}: Gradle launcher version drift")
     if os.name != "nt" and (project / "gradlew").exists() and not os.access(project / "gradlew", os.X_OK):
         error(errors, f"{label}: gradlew is not executable")
 
@@ -121,20 +129,63 @@ def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]
         error(errors, f"{label}: codec/worldgen blueprint missing")
 
 
+def validate_acquisition_manifest(errors: list[str]) -> None:
+    manifest_path = ROOT / "vault/manifest.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        error(errors, f"vault/manifest.json: {exc}")
+        return
+
+    if manifest.get("schema_version") != 2:
+        error(errors, "vault/manifest.json must use acquisition schema_version 2")
+    policy = manifest.get("policy", {})
+    if policy.get("mode") != "acquire-at-build-or-run-time":
+        error(errors, "vault acquisition mode must be acquire-at-build-or-run-time")
+    if policy.get("repository_must_not_redistribute_upstream_binaries") is not True:
+        error(errors, "vault acquisition policy must prohibit upstream binary redistribution")
+
+    artifacts = manifest.get("artifacts", [])
+    ids = {artifact.get("id") for artifact in artifacts if isinstance(artifact, dict)}
+    required_ids = {
+        "minecraft",
+        "neoforge",
+        "neoforge_mdk",
+        "jdk",
+        "gradle",
+        "lwjgl",
+        "java_maven_dependencies",
+    }
+    missing = required_ids - ids
+    if missing:
+        error(errors, "upstream acquisition manifest missing entries: " + ", ".join(sorted(missing)))
+    for artifact in artifacts:
+        if not isinstance(artifact, dict):
+            error(errors, "vault acquisition artifact entry is not an object")
+            continue
+        if artifact.get("repository_storage") != "prohibited":
+            error(errors, f"{artifact.get('id', '<unknown>')}: repository_storage must be prohibited")
+
+
 def validate_platform_files(errors: list[str]) -> None:
     required = [
         "platform/master-build.lock.json",
         "platform/capabilities.json",
+        "vault/manifest.json",
+        ".github/actions/gridelyx-toolchain/action.yml",
         "tools/build_lock.py",
         "tools/script_gatekeeper.py",
         "tools/autodoc.py",
         "tools/bytecode_diff.py",
         "tools/csv_recipe_pipeline.py",
         "tools/headless_validate.py",
+        "tools/hydrate_references.py",
+        "tools/redistribution_guard.py",
         "docs/AUTO_CAPABILITIES.md",
         "docs/PROJECT_PLAN.md",
         "docs/HOTLOAD_ARCHITECTURE.md",
         "docs/POLYGLOT_AND_BRIDGES.md",
+        "docs/REFERENCE_VAULT.md",
     ]
     for relative in required:
         if not (ROOT / relative).exists():
@@ -154,15 +205,11 @@ def main() -> int:
         validate_project(project, errors, seen_ids)
     else:
         validate_platform_files(errors)
+        validate_acquisition_manifest(errors)
         validate_project(ROOT / LOCK["template"], errors, seen_ids)
         for project in sorted((ROOT / "mods").glob("*")):
             if project.is_dir() and (project / "build.gradle").exists():
                 validate_project(project, errors, seen_ids)
-        manifest = json.loads((ROOT / "vault/manifest.json").read_text(encoding="utf-8"))
-        ids = {artifact["id"] for artifact in manifest["artifacts"]}
-        expected = {"mdk", "neoforge_installer", "jdk", "lwjgl"}
-        if ids != expected:
-            error(errors, f"vault manifest ids {ids} != {expected}")
     if errors:
         print(f"FAILED: {len(errors)} validation error(s)")
         return 2

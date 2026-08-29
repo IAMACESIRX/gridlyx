@@ -1,32 +1,68 @@
-name: Reference Vault Integrity
+name: Upstream Acquisition and AI Reference Integrity
 
 on:
   workflow_dispatch:
   push:
     paths:
       - 'vault/**'
-      - 'tools/vault.py'
       - 'platform/versions.json'
+      - 'platform/reference-sources.json'
+      - 'tools/hydrate_references.py'
+      - 'tools/hydrate_ai_references.py'
+      - 'tools/build_reference_indexes.py'
+      - 'tools/reference_sources_check.py'
+      - 'tools/redistribution_guard.py'
+      - 'docs/AI_MODDING_REFERENCE_CORPUS.md'
+      - 'ai/skills/**'
+      - '.gitignore'
+      - '.github/actions/gridelyx-toolchain/**'
+      - '.github/workflows/reference-integrity.yml'
+  pull_request:
+    paths:
+      - 'vault/**'
+      - 'platform/versions.json'
+      - 'platform/reference-sources.json'
+      - 'tools/hydrate_references.py'
+      - 'tools/hydrate_ai_references.py'
+      - 'tools/build_reference_indexes.py'
+      - 'tools/reference_sources_check.py'
+      - 'tools/redistribution_guard.py'
+      - 'docs/AI_MODDING_REFERENCE_CORPUS.md'
+      - 'ai/skills/**'
+      - '.gitignore'
+      - '.github/actions/gridelyx-toolchain/**'
+      - '.github/workflows/reference-integrity.yml'
 
 permissions:
   contents: read
 
 jobs:
-  verify:
+  verify-acquisition-policy-and-reference-corpus:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
-      - name: Check binary-vault import state
-        id: vault_state
-        shell: bash
-        run: |
-          if [ -f vault/REMOTE_BINARY_IMPORT_PENDING.md ]; then
-            echo 'ready=false' >> "$GITHUB_OUTPUT"
-            echo 'Exact binary vault import is still pending; manifest remains authoritative.'
-          else
-            echo 'ready=true' >> "$GITHUB_OUTPUT"
-          fi
-      - name: Verify every supplied artifact/chunk by SHA-256
-        if: steps.vault_state.outputs.ready == 'true'
-        run: python tools/vault.py verify --all
+
+      - name: Verify no upstream binary payload is tracked
+        run: python tools/redistribution_guard.py
+
+      - name: Validate acquisition manifest without network access
+        run: python tools/hydrate_references.py --check
+
+      - name: Validate AI reference manifest against canonical build locks
+        run: python tools/reference_sources_check.py
+
+      - name: Prove pinned MDK can be acquired from its official public source
+        run: python tools/hydrate_references.py --mdk
+
+      - name: Build deterministic MDK file index outside Git
+        run: python tools/build_reference_indexes.py --no-hydrate
+
+      - name: Hydrate high-value official AI reference corpus
+        run: python tools/hydrate_ai_references.py --core
+
+      - name: Build provenance-aware AI corpus index outside Git
+        run: python tools/build_reference_indexes.py --corpus
+
+      - name: Re-verify repository remains payload free
+        run: python tools/redistribution_guard.py

@@ -1,94 +1,256 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from pathlib import Path
 import argparse
-import io
-import re
-import zipfile
+import hashlib
+import json
+import subprocess
 import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-INDEX = ROOT / "references" / "index"
-CACHE = ROOT / ".reference-cache" / "raw"
-sys.path.insert(0, str(ROOT / "tools"))
-import vault as vault_tool
+CACHE = ROOT / ".reference-cache"
+UPSTREAM = CACHE / "upstream" / "mdk-26.2"
+CORPUS = CACHE / "corpus"
+INDEX = CACHE / "index"
+REFERENCE_MANIFEST = ROOT / "platform" / "reference-sources.json"
+PROVENANCE = INDEX / "reference-provenance.json"
 
-TYPE_RE = re.compile(r"\b(?:class|interface|enum|record|@interface)\s+([A-Za-z_$][\w$]*)")
-PACKAGE_RE = re.compile(r"\bpackage\s+([A-Za-z_$][\w$.]*)\s*;")
+TEXT_SUFFIXES = {
+    ".c",
+    ".cc",
+    ".cpp",
+    ".gradle",
+    ".groovy",
+    ".h",
+    ".hpp",
+    ".html",
+    ".java",
+    ".js",
+    ".json",
+    ".kt",
+    ".kts",
+    ".md",
+    ".properties",
+    ".py",
+    ".rs",
+    ".toml",
+    ".ts",
+    ".txt",
+    ".xml",
+    ".yaml",
+    ".yml",
+}
+TEXT_FILENAMES = {
+    "license",
+    "license.txt",
+    "notice",
+    "notice.txt",
+    "copying",
+    "readme",
+    "changelog",
+}
+SKIP_DIRS = {
+    ".git",
+    ".gradle",
+    ".idea",
+    ".vscode",
+    "build",
+    "out",
+    "target",
+    "node_modules",
+}
+MAX_TEXT_FILE_BYTES = 2 * 1024 * 1024
+CHUNK_CHARS = 12_000
+CHUNK_OVERLAP = 1_000
 
 
-def ensure_artifact(artifact_id: str) -> tuple[dict, Path]:
-    manifest = vault_tool.load()
-    artifact = next(a for a in manifest["artifacts"] if a["id"] == artifact_id)
-    CACHE.mkdir(parents=True, exist_ok=True)
-    path = CACHE / artifact["original_filename"]
-    if not (path.exists() and path.stat().st_size == artifact["size_bytes"] and vault_tool.digest(path) == artifact["sha256"]):
-        path = vault_tool.reconstruct(artifact, CACHE)
-    return artifact, path
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
-def archive_index(artifact_id: str, archive: Path) -> None:
-    outdir = INDEX / "archive-contents"
-    outdir.mkdir(parents=True, exist_ok=True)
-    out = outdir / f"{artifact_id}.tsv"
-    with zipfile.ZipFile(archive) as z, out.open("w", encoding="utf-8", newline="\n") as f:
-        f.write("path\tuncompressed_bytes\tcompressed_bytes\tcrc32\n")
-        for info in z.infolist():
-            f.write(f"{info.filename}\t{info.file_size}\t{info.compress_size}\t{info.CRC:08x}\n")
-    print(out.relative_to(ROOT))
+def ensure_mdk() -> None:
+    if UPSTREAM.is_dir():
+        return
+    subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "hydrate_references.py"), "--mdk"],
+        cwd=ROOT,
+        check=True,
+    )
 
 
-def jdk_source_index(archive: Path) -> None:
-    out = INDEX / "jdk-25.0.4-source-index.tsv"
-    with zipfile.ZipFile(archive) as outer:
-        src_name = next((n for n in outer.namelist() if n.endswith("/lib/src.zip")), None)
-        if src_name is None:
-            raise RuntimeError("JDK lib/src.zip not found")
-        with zipfile.ZipFile(io.BytesIO(outer.read(src_name))) as src, out.open("w", encoding="utf-8", newline="\n") as f:
-            f.write("path\tuncompressed_bytes\tcompressed_bytes\n")
-            for info in src.infolist():
-                f.write(f"{info.filename}\t{info.file_size}\t{info.compress_size}\n")
-    print(out.relative_to(ROOT))
+def write_mdk_index() -> Path:
+    INDEX.mkdir(parents=True, exist_ok=True)
+    output = INDEX / "neoforge-mdk-26.2-files.tsv"
+    with output.open("w", encoding="utf-8", newline="\n") as stream:
+        stream.write("path\tbytes\tsha256\n")
+        for path in sorted(item for item in UPSTREAM.rglob("*") if item.is_file() and ".git" not in item.parts):
+            relative = path.relative_to(UPSTREAM).as_posix()
+            stream.write(f"{relative}\t{path.stat().st_size}\t{sha256(path)}\n")
+    return output
 
 
-def lwjgl_indexes(archive: Path) -> None:
-    source_out = INDEX / "lwjgl-3.4.1-source-index.tsv"
-    type_out = INDEX / "lwjgl-3.4.1-type-index.tsv"
-    with zipfile.ZipFile(archive) as outer, source_out.open("w", encoding="utf-8", newline="\n") as sf, type_out.open("w", encoding="utf-8", newline="\n") as tf:
-        sf.write("source_jar\tpath\tuncompressed_bytes\n")
-        tf.write("module\tpackage\ttype\tpath\n")
-        for jar_info in sorted((i for i in outer.infolist() if i.filename.endswith("-sources.jar")), key=lambda i: i.filename):
-            module = jar_info.filename.split("/")[0]
-            with zipfile.ZipFile(io.BytesIO(outer.read(jar_info))) as src:
-                for info in src.infolist():
-                    sf.write(f"{jar_info.filename}\t{info.filename}\t{info.file_size}\n")
-                    if not info.filename.endswith(".java"):
-                        continue
-                    text = src.read(info).decode("utf-8", errors="replace")
-                    package = ""
-                    pm = PACKAGE_RE.search(text)
-                    if pm:
-                        package = pm.group(1)
-                    for tm in TYPE_RE.finditer(text):
-                        tf.write(f"{module}\t{package}\t{tm.group(1)}\t{info.filename}\n")
-    print(source_out.relative_to(ROOT))
-    print(type_out.relative_to(ROOT))
+def load_reference_manifest() -> dict:
+    data = json.loads(REFERENCE_MANIFEST.read_text(encoding="utf-8"))
+    if data.get("schema_version") != 1:
+        raise RuntimeError("platform/reference-sources.json must use schema_version 1")
+    return data
+
+
+def load_provenance() -> dict[str, dict]:
+    if not PROVENANCE.is_file():
+        return {}
+    data = json.loads(PROVENANCE.read_text(encoding="utf-8"))
+    return {record["source_id"]: record for record in data.get("records", [])}
+
+
+def source_roots(manifest: dict, provenance: dict[str, dict]) -> list[tuple[Path, dict]]:
+    roots: list[tuple[Path, dict]] = []
+    for entry in manifest.get("references", []):
+        destination = entry.get("local_destination")
+        if not destination:
+            continue
+        root = ROOT / destination
+        if not root.is_dir() or CORPUS.resolve() not in root.resolve().parents:
+            continue
+        resolved = provenance.get(entry["id"], {})
+        metadata = {
+            "source_id": entry["id"],
+            "kind": entry.get("kind"),
+            "version": entry.get("version"),
+            "resolved_revision": resolved.get("resolved_revision", entry.get("revision")),
+            "source_url": entry.get("source_url"),
+            "docs_url": entry.get("docs_url"),
+            "roles": entry.get("roles", []),
+            "ai_priority": entry.get("ai_priority", 0),
+            "redistribution": "local-reference-only",
+        }
+        roots.append((root, metadata))
+    return roots
+
+
+def is_indexable_text(path: Path) -> bool:
+    if any(part in SKIP_DIRS for part in path.parts):
+        return False
+    if path.stat().st_size > MAX_TEXT_FILE_BYTES:
+        return False
+    lower_name = path.name.lower()
+    return path.suffix.lower() in TEXT_SUFFIXES or lower_name in TEXT_FILENAMES
+
+
+def read_text(path: Path) -> str | None:
+    raw = path.read_bytes()
+    if b"\x00" in raw[:4096]:
+        return None
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        try:
+            return raw.decode("utf-8", errors="replace")
+        except Exception:
+            return None
+
+
+def chunks(text: str) -> list[tuple[int, int, str]]:
+    if not text:
+        return []
+    result: list[tuple[int, int, str]] = []
+    start = 0
+    while start < len(text):
+        end = min(len(text), start + CHUNK_CHARS)
+        if end < len(text):
+            # Prefer a semantic-ish boundary without making indexing dependent on a parser.
+            boundary = max(text.rfind("\n\n", start, end), text.rfind("\n", start, end))
+            if boundary > start + CHUNK_CHARS // 2:
+                end = boundary + 1
+        result.append((start, end, text[start:end]))
+        if end >= len(text):
+            break
+        start = max(start + 1, end - CHUNK_OVERLAP)
+    return result
+
+
+def write_corpus_index() -> tuple[Path, int, int]:
+    manifest = load_reference_manifest()
+    provenance = load_provenance()
+    roots = source_roots(manifest, provenance)
+    if not roots:
+        raise SystemExit(
+            "No hydrated corpus sources found. Run `python tools/hydrate_ai_references.py --core` first."
+        )
+
+    INDEX.mkdir(parents=True, exist_ok=True)
+    output = INDEX / "reference-corpus.jsonl"
+    file_count = 0
+    chunk_count = 0
+
+    with output.open("w", encoding="utf-8", newline="\n") as stream:
+        for source_root, metadata in sorted(roots, key=lambda item: item[1]["source_id"]):
+            for path in sorted(item for item in source_root.rglob("*") if item.is_file()):
+                if not is_indexable_text(path):
+                    continue
+                text = read_text(path)
+                if text is None:
+                    continue
+                file_count += 1
+                file_hash = sha256(path)
+                relative = path.relative_to(source_root).as_posix()
+                content_location = path.relative_to(ROOT).as_posix()
+                for chunk_index, (start, end, content) in enumerate(chunks(text)):
+                    record = {
+                        **metadata,
+                        "path": relative,
+                        "content_location": content_location,
+                        "sha256": file_hash,
+                        "bytes": path.stat().st_size,
+                        "chunk_index": chunk_index,
+                        "char_start": start,
+                        "char_end": end,
+                        "content": content,
+                    }
+                    stream.write(json.dumps(record, ensure_ascii=False) + "\n")
+                    chunk_count += 1
+
+    return output, file_count, chunk_count
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Regenerate searchable indexes from the exact supplied reference vault.")
-    parser.add_argument("--skip-source-indexes", action="store_true")
+    parser = argparse.ArgumentParser(
+        description="Build ignored local indexes for dynamically hydrated upstream reference material."
+    )
+    parser.add_argument(
+        "--no-hydrate",
+        action="store_true",
+        help="fail instead of hydrating a missing legacy MDK reference checkout",
+    )
+    parser.add_argument(
+        "--corpus",
+        action="store_true",
+        help="build provenance-aware JSONL chunks for sources hydrated under .reference-cache/corpus",
+    )
     args = parser.parse_args()
-    INDEX.mkdir(parents=True, exist_ok=True)
-    paths = {}
-    for artifact_id in ("mdk", "neoforge_installer", "jdk", "lwjgl"):
-        _, paths[artifact_id] = ensure_artifact(artifact_id)
-        archive_index(artifact_id, paths[artifact_id])
-    if not args.skip_source_indexes:
-        jdk_source_index(paths["jdk"])
-        lwjgl_indexes(paths["lwjgl"])
-    print("PASS: reference indexes generated from checksummed artifacts")
+
+    outputs: list[Path] = []
+    if args.corpus:
+        output, files, chunk_count = write_corpus_index()
+        outputs.append(output)
+        print(
+            f"PASS: AI reference corpus indexed {files} files into {chunk_count} chunks at {output.relative_to(ROOT)}"
+        )
+    else:
+        if not UPSTREAM.is_dir():
+            if args.no_hydrate:
+                raise SystemExit(f"Missing local reference checkout: {UPSTREAM}")
+            ensure_mdk()
+        output = write_mdk_index()
+        outputs.append(output)
+        print(f"PASS: local MDK reference index written to {output.relative_to(ROOT)}")
+
+    print("Index output remains under .reference-cache and is never committed.")
     return 0
 
 

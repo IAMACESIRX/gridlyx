@@ -1,9 +1,15 @@
 # Reference Index
 
-The reference index is the AI-facing lookup layer.
+Gridelyx no longer commits generated indexes derived from vendored upstream binary archives.
 
-The complete prepared repository also contains generated indexes for every supplied archive entry, every path in the JDK 25 embedded `src.zip`, and every file/type in all LWJGL 3.4.1 source JARs. Those indexes are generated from the immutable vault rather than guessed.
+Canonical dependency identity and acquisition provenance live in [`vault/manifest.json`](../../vault/manifest.json). Optional upstream source/reference material is hydrated into `.reference-cache/` and may be indexed locally without creating tracked derivative payloads.
 
-Core identity is always available in `supplied-artifacts.tsv` and `vault/manifest.json`.
+Generate the current local NeoForge MDK file index with [`tools/build_reference_indexes.py`](../../tools/build_reference_indexes.py):
 
-Use `tools/vault.py` to reconstruct exact inputs. After binary import, deeper indexes can be regenerated from those exact bytes if needed.
+```bash
+python tools/build_reference_indexes.py
+```
+
+The output is written beneath `.reference-cache/index/` and is ignored by Git.
+
+Repository documentation should link to official upstream sources or Gridelyx-owned analysis instead of mirroring complete third-party archive/source inventories.

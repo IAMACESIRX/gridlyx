@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -12,6 +14,7 @@ REQUIRED = [
     "requirements-docs.txt",
     "CHANGELOG.md",
     "docs/index.md",
+    "docs/LINKING_POLICY.md",
     "docs/assets/gridelyx-hero.svg",
     "docs/STAKEHOLDER_DASHBOARD.md",
     "docs/ARCHITECTURE_DIAGRAMS.md",
@@ -31,17 +34,38 @@ REQUIRED = [
     "tools/generate_changelog.py",
     "tools/generate_release_notes.py",
     "tools/sync_labels.py",
+    "tools/markdown_linkify.py",
 ]
+
+EXPECTED_JSON_SCHEMAS = {
+    "platform/label-taxonomy.json": 2,
+    "platform/portfolio-board.json": 1,
+}
 
 
 def fail(message: str) -> None:
     raise SystemExit(f"FAIL: {message}")
 
 
+def run_link_check() -> None:
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "tools/markdown_linkify.py"), "--check"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        details = "\n".join(part for part in (result.stdout.strip(), result.stderr.strip()) if part)
+        fail("documentation hyperlink policy failed" + (f":\n{details}" if details else ""))
+
+
 def main() -> int:
     missing = [path for path in REQUIRED if not (ROOT / path).exists()]
     if missing:
         fail("missing documentation/presentation paths: " + ", ".join(missing))
+
+    run_link_check()
 
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     docs_home = (ROOT / "docs/index.md").read_text(encoding="utf-8")
@@ -62,13 +86,13 @@ def main() -> int:
         if marker.lower() not in marketing.lower():
             fail(f"documentation-driven marketing missing marker: {marker}")
 
-    for json_path in ("platform/label-taxonomy.json", "platform/portfolio-board.json"):
+    for json_path, expected_schema in EXPECTED_JSON_SCHEMAS.items():
         try:
             data = json.loads((ROOT / json_path).read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
             fail(f"invalid JSON in {json_path}: {exc}")
-        if data.get("schema_version") != 1:
-            fail(f"{json_path} must use schema_version 1")
+        if data.get("schema_version") != expected_schema:
+            fail(f"{json_path} must use schema_version {expected_schema}")
 
     hero = (ROOT / "docs/assets/gridelyx-hero.svg").read_text(encoding="utf-8")
     if "<svg" not in hero or "GRIDELYX STUDIO" not in hero:
@@ -78,7 +102,7 @@ def main() -> int:
     if "openapi: 3.1.0" not in openapi or "/v1/capabilities:" not in openapi:
         fail("interactive API contract is missing OpenAPI 3.1/capability discovery")
 
-    print("PASS: Gridelyx stakeholder, diagram, documentation-site, API and release-communication surfaces are coherent")
+    print("PASS: Gridelyx stakeholder, diagram, documentation-site, API, hyperlink and release-communication surfaces are coherent")
     return 0
 
 

@@ -32,4 +32,4 @@ For every significant feature ask:
 - What guardrail reduces the tension?
 - What evidence would show the chosen balance is wrong?
 
-Use these results inside the Feature Decision Packet defined in `FEATURE_DECISION_FRAMEWORK.md`.
+Use these results inside the Feature Decision Packet defined in [`FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md).

@@ -23,10 +23,10 @@ The continuity layer exists to make those failure modes observable and recoverab
 
 Project Athena demonstrates the value of one obvious AI entrypoint. This repository uses a short ordered chain instead:
 
-1. `AGENTS.md` — mandatory engineering rules;
-2. `AI_HANDOFF.md` — current state and active transitions;
-3. `ai/AI_ORGANISATION.md` — role/capability boundaries;
-4. `ai/DRIFT_MITIGATION.md` — consistency controls;
+1. [`AGENTS.md`](../AGENTS.md) — mandatory engineering rules;
+2. [`AI_HANDOFF.md`](../AI_HANDOFF.md) — current state and active transitions;
+3. [`ai/AI_ORGANISATION.md`](../ai/AI_ORGANISATION.md) — role/capability boundaries;
+4. [`ai/DRIFT_MITIGATION.md`](../ai/DRIFT_MITIGATION.md) — consistency controls;
 5. `ai/work-state.json` — machine-readable current work;
 6. decision/assumption ledgers;
 7. `ai/context-map.json` — task-specific routing.
@@ -107,7 +107,7 @@ A substantial session should end by writing verified state back into the reposit
 - recovery point;
 - next action.
 
-`ai/work-state.json` carries compact cross-session state while `AI_HANDOFF.md` gives a readable summary.
+`ai/work-state.json` carries compact cross-session state while [`AI_HANDOFF.md`](../AI_HANDOFF.md) gives a readable summary.
 
 ## Deliberate non-equivalences
 

@@ -5,9 +5,10 @@
     "suite_name": "Gridelyx Studio",
     "slug": "gridelyx",
     "protocol_prefix": "GLYX",
+    "bridge_magic": "GLXB",
     "native_symbol_prefix": "gridelyx_"
   },
-  "migration_phase": "identity_scrub_complete",
+  "migration_phase": "complete_breaking_v2",
   "enforcement": {
     "mode": "strict",
     "whole_current_tree": true,
@@ -16,13 +17,6 @@
     "excluded_directories": [".git", ".gradle", "build", ".reference-cache"],
     "binary_or_generated_suffixes": [".jar", ".zip", ".7z", ".png", ".jpg", ".jpeg", ".ogg", ".class", ".bin"]
   },
-  "versioned_technical_identifiers": [
-    {
-      "identifier": "VFSB",
-      "class": "bridge_protocol_magic",
-      "status": "version_1_protocol_pending_version_2_migration",
-      "replacement": "GLXB"
-    }
-  ],
-  "exit_policy": "The current project-owned tree is Gridelyx-only. Reintroduction of the retired product identifier in paths or text is a CI failure. Versioned protocol identifiers migrate through explicit compatibility boundaries."
+  "known_legacy_technical_identifiers": [],
+  "exit_policy": "The current tree is Gridelyx-only. Reintroduction of the retired product identifier in project-owned paths or text is a CI failure. Protocol and native ABI compatibility starts at Gridelyx v2."
 }

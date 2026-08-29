@@ -75,7 +75,7 @@ Use a work-breakdown tree until leaf tasks can be implemented and verified witho
 
 ## 3. Check project values
 
-Evaluate the feature against `PROJECT_VALUES.md`. Record alignment, tension and mitigation. Value mismatch is a diagnostic and design signal, not an automatic scope deletion mechanism.
+Evaluate the feature against [`PROJECT_VALUES.md`](PROJECT_VALUES.md). Record alignment, tension and mitigation. Value mismatch is a diagnostic and design signal, not an automatic scope deletion mechanism.
 
 ## 4. Measure cost
 
@@ -243,7 +243,7 @@ Build neutral contracts upward, then adapt to Minecraft/Bedrock/loader implement
 
 ## 17. Benchmarking
 
-Use `BENCHMARKING_MATRIX.md` as the starting comparison set. For any feature:
+Use [`BENCHMARKING_MATRIX.md`](BENCHMARKING_MATRIX.md) as the starting comparison set. For any feature:
 
 1. choose relevant top-tier reference products/projects;
 2. verify their **current** behaviour before relying on it;
@@ -325,7 +325,7 @@ Use Pareto analysis for sequencing, never to erase the remaining 80% of retained
 
 ## 25. Critical Path Method
 
-Model dependencies explicitly and identify the sequence that controls a milestone. `DEVELOPMENT_MAP.md` records the current program-level path. Feature packets must record predecessor/successor dependencies and parallelizable work.
+Model dependencies explicitly and identify the sequence that controls a milestone. [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md) records the current program-level path. Feature packets must record predecessor/successor dependencies and parallelizable work.
 
 ## 26. Cynefin classification
 
@@ -388,4 +388,4 @@ A complete packet includes:
 29. rollback/migration path;
 30. unresolved assumptions and next decision trigger.
 
-Use `docs/templates/FEATURE_EVALUATION_TEMPLATE.md` and the feature issue form. Machine contract: `platform/feature-analysis.schema.json`.
+Use [`docs/templates/FEATURE_EVALUATION_TEMPLATE.md`](templates/FEATURE_EVALUATION_TEMPLATE.md) and the feature issue form. Machine contract: `platform/feature-analysis.schema.json`.

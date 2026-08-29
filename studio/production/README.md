@@ -2,7 +2,7 @@
 
 This directory owns launcher-side machinima/project orchestration: production project storage, render/capture queues, external encoder integration, export manifests and desktop timeline services. Game-specific camera/replay/render hooks belong in their Java/Bedrock runtime adapters rather than here.
 
-Canonical architecture: `docs/MACHINIMA_PRODUCTION.md`.
+Canonical architecture: [`docs/MACHINIMA_PRODUCTION.md`](../../docs/MACHINIMA_PRODUCTION.md).
 
 Planned modules:
 

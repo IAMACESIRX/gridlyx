@@ -1,6 +1,6 @@
 # Gridelyx development map
 
-This map complements `ROADMAP.md`, `FEATURE_MAP.md` and `TODO.md`. It focuses on dependency order, parallel work, decision gates and Kanban state rather than repeating every feature description.
+This map complements [`ROADMAP.md`](ROADMAP.md), [`FEATURE_MAP.md`](FEATURE_MAP.md) and [`TODO.md`](TODO.md). It focuses on dependency order, parallel work, decision gates and Kanban state rather than repeating every feature description.
 
 ## Program topology
 
@@ -135,8 +135,8 @@ Ensure archived Gridelyx projects remain understandable/recoverable and do not d
 Every new substantial feature must:
 
 1. map to an existing CR or create a new CR;
-2. use `FEATURE_DECISION_FRAMEWORK.md`;
+2. use [`FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md);
 3. state prerequisites and critical-path effect;
 4. enter Kanban with a real state;
 5. identify readiness/evidence target;
-6. update `FEATURE_MAP.md`, `ROADMAP.md`, `TODO.md` or target manifests when project truth changes.
+6. update [`FEATURE_MAP.md`](FEATURE_MAP.md), [`ROADMAP.md`](ROADMAP.md), [`TODO.md`](TODO.md) or target manifests when project truth changes.

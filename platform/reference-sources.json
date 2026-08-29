@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "purpose": "Machine-readable source-of-truth map for humans and AI systems that need the same mod-development reference surface as a locally vendored SDK without committing upstream payloads.",
+  "policy": {
+    "repository_storage": "metadata-and-project-owned-source-only",
+    "hydrated_root": ".reference-cache/corpus",
+    "index_root": ".reference-cache/index",
+    "official_or_authorized_sources_only": true,
+    "pin_when_possible": true,
+    "generated_minecraft_source_is_local_only": true,
+    "do_not_train_or_publish_from_material_without_licence_review": true,
+    "source_priority": [
+      "repository-pinned configuration and Gridelyx code",
+      "pinned official MDK/template",
+      "official NeoForged documentation",
+      "official project source repositories",
+      "resolved source/Javadoc artifacts from package repositories",
+      "locally generated Minecraft development sources under applicable Mojang terms"
+    ]
+  },
+  "references": [
+    {
+      "id": "gridelyx-template",
+      "kind": "project-source",
+      "version": "26.2",
+      "location": "templates/neoforge-26.2",
+      "roles": ["canonical-build", "mod-bootstrap", "datagen", "resources", "advanced-runtime"],
+      "ai_priority": 100,
+      "repository_storage": "tracked-project-owned-source"
+    },
+    {
+      "id": "neoforge-mdk-26.2-moddevgradle",
+      "kind": "git-source-template",
+      "version": "26.2",
+      "source_url": "https://github.com/NeoForgeMDKs/MDK-26.2-ModDevGradle.git",
+      "revision": "3a29a9e13f09e27050c0dd962b365a070fae990b",
+      "local_destination": ".reference-cache/corpus/neoforge-mdk-26.2",
+      "roles": ["canonical-upstream-template", "gradle-layout", "mod-metadata", "examplemod", "datagen-layout"],
+      "ai_priority": 95,
+      "repository_storage": "prohibited",
+      "licence_rule": "Read upstream TEMPLATE_LICENSE.txt and file notices before redistribution; local reference checkout only by Gridelyx policy."
+    },
+    {
+      "id": "neoforge-documentation",
+      "kind": "documentation",
+      "version": "current-for-target",
+      "docs_url": "https://docs.neoforged.net/",
+      "source_url": "https://github.com/neoforged/Documentation.git",
+      "local_destination": ".reference-cache/corpus/neoforge-documentation",
+      "roles": ["registries", "events", "networking", "datagen", "worldgen", "rendering", "mod-files", "toolchain", "porting"],
+      "ai_priority": 100,
+      "repository_storage": "prohibited",
+      "licence": "MIT"
+    },
+    {
+      "id": "moddevgradle",
+      "kind": "toolchain-source-and-docs",
+      "version": "2.0.144",
+      "docs_url": "https://docs.neoforged.net/toolchain/docs/plugins/mdg/",
+      "source_url": "https://github.com/neoforged/ModDevGradle.git",
+      "local_destination": ".reference-cache/corpus/moddevgradle",
+      "roles": ["dependency-resolution", "minecraft-development-runtime", "runs", "mappings", "ide-integration"],
+      "ai_priority": 95,
+      "repository_storage": "prohibited",
+      "licence_rule": "Use upstream repository licence and notices as authoritative."
+    },
+    {
+      "id": "neoforge-source",
+      "kind": "api-source",
+      "version": "26.2.0.67",
+      "source_url": "https://github.com/neoforged/NeoForge.git",
+      "branch_hint": "26.2.x",
+      "maven_repository": "https://maven.neoforged.net/releases/",
+      "coordinate": "net.neoforged:neoforge:26.2.0.67",
+      "local_destination": ".reference-cache/corpus/neoforge-source",
+      "roles": ["api-implementation", "events", "registries", "network", "server", "client", "patch-behaviour"],
+      "ai_priority": 90,
+      "repository_storage": "prohibited",
+      "licence": "LGPL-2.1"
+    },
+    {
+      "id": "minecraft-version-metadata",
+      "kind": "official-metadata",
+      "version": "dynamic",
+      "metadata_url": "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
+      "roles": ["version-resolution", "libraries", "assets", "runtime-metadata", "launch-metadata"],
+      "ai_priority": 70,
+      "repository_storage": "metadata-link-only"
+    },
+    {
+      "id": "minecraft-development-sources",
+      "kind": "generated-local-reference",
+      "version": "26.2",
+      "producer": "NeoForge ModDevGradle using the configured Minecraft/NeoForge target and official mapping names",
+      "mapping_licence_reference": "https://github.com/NeoForged/NeoForm/blob/main/Mojang.md",
+      "local_discovery": [
+        "Gradle/ModDevGradle generated sources attached to the IDE",
+        "Gradle user-home caches for the resolved development environment"
+      ],
+      "roles": ["minecraft-types", "method-signatures", "field-signatures", "vanilla-behaviour-reference"],
+      "ai_priority": 85,
+      "repository_storage": "strictly-prohibited",
+      "licence_rule": "Local development/reference use only under the applicable Minecraft EULA and Mojang mapping licence; do not commit, mirror, publish or treat generated/decompiled Minecraft source as Gridelyx-owned source."
+    },
+    {
+      "id": "jdk-sources",
+      "kind": "installed-toolchain-source",
+      "version": "25.0.4+7",
+      "provider": "Eclipse Temurin / Adoptium",
+      "source_location_hint": "$JAVA_HOME/lib/src.zip",
+      "provider_url": "https://adoptium.net/temurin/releases/?version=25",
+      "roles": ["java-api", "concurrency", "nio", "instrumentation", "foreign-function-memory", "collections"],
+      "ai_priority": 75,
+      "repository_storage": "prohibited"
+    },
+    {
+      "id": "gradle-docs",
+      "kind": "documentation",
+      "version": "9.2.1",
+      "docs_url": "https://docs.gradle.org/9.2.1/userguide/userguide.html",
+      "source_url": "https://github.com/gradle/gradle.git",
+      "roles": ["build-logic", "tasks", "source-sets", "dependency-management", "toolchains", "plugins"],
+      "ai_priority": 75,
+      "repository_storage": "prohibited"
+    },
+    {
+      "id": "asm",
+      "kind": "maven-source",
+      "version": "9.10.1",
+      "coordinates": ["org.ow2.asm:asm:9.10.1", "org.ow2.asm:asm-commons:9.10.1"],
+      "repository_url": "https://repo1.maven.org/maven2/",
+      "docs_url": "https://asm.ow2.io/",
+      "roles": ["bytecode-reading", "bytecode-generation", "class-transformation", "method-adapters"],
+      "ai_priority": 80,
+      "repository_storage": "prohibited"
+    },
+    {
+      "id": "lwjgl",
+      "kind": "maven-and-git-source",
+      "version": "3.4.1",
+      "coordinates": ["org.lwjgl:lwjgl:3.4.1", "org.lwjgl:lwjgl-opengl:3.4.1", "org.lwjgl:lwjgl-glfw:3.4.1"],
+      "repository_url": "https://repo1.maven.org/maven2/",
+      "source_url": "https://github.com/LWJGL/lwjgl3.git",
+      "docs_url": "https://www.lwjgl.org/guide",
+      "local_destination": ".reference-cache/corpus/lwjgl3",
+      "roles": ["opengl", "glfw", "native-bindings", "gpu-upload", "render-context"],
+      "ai_priority": 75,
+      "repository_storage": "prohibited",
+      "licence_rule": "Use the upstream LWJGL licence and module notices as authoritative."
+    },
+    {
+      "id": "graalvm-polyglot",
+      "kind": "maven-and-documentation",
+      "version": "25.3.4.1",
+      "coordinates": ["org.graalvm.polyglot:polyglot:25.3.4.1", "org.graalvm.polyglot:js:25.3.4.1", "org.graalvm.polyglot:python:25.3.4.1"],
+      "repository_url": "https://repo1.maven.org/maven2/",
+      "docs_url": "https://www.graalvm.org/latest/reference-manual/embed-languages/",
+      "roles": ["polyglot-context", "javascript", "python", "host-access", "sandbox-boundaries"],
+      "ai_priority": 70,
+      "repository_storage": "prohibited"
+    },
+    {
+      "id": "junit",
+      "kind": "maven-source-and-docs",
+      "version": "6.1.3",
+      "coordinates": ["org.junit:junit-bom:6.1.3", "org.junit.jupiter:junit-jupiter", "org.junit.platform:junit-platform-launcher"],
+      "repository_url": "https://repo1.maven.org/maven2/",
+      "docs_url": "https://docs.junit.org/",
+      "source_url": "https://github.com/junit-team/junit5.git",
+      "roles": ["unit-testing", "parameterized-tests", "test-platform"],
+      "ai_priority": 55,
+      "repository_storage": "prohibited"
+    },
+    {
+      "id": "archunit",
+      "kind": "maven-source-and-docs",
+      "version": "1.4.2",
+      "coordinate": "com.tngtech.archunit:archunit:1.4.2",
+      "repository_url": "https://repo1.maven.org/maven2/",
+      "docs_url": "https://www.archunit.org/",
+      "source_url": "https://github.com/TNG/ArchUnit.git",
+      "roles": ["architecture-tests", "dependency-rules", "layer-rules"],
+      "ai_priority": 50,
+      "repository_storage": "prohibited",
+      "licence": "Apache-2.0"
+    }
+  ],
+  "ai_read_order": [
+    "README.md",
+    "AGENTS.md",
+    "AI_HANDOFF.md",
+    "docs/DEPENDENCIES_AND_TOOLCHAIN.md",
+    "docs/AI_MODDING_REFERENCE_CORPUS.md",
+    "platform/versions.json",
+    "platform/toolchain-requirements.json",
+    "platform/reference-sources.json",
+    "vault/manifest.json",
+    "templates/neoforge-26.2/build.gradle",
+    "templates/neoforge-26.2/gradle.properties",
+    ".reference-cache/index/reference-corpus.jsonl"
+  ]
+}
