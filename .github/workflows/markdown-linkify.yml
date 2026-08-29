@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - gridelyx-rebrand-reload-orchestrator
-    paths:
-      - '**/*.md'
-      - tools/markdown_linkify.py
-      - .github/workflows/markdown-linkify.yml
+  pull_request:
+    branches:
+      - main
+      - gridelyx-rebrand-reload-orchestrator
   workflow_dispatch:
 
 permissions:
@@ -17,22 +17,24 @@ jobs:
   linkify:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out branch
+      - name: Check out repository
         uses: actions/checkout@v7
         with:
-          ref: gridelyx-rebrand-reload-orchestrator
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref }}
           fetch-depth: 0
 
       - name: Convert documentation targets to clickable links
+        if: github.event_name != 'pull_request'
         run: python tools/markdown_linkify.py --fix
 
-      - name: Verify generated links
+      - name: Verify clickable and resolvable links
         run: python tools/markdown_linkify.py --check
 
       - name: Check whitespace
         run: git diff --check
 
       - name: Commit linkified documentation
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           if git diff --quiet; then
