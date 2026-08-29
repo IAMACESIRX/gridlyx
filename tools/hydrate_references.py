@@ -1,78 +1,85 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from pathlib import Path
 import argparse
+import json
 import shutil
-import sys
-import zipfile
+import subprocess
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CACHE = ROOT / ".reference-cache" / "raw"
-UPSTREAM = ROOT / "references" / "upstream" / "mdk-26.2"
-TEMPLATE = ROOT / "templates" / "neoforge-26.2"
-sys.path.insert(0, str(ROOT / "tools"))
-import vault as vault_tool
+MANIFEST = ROOT / "vault" / "manifest.json"
+CACHE_ROOT = ROOT / ".reference-cache"
 
 
-def exact_artifact(artifact_id: str) -> tuple[dict, Path]:
-    manifest = vault_tool.load()
-    artifact = next(a for a in manifest["artifacts"] if a["id"] == artifact_id)
-    CACHE.mkdir(parents=True, exist_ok=True)
-    dest = CACHE / artifact["original_filename"]
-    if not (dest.exists() and dest.stat().st_size == artifact["size_bytes"] and vault_tool.digest(dest) == artifact["sha256"]):
-        dest = vault_tool.reconstruct(artifact, CACHE)
-    return artifact, dest
+def load_manifest() -> dict:
+    data = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    if data.get("schema_version") != 2:
+        raise RuntimeError("vault/manifest.json must use acquisition schema_version 2")
+    policy = data.get("policy", {})
+    if policy.get("mode") != "acquire-at-build-or-run-time":
+        raise RuntimeError("upstream acquisition policy is not enabled")
+    if policy.get("repository_must_not_redistribute_upstream_binaries") is not True:
+        raise RuntimeError("upstream binary redistribution must be prohibited by project policy")
+    for artifact in data.get("artifacts", []):
+        if artifact.get("repository_storage") != "prohibited":
+            raise RuntimeError(f"artifact {artifact.get('id')} is not marked repository_storage=prohibited")
+    return data
 
 
-def safe_extract_mdk(archive: Path, destination: Path) -> None:
-    staging = ROOT / ".reference-cache" / "mdk-extract"
-    shutil.rmtree(staging, ignore_errors=True)
-    staging.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(archive) as z:
-        root = None
-        for info in z.infolist():
-            p = Path(info.filename)
-            if p.is_absolute() or ".." in p.parts:
-                raise RuntimeError(f"Unsafe path in MDK archive: {info.filename}")
-            if p.parts:
-                root = root or p.parts[0]
-                if p.parts[0] != root:
-                    raise RuntimeError("MDK archive has multiple top-level roots")
-        z.extractall(staging)
-    extracted = staging / root
-    if not extracted.is_dir():
-        raise RuntimeError("Expected MDK top-level directory was not produced")
-    shutil.rmtree(destination, ignore_errors=True)
+def artifact(manifest: dict, artifact_id: str) -> dict:
+    try:
+        return next(item for item in manifest["artifacts"] if item["id"] == artifact_id)
+    except StopIteration as exc:
+        raise RuntimeError(f"missing acquisition manifest entry: {artifact_id}") from exc
+
+
+def run_git(*args: str, cwd: Path | None = None) -> None:
+    subprocess.run(["git", *args], cwd=cwd, check=True)
+
+
+def hydrate_mdk(manifest: dict, refresh: bool) -> Path:
+    mdk = artifact(manifest, "neoforge_mdk")
+    destination = ROOT / mdk["local_destination"]
+    source = mdk["source_url"]
+    revision = mdk.get("revision")
     destination.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(extracted, destination)
+
+    if destination.exists() and refresh:
+        shutil.rmtree(destination)
+
+    if not destination.exists():
+        run_git("clone", "--filter=blob:none", "--no-checkout", source, str(destination))
+
+    run_git("fetch", "--depth", "1", "origin", revision or "main", cwd=destination)
+    run_git("checkout", "--detach", "FETCH_HEAD", cwd=destination)
+    if revision:
+        actual = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=destination, text=True).strip()
+        if actual != revision:
+            raise RuntimeError(f"MDK revision mismatch: expected {revision}, got {actual}")
+
+    print(f"HYDRATED optional NeoForge MDK reference -> {destination.relative_to(ROOT)}")
+    return destination
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Hydrate readable upstream references from the exact checksummed binary vault.")
-    ap.add_argument("--skip-indexes", action="store_true")
-    ns = ap.parse_args()
-    _, mdk = exact_artifact("mdk")
-    safe_extract_mdk(mdk, UPSTREAM)
-    print(f"HYDRATED {UPSTREAM.relative_to(ROOT)}")
-    wrapper = UPSTREAM / "gradle" / "wrapper" / "gradle-wrapper.jar"
-    if not wrapper.is_file():
-        raise RuntimeError("Upstream MDK does not contain gradle-wrapper.jar")
-    target = TEMPLATE / "gradle" / "wrapper" / "gradle-wrapper.jar"
-    target.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(wrapper, target)
-    print(f"RESTORED {target.relative_to(ROOT)}")
-    shutil.copy2(UPSTREAM / "gradlew", TEMPLATE / "gradlew")
-    shutil.copy2(UPSTREAM / "gradlew.bat", TEMPLATE / "gradlew.bat")
-    try:
-        (TEMPLATE / "gradlew").chmod((TEMPLATE / "gradlew").stat().st_mode | 0o111)
-    except OSError:
-        pass
-    print("RESTORED template Gradle wrapper launchers")
-    if not ns.skip_indexes:
-        import subprocess
-        subprocess.run([sys.executable, str(ROOT / "tools" / "build_reference_indexes.py")], check=True)
-    print("PASS: readable reference layer hydrated from exact supplied bytes")
+    parser = argparse.ArgumentParser(
+        description="Validate Gridelyx upstream acquisition policy and optionally hydrate ignored reference checkouts."
+    )
+    parser.add_argument("--check", action="store_true", help="validate the acquisition manifest without network access")
+    parser.add_argument("--mdk", action="store_true", help="hydrate the pinned NeoForge MDK into .reference-cache")
+    parser.add_argument("--refresh", action="store_true", help="replace an existing local reference checkout")
+    args = parser.parse_args()
+
+    manifest = load_manifest()
+    print("PASS: upstream acquisition manifest is valid and forbids repository binary storage")
+
+    if args.check:
+        return 0
+    if args.mdk:
+        hydrate_mdk(manifest, args.refresh)
+    else:
+        print("No optional reference requested. Build dependencies are resolved by Gradle/ModDevGradle on demand.")
     return 0
 
 
