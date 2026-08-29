@@ -2,7 +2,7 @@
 
 ## Current identity state
 
-The canonical root brand is **Gridelyx** and the integrated suite is **Gridelyx Studio**. `platform/brand.json` is authoritative. Product/API slug remains `gridelyx`; the requested GitHub repository slug is `gridlyx`, tracked in `platform/repository-metadata.json`.
+The canonical root brand is **Gridelyx** and the integrated suite is **Gridelyx Studio**. [`platform/brand.json`](platform/brand.json) is authoritative. Product/API slug remains `gridelyx`; the requested GitHub repository slug is `gridlyx`, tracked in [`platform/repository-metadata.json`](platform/repository-metadata.json).
 
 ## Mission
 
@@ -12,7 +12,7 @@ The project is **not constrained to conventional modding extension points**. Req
 
 ## Canonical retained scope
 
-Read [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and `platform/chat-requirements.json` before broad design work. They preserve the retained Gridelyx capability scope, including:
+Read [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and [`platform/chat-requirements.json`](platform/chat-requirements.json) before broad design work. They preserve the retained Gridelyx capability scope, including:
 
 - reproducible Java/NeoForge R&D and multi-JAR workspaces;
 - quality/CI/Codespaces/Copilot/CodeQL/build locks;
@@ -57,24 +57,24 @@ For a substantial feature or architecture decision read:
 - [`docs/DEVELOPMENT_MAP.md`](docs/DEVELOPMENT_MAP.md);
 - [`docs/BENCHMARKING_MATRIX.md`](docs/BENCHMARKING_MATRIX.md);
 - [`docs/templates/FEATURE_EVALUATION_TEMPLATE.md`](docs/templates/FEATURE_EVALUATION_TEMPLATE.md);
-- `platform/feature-analysis.schema.json`.
+- [`platform/feature-analysis.schema.json`](platform/feature-analysis.schema.json).
 
 The packet must cover W5x5x5 positive/inverse questions, task decomposition, values, cost, 10m/10h/10d/10mo/1y/5y/10y horizons, opportunity cost, regret/reversibility, risk/inversion/pre-mortem, second-order effects, Eisenhower, overlap/Venn analysis, brainstorming, first principles, verified benchmarks, Feynman explanation, MVP/timebox, asymmetric risk, working backward, Pareto, Critical Path, Cynefin, Kanban, validation and rollback. This framework guides sequencing; it is not an automatic scope veto.
 
 ## Current architecture
 
-- **Java advanced runtime:** `templates/neoforge-26.2/src/advanced` — UAL/Polyloader, public hotload orchestration, bytecode, scripting, MCP/indexing, world editing, assets, scene/physics tooling, rendering, native/IPC and production foundations.
+- **Java advanced runtime:** [`templates/neoforge-26.2/src/advanced/`](templates/neoforge-26.2/src/advanced/) — UAL/Polyloader, public hotload orchestration, bytecode, scripting, MCP/indexing, world editing, assets, scene/physics tooling, rendering, native/IPC and production foundations.
 - **Hotload target integration:** concrete NeoForge H0/H1 resource reload, H3 versioned module epochs, Instrumentation redefine, and H6 external runtime-supervisor boundary; H6 fails closed without a real supervisor.
 - **Deep integration:** [`docs/DEEP_INTEGRATION_ARCHITECTURE.md`](docs/DEEP_INTEGRATION_ARCHITECTURE.md) — escalation from supported APIs through additive patch/runtime ownership.
-- **Bedrock:** `bedrock/` + `native/bedrock/` + `platform/bedrock-capabilities.json`.
-- **Native/IPC:** `native/`, `bridges/`, FFM/Panama/shared-memory framing.
-- **Studio/launcher core:** `studio/core` plus provider/loader manifests and schemas.
-- **Public upstream acquisition:** `vault/manifest.json`, `.github/actions/gridelyx-toolchain/action.yml`, `tools/hydrate_references.py`, `tools/redistribution_guard.py`. Upstream payloads are acquired into ignored local/runner/package-manager caches, not committed.
-- **Project control:** [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md), `ROADMAP.md`, `DEVELOPMENT_MAP.md`, `FEATURE_MAP.md`, `TODO.md`, requirements ledger.
-- **AI continuity:** [`ai/AI_ORGANISATION.md`](ai/AI_ORGANISATION.md), drift controls, work/decision/assumption ledgers, context map.
-- **Dependencies/toolchain:** [`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](docs/DEPENDENCIES_AND_TOOLCHAIN.md), `platform/toolchain-requirements.json`, `vault/manifest.json`.
-- **Feature analysis:** [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md), `platform/feature-analysis.schema.json`.
-- **Community:** [`COMMUNITY.md`](COMMUNITY.md), [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SUPPORT.md`](SUPPORT.md), [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md), `docs/community/`.
+- **Bedrock:** [`bedrock/`](bedrock/) + [`native/bedrock/`](native/bedrock/) + [`platform/bedrock-capabilities.json`](platform/bedrock-capabilities.json).
+- **Native/IPC:** [`native/`](native/), [`bridges/`](bridges/), FFM/Panama/shared-memory framing.
+- **Studio/launcher core:** [`studio/core/`](studio/core/) plus provider/loader manifests and schemas.
+- **Public upstream acquisition:** [`vault/manifest.json`](vault/manifest.json), [`.github/actions/gridelyx-toolchain/action.yml`](.github/actions/gridelyx-toolchain/action.yml), [`tools/hydrate_references.py`](tools/hydrate_references.py), [`tools/redistribution_guard.py`](tools/redistribution_guard.py). Upstream payloads are acquired into ignored local/runner/package-manager caches, not committed.
+- **Project control:** [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md), [`docs/ROADMAP.md`](docs/ROADMAP.md), [`docs/DEVELOPMENT_MAP.md`](docs/DEVELOPMENT_MAP.md), [`docs/FEATURE_MAP.md`](docs/FEATURE_MAP.md), [`docs/TODO.md`](docs/TODO.md), requirements ledger.
+- **AI continuity:** [`ai/AI_ORGANISATION.md`](ai/AI_ORGANISATION.md), [`ai/DRIFT_MITIGATION.md`](ai/DRIFT_MITIGATION.md), [`ai/work-state.json`](ai/work-state.json), [`ai/decision-ledger.json`](ai/decision-ledger.json), [`ai/assumption-ledger.json`](ai/assumption-ledger.json), [`ai/context-map.json`](ai/context-map.json).
+- **Dependencies/toolchain:** [`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](docs/DEPENDENCIES_AND_TOOLCHAIN.md), [`platform/toolchain-requirements.json`](platform/toolchain-requirements.json), [`vault/manifest.json`](vault/manifest.json).
+- **Feature analysis:** [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md), [`platform/feature-analysis.schema.json`](platform/feature-analysis.schema.json).
+- **Community:** [`COMMUNITY.md`](COMMUNITY.md), [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SUPPORT.md`](SUPPORT.md), [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md), [`docs/community/`](docs/community/).
 
 ## Source-of-truth order
 
@@ -135,13 +135,13 @@ Never resolve contradictions by averaging incompatible summaries.
 
 The source repository must remain payload-free for upstream runtime/toolchain dependencies:
 
-- `actions/setup-java` installs the locked Temurin JDK in CI.
-- `gradle/actions/setup-gradle` installs locked Gradle in CI.
-- `net.neoforged.moddev` resolves the Minecraft/NeoForge development runtime and mappings into Gradle caches.
+- [`actions/setup-java`](https://github.com/actions/setup-java) installs the locked Temurin JDK in CI.
+- [`gradle/actions/setup-gradle`](https://github.com/gradle/actions/tree/main/setup-gradle) installs locked Gradle in CI.
+- [`net.neoforged.moddev`](https://docs.neoforged.net/toolchain/docs/plugins/mdg/) resolves the Minecraft/NeoForge development runtime and mappings into Gradle caches.
 - Gradle/Maven resolves LWJGL, ASM, GraalVM, JUnit, ArchUnit and other declared libraries.
-- `tools/hydrate_references.py --mdk` optionally clones the pinned official NeoForge MDK revision to `.reference-cache/upstream/mdk-26.2`.
-- `tools/redistribution_guard.py` scans `git ls-files` and rejects tracked JAR/class/archive/native/installer/chunk payloads and upstream reference trees.
-- `vault/manifest.json` is acquisition metadata only; the historical directory name does not mean binary storage.
+- [`tools/hydrate_references.py`](tools/hydrate_references.py) with `--mdk` optionally clones the pinned official NeoForge MDK revision to `.reference-cache/upstream/mdk-26.2`.
+- [`tools/redistribution_guard.py`](tools/redistribution_guard.py) scans `git ls-files` and rejects tracked JAR/class/archive/native/installer/chunk payloads and upstream reference trees.
+- [`vault/manifest.json`](vault/manifest.json) is acquisition metadata only; the historical directory name does not mean binary storage.
 
 A local launcher/runtime may cache legitimately acquired game/runtime artifacts for the user, subject to provider terms. That local cache is not permission to publish those bytes from the Gridelyx source repository.
 
@@ -154,9 +154,9 @@ For non-trivial work:
 3. read [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md);
 4. for substantial feature/architecture work, read [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md) and [`docs/DEVELOPMENT_MAP.md`](docs/DEVELOPMENT_MAP.md);
 5. read [`ai/AI_ORGANISATION.md`](ai/AI_ORGANISATION.md) and [`ai/DRIFT_MITIGATION.md`](ai/DRIFT_MITIGATION.md);
-6. inspect `platform/brand.json`, `platform/repository-metadata.json`, `platform/chat-requirements.json`, `platform/feature-analysis.schema.json`, `platform/toolchain-requirements.json` and `vault/manifest.json`;
-7. inspect work-state, decision and assumption ledgers;
-8. use `ai/context-map.json` for task-specific canonical source;
+6. inspect [`platform/brand.json`](platform/brand.json), [`platform/repository-metadata.json`](platform/repository-metadata.json), [`platform/chat-requirements.json`](platform/chat-requirements.json), [`platform/feature-analysis.schema.json`](platform/feature-analysis.schema.json), [`platform/toolchain-requirements.json`](platform/toolchain-requirements.json) and [`vault/manifest.json`](vault/manifest.json);
+7. inspect [`ai/work-state.json`](ai/work-state.json), [`ai/decision-ledger.json`](ai/decision-ledger.json) and [`ai/assumption-ledger.json`](ai/assumption-ledger.json);
+8. use [`ai/context-map.json`](ai/context-map.json) for task-specific canonical source;
 9. inspect versions/providers/acquisition metadata before guessing external APIs or distribution behavior;
 10. check GitHub issues/TODO for overlapping tracked work.
 
