@@ -1,0 +1,38 @@
+name: Gridelyx History Redistribution Guard
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  reachable-history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout complete current ref history
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Fetch all public branch and tag refs
+        shell: bash
+        run: |
+          git fetch --force --prune origin \
+            '+refs/heads/*:refs/remotes/origin/*' \
+            '+refs/tags/*:refs/tags/*'
+
+      - name: Fetch GitHub pull-request head refs for publication audit
+        shell: bash
+        run: |
+          git fetch --force origin '+refs/pull/*/head:refs/remotes/pull/*' || true
+
+      - name: Scan every fetched reachable object for prohibited payloads
+        run: python tools/history_redistribution_guard.py --include-pull-refs
+
+      - name: Scan current tracked tree and acquisition policy
+        run: python tools/redistribution_guard.py
