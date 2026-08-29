@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The platform separates **knowledge/reference state** from **build/execution state**.
+The platform separates **Gridelyx-owned source/control state** from **dynamically acquired upstream/build state**.
 
 ```text
                            +-----------------------+
@@ -11,48 +11,63 @@ request / AI intent -----> |  mod workspace       |
                            +-----------+-----------+
                                        |
                                        v
-+----------------+        +-----------+-----------+        +----------------+
-| reference index| -----> | static validation     | -----> | Gradle build   |
-| + source locks |        | API/version checks    |        | NeoForge MDK   |
-+--------+-------+        +-----------+-----------+        +-------+--------+
-         |                            |                            |
-         v                            v                            v
-+--------+-------+             validation report            built mod JAR
-| immutable vault|                    |                            |
-| supplied bytes |                    +-------------+--------------+
-+--------+-------+                                  |
-         |                                          v
-         +------ on-demand hydrate ----------> GameTest / JAR audit
++--------------------+    +-----------+-----------+    +----------------------+
+| provenance/version | -> | static validation     | -> | Gradle / ModDevGradle|
+| acquisition locks  |    | policy/API checks     |    | dependency resolver  |
++---------+----------+    +-----------+-----------+    +----------+-----------+
+          |                           |                           |
+          v                           v                           v
+ official upstream            validation report          ignored local caches
+ providers/repos                      |                  + resolved dev runtime
+          |                            |                           |
+          +---- optional hydrate ---->+---------------------------+
+                                                               |
+                                                               v
+                                                        GameTest / build / run
 ```
 
 ## Zones
 
 ### `templates/`
-Known-good starting points. `templates/neoforge-26.2` is derived from the supplied official-style MDK snapshot and is the source for new workspaces.
+Known-good Gridelyx-owned starting points. `templates/neoforge-26.2` is the canonical construction target and applies NeoForge ModDevGradle directly; it does not require a checked-in MDK archive or NeoForge installer.
 
 ### `mods/`
 Each directory is a standalone Gradle mod project. This sacrifices some deduplication in exchange for isolation: one broken experimental mod does not poison the build model of every other mod.
 
 ### `references/`
-Human/AI-readable evidence and lookup material. The original MDK is preserved as an upstream snapshot. Archive indexes allow an agent to locate a reference before reconstructing hundreds of megabytes of binary material.
+Human/AI-readable Gridelyx documentation, proposals and navigation metadata. Complete third-party snapshots are not tracked here. Optional reference checkouts live under `.reference-cache/`.
 
 ### `vault/`
-Content-addressed supplied artifacts. Large files are split into deterministic parts smaller than GitHub's per-file hard limit. `tools/vault.py` verifies every part and reconstructed artifact using SHA-256.
+Despite the historical directory name, this is **metadata-only**. `vault/manifest.json` records official providers, version locks, acquisition mechanisms and the rule that upstream binary payloads are prohibited from repository storage.
 
 ### `.reference-cache/`
-Ignored local reconstruction/extraction area. This is where an agent may materialise JDK/LWJGL/installer content for deep investigation without polluting Git history or a mod classpath.
+Ignored local acquisition/reference area. Optional upstream source checkouts and locally generated reference indexes may be materialised here without entering Git history.
 
-## Why the JDK and LWJGL bundles are not normal dependencies
+### Gradle / runner caches
+Minecraft, NeoForge, mappings, Maven libraries, JDK installations and Gradle distributions are resolver/toolchain state. GitHub Actions and local developer machines acquire these from the relevant upstream providers and cache them outside the tracked tree.
 
-The JDK is a compiler/runtime toolchain. LWJGL is already selected transitively by the Minecraft/NeoForge runtime. Treating the supplied bundles as ordinary implementation dependencies can produce duplicate classes, mismatched natives and launch failures. The vault therefore provides **reference availability without dependency injection**.
+## Why JDK, Minecraft, NeoForge and LWJGL are not vendored
+
+The JDK is a compiler/runtime toolchain. Minecraft and NeoForge are development/runtime inputs resolved by the supported NeoForge toolchain. LWJGL and other libraries are package-manager dependencies. Vendoring those payloads would duplicate upstream distribution, enlarge clones, complicate updates and can create licensing/redistribution risk.
+
+Gridelyx therefore preserves **version/provenance reproducibility without binary redistribution**:
+
+- JDK: dynamically installed by `actions/setup-java` in CI or supplied by the developer locally;
+- Gradle: dynamically installed by `gradle/actions/setup-gradle` in CI;
+- Minecraft + NeoForge + mappings: resolved by `net.neoforged.moddev`;
+- Java libraries: resolved from configured Maven repositories;
+- optional MDK comparison source: pinned Git checkout under `.reference-cache/`.
+
+`tools/redistribution_guard.py` independently checks the tracked Git index and rejects prohibited binary/archive payloads.
 
 ## Validation levels
 
-1. Repository invariants and version locks.
-2. Static workspace checks.
-3. Java compilation/resource processing.
-4. Unit tests.
-5. Dependency graph checks.
-6. Optional NeoForge GameTest server.
-7. Built-JAR structure inspection.
-8. Manual client/server behavioural test where automation is insufficient.
+1. Acquisition-manifest and no-redistribution invariants.
+2. Repository invariants and version locks.
+3. Static workspace checks.
+4. Java compilation/resource processing with dynamically resolved dependencies.
+5. Unit tests.
+6. Dependency graph checks.
+7. Optional NeoForge GameTest server.
+8. Built-JAR structure inspection.
+9. Manual client/server behavioural test where automation is insufficient.
