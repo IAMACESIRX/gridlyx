@@ -23,6 +23,30 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Repair generated-comment cleanup predicate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("tools/code_reference_comments.py")
+          text = path.read_text(encoding="utf-8")
+          old = '    lines = [line for line in text.splitlines() if MARKER not in line]'
+          new = '''    generated_prefixes = (
+              "# Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
+              "// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
+          )
+              lines = [
+                  line
+                  for line in text.splitlines()
+                  if not line.lstrip().startswith(generated_prefixes)
+              ]'''
+          if old in text:
+              path.write_text(text.replace(old, new), encoding="utf-8", newline="\n")
+              print("Repaired generated-comment cleanup predicate.")
+          else:
+              print("Cleanup predicate already repaired.")
+          PY
+
       - name: Generate project-local reference comments
         run: python tools/code_reference_comments.py --fix
 
