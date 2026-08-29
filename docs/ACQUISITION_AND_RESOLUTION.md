@@ -35,7 +35,7 @@ A failed verification never promotes a temporary blob into the shared local cach
 
 For the canonical NeoForge development lane, Gridelyx does not reimplement dependency downloads that supported tooling already handles:
 
-- GitHub Actions installs the locked Temurin JDK and Gradle release dynamically through `.github/actions/gridelyx-toolchain/action.yml`.
+- GitHub Actions installs the locked Temurin JDK and Gradle release dynamically through [`.github/actions/gridelyx-toolchain/action.yml`](../.github/actions/gridelyx-toolchain/action.yml).
 - NeoForge ModDevGradle resolves the Minecraft/NeoForge development runtime and mappings into local/runner Gradle caches.
 - Gradle/Maven resolves LWJGL, ASM, GraalVM Polyglot, JUnit, ArchUnit and other declared libraries.
 - An optional pinned NeoForge MDK source/reference checkout may be hydrated into ignored `.reference-cache/` for comparison/provenance; it is not copied into tracked source.
