@@ -1,6 +1,6 @@
 # Gridelyx roadmap
 
-Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md) and `../platform/chat-requirements.json`. Dependencies/tools are canonicalized in [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md), [`CAPABILITY_DEPENDENCY_MATRIX.md`](CAPABILITY_DEPENDENCY_MATRIX.md) and `../platform/toolchain-requirements.json`. Feature analysis, critical path and prioritisation are governed by [`FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md) and [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md).
+Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md) and `../platform/chat-requirements.json`. Dependencies/tools are canonicalized in [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md), [`CAPABILITY_DEPENDENCY_MATRIX.md`](CAPABILITY_DEPENDENCY_MATRIX.md), `../platform/toolchain-requirements.json` and `../vault/manifest.json`. Feature analysis, critical path and prioritisation are governed by [`FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md) and [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md).
 
 ## Readiness scale
 
@@ -26,7 +26,7 @@ Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_RE
 - [x] Human project overview, structure, roadmap, development map, feature map and TODO.
 - [x] AI handoff/context/index design and drift mitigation.
 - [x] Deterministic repository index/context-pack generation in CI.
-- [x] Canonical **34-group** whole-chat requirements traceability ledger and machine-readable manifest.
+- [x] Canonical whole-chat requirements traceability ledger and machine-readable manifest.
 - [x] Requirements-path CI enforcement.
 - [x] Complete dependency/tool inventory plus capability→dependency matrix.
 - [x] Toolchain evidence-path CI enforcement.
@@ -35,6 +35,7 @@ Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_RE
 - [x] Staged Gridelyx terminology manifest/checker for public entrypoints and classified compatibility identifiers.
 - [x] Advanced W5x5x5 Feature Decision Packet system with project values, cost/horizon/risk/decision frameworks, benchmarking, critical path, Cynefin and Kanban.
 - [x] Machine-readable feature-analysis schema and GitHub feature-evaluation issue intake.
+- [x] Replace the former binary-reference-vault design with acquisition-only metadata, dynamic toolchain setup and a Git-index redistribution guard.
 - [ ] Generate readiness/evidence summaries from manifests/tests automatically where practical.
 - [ ] Pin supported Python/Rust/CMake/compiler/Go/.NET toolchain versions for release lanes.
 - [ ] Produce SBOM/licence/provenance automation for release dependencies.
@@ -92,7 +93,10 @@ Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_RE
 - [ ] GraalJS/GraalPy live editing.
 - [ ] MCP/local-AI/sidecar communication and bounded automation controller.
 - [ ] Generic non-Java extension SDK across script, sidecar, native, IPC/web and filesystem transports.
-- [ ] External `WatchService` hotload with last-known-good rollback.
+- [x] Serialized external `WatchService` hotload orchestration with target bindings and explicit H6 escalation.
+- [x] H3 Gridelyx versioned module runtime with staged prepare/health-check/activation and deterministic retirement.
+- [ ] Validate NeoForge H0/H1/H3 target bindings in a live current Java client/server.
+- [ ] Implement a real external H6 Runtime Epoch supervisor/driver and rollback proof.
 - [ ] Preserve editor/session state across broader supervised restart scopes.
 
 ### 4B — live world authoring
@@ -118,12 +122,12 @@ Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_RE
 
 ### 4D — asset editor, scene graph and sandbox construction
 
-- [ ] Hytale-style live voxel/model/mesh/texture authoring and immediate in-world preview.
+- [ ] Live voxel/model/mesh/texture authoring and immediate in-world preview.
 - [ ] Dynamic model/texture registries and GPU resource updates.
 - [ ] Unified hierarchical scene graph and property serialization.
 - [ ] Translate/rotate/scale gizmos and drag/drop part manipulation.
-- [ ] Garry's Mod-style physics bodies, tool-gun and weld/hinge/slider/spring/rope constraints.
-- [ ] Roblox-Studio-like properties, runtime script execution and live scene manipulation.
+- [ ] Physics bodies, tool-gun and weld/hinge/slider/spring/rope constraints.
+- [ ] Properties, runtime script execution and live scene manipulation.
 - [ ] Dynamic dimensions and zero-entity teleport channels.
 
 ## Phase 5 — cross-edition creator parity and deep integration
@@ -167,35 +171,41 @@ Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_RE
 ## Phase 8 — Gridelyx migration completion and release hardening
 
 - [x] Select/freeze Gridelyx identity and technical target identifiers.
-- [x] Start machine-readable retired-term/legacy-identifier inventory.
 - [x] Rebrand canonical public/control entrypoints to Gridelyx.
-- [x] Add staged terminology CI for current public files and classified legacy technical identifiers.
+- [x] Switch current-tree terminology enforcement to strict Gridelyx identity scanning.
 - [x] Record requested GitHub repository target as `IAMACESIRX/gridlyx` plus combined project description.
-- [ ] Complete full tracked-tree occurrence inventory and classify A-G migration classes.
-- [ ] Migrate remaining public documentation/workflow display strings.
-- [ ] Migrate Java/Rust/C/C++/Bedrock project-owned source/path identifiers.
-- [ ] Version-migrate `VFSB`/native ABI/persisted protocol identifiers with compatibility tests.
-- [ ] Switch terminology CI to strict whole-current-tree mode with narrow historical/provenance exceptions.
-- [ ] Regenerate AI indexes/autodoc and require zero unexplained current-tree occurrences.
-- [ ] Apply the actual GitHub repository rename/description mutation when repository-metadata write capability is available.
-- [ ] Keep Git-history rewriting as a separate explicit destructive decision.
+- [x] Migrate project-owned GLXB/GLXM/native ABI v2 surfaces on the feature branch.
+- [ ] Complete target-runtime compatibility validation for the versioned protocol/ABI boundaries.
+- [ ] Regenerate AI indexes/autodoc and require zero unexplained current-tree identity drift.
+- [ ] Apply the actual GitHub repository rename/description mutation when requested/ready for publication.
 
-## Phase 9 — dependency/toolchain reproducibility and reference-vault completion
+## Phase 9 — public dependency acquisition and toolchain reproducibility
 
+- [x] Replace the repository binary-vault/chunk design with metadata-only `vault/manifest.json` acquisition schema v2.
+- [x] Prohibit repository storage for Minecraft, NeoForge, MDK, JDK, Gradle, LWJGL and Maven-resolved dependency payloads.
+- [x] Add `.github/actions/gridelyx-toolchain/action.yml` to install locked Temurin JDK and Gradle dynamically in CI.
+- [x] Route Minecraft/NeoForge/mappings through ModDevGradle and Java libraries through normal Gradle/Maven resolution.
+- [x] Pin the optional official NeoForge 26.2 MDK reference revision and hydrate it only beneath ignored `.reference-cache/`.
+- [x] Add `tools/redistribution_guard.py` to reject prohibited binary/archive/native payloads in the actual Git index.
+- [x] Remove the obsolete binary importer, binary reconstruction tool and remote-import pending marker.
+- [x] Move generated upstream reference indexes to ignored `.reference-cache/index/`.
+- [ ] Validate the complete Java build from a clean public runner with empty dependency caches.
+- [ ] Generate SBOM plus dependency licence/provenance report from the resolved graph.
 - [ ] Pin/test minimum Python version for repository tools.
 - [ ] Pin/test supported Rust toolchain.
 - [ ] Pin/test CMake + MSVC/GCC/Clang matrix and add macOS validation.
 - [ ] Add Go/.NET bridge conformance CI or explicitly exclude unvalidated release platforms.
 - [ ] Freeze external encoder acquisition/provenance policy.
-- [ ] Finish remote exact reference-vault binary import if GitHub is intended to contain the supplied payload.
 - [ ] Validate all machine toolchain evidence and capability-dependency mappings in release CI.
 
 ## Ongoing rules
 
 Every provider, loader, Minecraft/Bedrock release, deep patch and creator/production feature is capability-negotiated. New versions may move a capability backward in readiness until revalidated; UI/docs show actual state rather than stale compatibility claims.
 
-Every retained CR-001..CR-034 request must continue to have implementation evidence or explicit planning. Difficulty or lack of a normal API does not delete scope.
+Every retained requirement must continue to have implementation evidence or explicit planning. Difficulty or lack of a normal API does not delete scope.
 
-Every substantial feature moving toward execution must be evaluated with the CR-034 Feature Decision Packet at a depth proportionate to risk and reversibility. The framework informs sequencing and architecture; it does not automatically cancel retained scope.
+Every substantial feature moving toward execution must be evaluated with the Feature Decision Packet at a depth proportionate to risk and reversibility. The framework informs sequencing and architecture; it does not automatically cancel retained scope.
 
-No new compiler/runtime/executable/provider/library becomes a hidden project prerequisite: it must update the dependency inventory, capability matrix, licensing/provenance and CI/setup surfaces as applicable.
+No new compiler/runtime/executable/provider/library becomes a hidden project prerequisite: it must update the dependency inventory, acquisition manifest/provider policy, capability matrix, licensing/provenance and CI/setup surfaces as applicable.
+
+No upstream runtime/toolchain payload may enter the public source repository merely to make builds self-contained. Reproducibility is provided through locks, official acquisition channels, local/runner caches and clean-build evidence rather than redistribution.
