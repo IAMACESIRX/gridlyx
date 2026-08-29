@@ -1,7 +1,10 @@
 package com.example.examplemod.advanced.sandbox;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/worldedit/SectionDelta.java
 import com.example.examplemod.advanced.worldedit.SectionDelta;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/worldedit/SectionKey.java
 import com.example.examplemod.advanced.worldedit.SectionKey;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/worldedit/WorldMutationSink.java
 import com.example.examplemod.advanced.worldedit.WorldMutationSink;
 import java.util.LinkedHashSet;
 import java.util.List;

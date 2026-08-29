@@ -1,7 +1,10 @@
 package com.example.examplemod;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/main/java/com/example/examplemod/datagen/ModDataGenerators.java
 import com.example.examplemod.datagen.ModDataGenerators;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/main/java/com/example/examplemod/registry/CreativeTabAnchor.java
 import com.example.examplemod.registry.CreativeTabAnchor;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/main/java/com/example/examplemod/registry/ModRegistries.java
 import com.example.examplemod.registry.ModRegistries;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;

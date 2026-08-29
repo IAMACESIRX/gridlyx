@@ -25,6 +25,7 @@ public final class ModArtifactAnalyzer {
                     loaders.add(LoaderFamily.FABRIC);
                 } else if (name.equals("quilt.mod.json")) {
                     loaders.add(LoaderFamily.QUILT);
+                // Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/main/templates/META-INF/neoforge.mods.toml
                 } else if (name.equals("META-INF/neoforge.mods.toml")) {
                     loaders.add(LoaderFamily.NEOFORGE);
                 } else if (name.equals("META-INF/mods.toml") || name.equals("mcmod.info")) {

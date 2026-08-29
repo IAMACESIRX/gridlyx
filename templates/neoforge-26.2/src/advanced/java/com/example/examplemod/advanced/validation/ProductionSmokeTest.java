@@ -1,8 +1,12 @@
 package com.example.examplemod.advanced.validation;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/production/CameraKeyframe.java
 import com.example.examplemod.advanced.production.CameraKeyframe;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/production/CameraPose.java
 import com.example.examplemod.advanced.production.CameraPose;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/production/CameraTrack.java
 import com.example.examplemod.advanced.production.CameraTrack;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/production/RationalTime.java
 import com.example.examplemod.advanced.production.RationalTime;
 import java.util.List;
 

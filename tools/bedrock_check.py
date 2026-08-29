@@ -69,6 +69,7 @@ def main() -> None:
     for relative in required:
         require_file(relative)
 
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/brand.json
     brand = load_json("platform/brand.json")
     if brand.get("product_name") != "Gridelyx Studio":
         fail("canonical product name is not Gridelyx Studio")
@@ -81,14 +82,18 @@ def main() -> None:
     if brand.get("bridge_protocol_version") != 2:
         fail("canonical bridge protocol version is not 2")
 
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/bedrock-capabilities.json
     capabilities = load_json("platform/bedrock-capabilities.json")
     if capabilities.get("plane") != "gridelyx-bedrock":
         fail("Bedrock capability manifest has wrong Gridelyx plane")
     if capabilities.get("baseline", {}).get("minecraft_server") != "2.9.0":
         fail("stable Bedrock @minecraft/server baseline is not 2.9.0")
 
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/bedrock/addon/behavior_pack/manifest.json
     behavior = load_json("bedrock/addon/behavior_pack/manifest.json")
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/bedrock/addon/resource_pack/manifest.json
     resources = load_json("bedrock/addon/resource_pack/manifest.json")
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/bedrock/editor-extension/behavior_pack/manifest.json
     editor = load_json("bedrock/editor-extension/behavior_pack/manifest.json")
     if behavior.get("format_version") != 2 or resources.get("format_version") != 2:
         fail("Bedrock stable manifests must use format_version 2")

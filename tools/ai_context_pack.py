@@ -17,6 +17,7 @@ def tokenize(text: str) -> set[str]:
 
 def ensure_index() -> dict:
     if not INDEX.exists():
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/repo_index.py
         import repo_index
         INDEX.parent.mkdir(parents=True, exist_ok=True)
         INDEX.write_text(json.dumps(repo_index.build_index(), indent=2, sort_keys=True) + "\n", encoding="utf-8")

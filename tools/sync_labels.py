@@ -16,6 +16,7 @@ def fail(message: str) -> None:
 
 
 def main() -> int:
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/label-taxonomy.json
     parser = argparse.ArgumentParser(description="Synchronize Gridelyx GitHub labels from platform/label-taxonomy.json")
     parser.add_argument("--repo", required=True, help="GitHub repository in owner/name form")
     parser.add_argument("--dry-run", action="store_true")

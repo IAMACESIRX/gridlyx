@@ -44,5 +44,6 @@ body:
     attributes:
       label: Validation
       options:
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/diagnose.py
         - label: I ran tools/diagnose.py or attached equivalent diagnostics.
         - label: I did not include credentials, tokens, private keys, or personal data.

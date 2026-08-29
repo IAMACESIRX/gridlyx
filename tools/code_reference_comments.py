@@ -335,7 +335,15 @@ def line_references(
 
 
 def strip_generated_comments(text: str) -> str:
-    lines = [line for line in text.splitlines() if MARKER not in line]
+    generated_prefixes = (
+    "# Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
+    "// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
+)
+    lines = [
+        line
+        for line in text.splitlines()
+        if not line.lstrip().startswith(generated_prefixes)
+    ]
     result = "\n".join(lines)
     if text.endswith("\n"):
         result += "\n"

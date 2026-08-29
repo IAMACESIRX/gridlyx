@@ -1,6 +1,8 @@
 package com.example.examplemod.advanced.validation;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/bedrock/BedrockBridgeCodec.java
 import com.example.examplemod.advanced.bedrock.BedrockBridgeCodec;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/bedrock/BedrockBridgeFrame.java
 import com.example.examplemod.advanced.bedrock.BedrockBridgeFrame;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;

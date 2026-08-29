@@ -1,5 +1,6 @@
 package com.example.examplemod.advanced.runtime;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/ActivationStrategy.java
 import com.example.examplemod.advanced.polyloader.ActivationStrategy;
 import java.nio.file.Path;
 import java.util.Objects;

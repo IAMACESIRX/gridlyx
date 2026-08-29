@@ -6,6 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/docs/FEATURE_DECISION_FRAMEWORK.md
         Use this for substantial features/architecture. Read `docs/FEATURE_DECISION_FRAMEWORK.md` and map the proposal to retained CR IDs. This form is an intake summary; attach or link a complete Feature Decision Packet when the work becomes Ready.
   - type: input
     id: cr_ids

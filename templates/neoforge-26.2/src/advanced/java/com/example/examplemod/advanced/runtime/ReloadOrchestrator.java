@@ -1,6 +1,8 @@
 package com.example.examplemod.advanced.runtime;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/ActivationStrategy.java
 import com.example.examplemod.advanced.polyloader.ActivationStrategy;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/scripting/PolyglotScriptHost.java
 import com.example.examplemod.advanced.scripting.PolyglotScriptHost;
 import java.io.IOException;
 import java.nio.file.Path;

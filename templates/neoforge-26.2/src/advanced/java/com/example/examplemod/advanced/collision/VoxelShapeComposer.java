@@ -1,5 +1,6 @@
 package com.example.examplemod.advanced.collision;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/collision/DynamicCollisionShape.java
 import com.example.examplemod.advanced.collision.DynamicCollisionShape.Box;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;

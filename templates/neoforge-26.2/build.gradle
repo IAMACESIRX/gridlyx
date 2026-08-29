@@ -106,6 +106,7 @@ dependencies {
 
 checkstyle {
     toolVersion = checkstyle_version
+    // Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/config/checkstyle/checkstyle.xml
     configFile = file('config/checkstyle/checkstyle.xml')
     maxWarnings = 0
 }

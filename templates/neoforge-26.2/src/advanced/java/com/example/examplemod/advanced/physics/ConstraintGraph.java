@@ -1,6 +1,8 @@
 package com.example.examplemod.advanced.physics;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/physics/PhysicsWorld.java
 import com.example.examplemod.advanced.physics.PhysicsWorld.Body;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/physics/PhysicsWorld.java
 import com.example.examplemod.advanced.physics.PhysicsWorld.Vec3;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -67,6 +67,7 @@ def require_unique(records: list[dict], key: str, label: str) -> None:
 
 
 def validate_brand() -> None:
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/brand.json
     data = load_json("platform/brand.json", schema_version=3)
     if data.get("root_brand") != "Gridelyx" or data.get("product_name") != "Gridelyx Studio":
         raise SystemExit("FAIL: platform/brand.json must identify Gridelyx / Gridelyx Studio")
@@ -77,6 +78,7 @@ def validate_brand() -> None:
     if data.get("native_symbol_prefix") != "gridelyx_":
         raise SystemExit("FAIL: platform/brand.json must identify the gridelyx_ native prefix")
 
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/repository-metadata.json
     metadata = load_json("platform/repository-metadata.json")
     if metadata.get("product_brand") != "Gridelyx":
         raise SystemExit("FAIL: repository metadata must retain Gridelyx as product brand")
@@ -85,6 +87,7 @@ def validate_brand() -> None:
 
 
 def validate_requirements() -> None:
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/chat-requirements.json
     data = load_json("platform/chat-requirements.json")
     requirements = data.get("requirements")
     if not isinstance(requirements, list):
@@ -97,6 +100,7 @@ def validate_requirements() -> None:
 
 
 def validate_feature_analysis() -> None:
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/feature-analysis.schema.json
     schema = load_json("platform/feature-analysis.schema.json")
     required = set(schema.get("required", []))
     for field in ("w5x5x5", "cost", "time_horizons", "risks", "critical_path", "cynefin", "rollback"):
@@ -105,6 +109,7 @@ def validate_feature_analysis() -> None:
 
 
 def validate_work_state() -> None:
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/ai/work-state.json
     data = load_json("ai/work-state.json")
     objectives = data.get("active_objectives")
     if not isinstance(objectives, list):
@@ -116,7 +121,9 @@ def validate_work_state() -> None:
 
 
 def validate_ledgers() -> None:
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/ai/decision-ledger.json
     decisions = load_json("ai/decision-ledger.json").get("decisions")
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/ai/assumption-ledger.json
     assumptions = load_json("ai/assumption-ledger.json").get("assumptions")
     if not isinstance(decisions, list) or not isinstance(assumptions, list):
         raise SystemExit("FAIL: decision/assumption ledgers must contain lists")
@@ -135,6 +142,7 @@ def validate_ledgers() -> None:
 
 
 def validate_context_map() -> None:
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/ai/context-map.json
     data = load_json("ai/context-map.json")
     entrypoints = data.get("entrypoints", [])
     domains = data.get("domains", {})

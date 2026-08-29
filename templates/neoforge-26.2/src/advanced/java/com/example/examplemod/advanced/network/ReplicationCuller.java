@@ -1,5 +1,6 @@
 package com.example.examplemod.advanced.network;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/worldedit/SectionKey.java
 import com.example.examplemod.advanced.worldedit.SectionKey;
 import java.util.Collection;
 import java.util.List;

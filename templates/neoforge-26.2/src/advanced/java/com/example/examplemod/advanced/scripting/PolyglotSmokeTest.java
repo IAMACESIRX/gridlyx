@@ -1,7 +1,10 @@
 package com.example.examplemod.advanced.scripting;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/validation/BedrockBridgeSmokeTest.java
 import com.example.examplemod.advanced.validation.BedrockBridgeSmokeTest;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/validation/GridelyxSmokeTest.java
 import com.example.examplemod.advanced.validation.GridelyxSmokeTest;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/validation/ProductionSmokeTest.java
 import com.example.examplemod.advanced.validation.ProductionSmokeTest;
 import org.graalvm.polyglot.Context;
 

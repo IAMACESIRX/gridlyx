@@ -21,7 +21,9 @@ runs:
     - name: Validate acquisition-only dependency policy
       shell: bash
       run: |
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/hydrate_references.py
         python tools/hydrate_references.py --check
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/redistribution_guard.py
         python tools/redistribution_guard.py
         java -version
         gradle --version

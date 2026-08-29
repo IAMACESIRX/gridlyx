@@ -41,6 +41,7 @@ def main() -> int:
     if args.check:
         current = OUTPUT.read_text(encoding="utf-8") if OUTPUT.exists() else ""
         if current != expected:
+            # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/autodoc.py
             print("ERROR: docs/AUTO_CAPABILITIES.md is stale; run python tools/autodoc.py")
             return 2
         print("PASS: auto-documentation is current")

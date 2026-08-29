@@ -75,5 +75,7 @@ nav:
       - Release Notes and Changelog: RELEASE_NOTES_AND_CHANGELOGS.md
       - Documentation Marketing: DOCUMENTATION_DRIVEN_MARKETING.md
       - Community: community/README.md
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/docs/community/GETTING_STARTED.md
       - Getting Started: community/GETTING_STARTED.md
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/docs/community/CONTRIBUTOR_ONBOARDING.md
       - Contributor Onboarding: community/CONTRIBUTOR_ONBOARDING.md

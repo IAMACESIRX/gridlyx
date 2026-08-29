@@ -138,6 +138,7 @@ def main() -> int:
         if not (ROOT / relative).is_file():
             fail(f"required human/AI reference artifact missing: {relative}")
 
+    # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/reference-sources.json
     check_urls(REFERENCES, "platform/reference-sources.json")
     print("PASS: AI reference sources align with canonical build/dependency locks")
     print(f"PASS: {len(refs)} reference source records validated")

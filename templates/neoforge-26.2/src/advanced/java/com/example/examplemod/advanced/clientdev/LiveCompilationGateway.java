@@ -1,5 +1,6 @@
 package com.example.examplemod.advanced.clientdev;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/bytecode/AgentBootstrap.java
 import com.example.examplemod.advanced.bytecode.AgentBootstrap;
 import java.util.Map;
 import java.util.Objects;

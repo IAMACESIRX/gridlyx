@@ -1,5 +1,6 @@
 package com.example.examplemod.datagen;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/main/java/com/example/examplemod/ExampleMod.java
 import com.example.examplemod.ExampleMod;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;

@@ -1,8 +1,12 @@
 package com.example.examplemod.advanced.validation;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/ActivationStrategy.java
 import com.example.examplemod.advanced.polyloader.ActivationStrategy;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/GridelyxHotloadModule.java
 import com.example.examplemod.advanced.polyloader.GridelyxHotloadModule;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/ModuleScope.java
 import com.example.examplemod.advanced.polyloader.ModuleScope;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/VersionedModuleRuntime.java
 import com.example.examplemod.advanced.polyloader.VersionedModuleRuntime;
 import java.io.IOException;
 import java.io.OutputStream;

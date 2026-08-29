@@ -1,26 +1,48 @@
 package com.example.examplemod.advanced.validation;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/assets/DynamicModelRegistry.java
 import com.example.examplemod.advanced.assets.DynamicModelRegistry;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/assets/DynamicTextureRegistry.java
 import com.example.examplemod.advanced.assets.DynamicTextureRegistry;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/assets/MeshAsset.java
 import com.example.examplemod.advanced.assets.MeshAsset;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/assets/TextureAsset.java
 import com.example.examplemod.advanced.assets.TextureAsset;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/ActivationStrategy.java
 import com.example.examplemod.advanced.polyloader.ActivationStrategy;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/AsmInvocationTranslator.java
 import com.example.examplemod.advanced.polyloader.AsmInvocationTranslator;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/CallTranslationRule.java
 import com.example.examplemod.advanced.polyloader.CallTranslationRule;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/ModArtifactAnalyzer.java
 import com.example.examplemod.advanced.polyloader.ModArtifactAnalyzer;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/ModArtifactProfile.java
 import com.example.examplemod.advanced.polyloader.ModArtifactProfile;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/SideloadMode.java
 import com.example.examplemod.advanced.polyloader.SideloadMode;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/polyloader/UnifiedAbstractionLayer.java
 import com.example.examplemod.advanced.polyloader.UnifiedAbstractionLayer;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/runtime/ClassHotSwapService.java
 import com.example.examplemod.advanced.runtime.ClassHotSwapService;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/runtime/ExternalHotloadCore.java
 import com.example.examplemod.advanced.runtime.ExternalHotloadCore;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/runtime/ReloadOrchestrator.java
 import com.example.examplemod.advanced.runtime.ReloadOrchestrator;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/runtime/ReloadTargetBindings.java
 import com.example.examplemod.advanced.runtime.ReloadTargetBindings;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/sandbox/PreparedWorldTransaction.java
 import com.example.examplemod.advanced.sandbox.PreparedWorldTransaction;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/sandbox/ScriptSupervisor.java
 import com.example.examplemod.advanced.sandbox.ScriptSupervisor;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/sandbox/TransactionalWorldSandbox.java
 import com.example.examplemod.advanced.sandbox.TransactionalWorldSandbox;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/scripting/PolyglotScriptHost.java
 import com.example.examplemod.advanced.scripting.PolyglotScriptHost;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/worldedit/SectionDelta.java
 import com.example.examplemod.advanced.worldedit.SectionDelta;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/worldedit/SectionKey.java
 import com.example.examplemod.advanced.worldedit.SectionKey;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/worldedit/WorldMutationSink.java
 import com.example.examplemod.advanced.worldedit.WorldMutationSink;
 import java.io.IOException;
 import java.io.OutputStream;

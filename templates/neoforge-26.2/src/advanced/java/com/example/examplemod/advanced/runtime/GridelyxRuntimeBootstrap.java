@@ -1,6 +1,8 @@
 package com.example.examplemod.advanced.runtime;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/main/java/com/example/examplemod/ExampleMod.java
 import com.example.examplemod.ExampleMod;
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/scripting/PolyglotScriptHost.java
 import com.example.examplemod.advanced.scripting.PolyglotScriptHost;
 import java.nio.file.Files;
 import java.nio.file.Path;

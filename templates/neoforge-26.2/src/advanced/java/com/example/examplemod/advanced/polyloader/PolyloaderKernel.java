@@ -1,5 +1,6 @@
 package com.example.examplemod.advanced.polyloader;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/bytecode/BytecodeTransformEngine.java
 import com.example.examplemod.advanced.bytecode.BytecodeTransformEngine;
 import java.lang.instrument.Instrumentation;
 import java.util.List;
