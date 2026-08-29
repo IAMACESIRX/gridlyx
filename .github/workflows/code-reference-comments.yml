@@ -50,13 +50,26 @@ jobs:
       - name: Generate project-local reference comments
         run: python tools/code_reference_comments.py --fix
 
-      - name: Verify generated reference comments
+      - name: Verify complete generated state
         run: python tools/code_reference_comments.py --check
 
       - name: Validate patch whitespace
         run: git diff --check
 
-      - name: Require pull requests to include generated comments
+      - name: Show workflow reference patch
+        run: |
+          if git diff --quiet -- .github/workflows; then
+            echo 'No workflow reference comments require privileged synchronization.'
+          else
+            echo 'BEGIN WORKFLOW REFERENCE PATCH'
+            git diff -- .github/workflows
+            echo 'END WORKFLOW REFERENCE PATCH'
+          fi
+
+      - name: Restore workflow files before bot commit
+        run: git restore -- .github/workflows
+
+      - name: Require pull requests to include generated non-workflow comments
         if: github.event_name == 'pull_request'
         run: |
           if ! git diff --quiet; then
@@ -66,11 +79,11 @@ jobs:
             exit 1
           fi
 
-      - name: Commit synchronized comments
+      - name: Commit synchronized non-workflow comments
         if: github.event_name == 'push'
         run: |
           if git diff --quiet; then
-            echo 'No reference-comment changes required.'
+            echo 'No non-workflow reference-comment changes required.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
