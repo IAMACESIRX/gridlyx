@@ -59,7 +59,7 @@ The public repository does **not** store:
 
 An AI writing a NeoForge mod should consult sources in this order unless the task requires a lower-level implementation detail:
 
-1. **Gridelyx canonical template and project rules** — `templates/neoforge-26.2`, `AGENTS.md`, `platform/versions.json`.
+1. **Gridelyx canonical template and project rules** — [`../templates/neoforge-26.2/`](../templates/neoforge-26.2/), [`../AGENTS.md`](../AGENTS.md), [`../platform/versions.json`](../platform/versions.json).
 2. **Pinned NeoForge 26.2 MDK** — exact upstream template shape, Gradle layout, metadata and generated example structure.
 3. **Official NeoForged documentation** — API usage and supported patterns for registries, events, data generation, networking, rendering, worldgen, configuration and toolchain behaviour.
 4. **NeoForge / ModDevGradle source** — implementation-level questions, lifecycle behaviour and exact toolchain mechanics.
@@ -73,20 +73,20 @@ Do not answer a version-specific API question from memory when the local/referen
 
 | Reference | Version | What the AI uses it for | Official source / acquisition | Git policy |
 |---|---:|---|---|---|
-| Gridelyx template | 26.2 | Project conventions, build tasks, registries, datagen, advanced runtime | `templates/neoforge-26.2` | tracked |
-| NeoForge MDK / ModDevGradle template | 26.2 | Upstream project layout, mod bootstrap, metadata and build conventions | `https://github.com/NeoForgeMDKs/MDK-26.2-ModDevGradle.git`, pinned revision in `platform/reference-sources.json` | hydrate locally only |
-| NeoForged docs | target-current | Supported APIs and examples | `https://docs.neoforged.net/`; source `https://github.com/neoforged/Documentation.git` | link/clone locally |
-| ModDevGradle | 2.0.144 | Minecraft dependency resolution, runs, IDE/source generation | `https://docs.neoforged.net/toolchain/docs/plugins/mdg/`; source `https://github.com/neoforged/ModDevGradle.git` | link/clone locally |
-| NeoForge | 26.2.0.67 | API implementation and exact lifecycle behaviour | `net.neoforged:neoforge:26.2.0.67`, `https://maven.neoforged.net/releases/`, `https://github.com/neoforged/NeoForge.git` | resolver/local source only |
+| Gridelyx template | 26.2 | Project conventions, build tasks, registries, datagen, advanced runtime | [`../templates/neoforge-26.2/`](../templates/neoforge-26.2/) | tracked |
+| NeoForge MDK / ModDevGradle template | 26.2 | Upstream project layout, mod bootstrap, metadata and build conventions | [NeoForge MDK 26.2 ModDevGradle](https://github.com/NeoForgeMDKs/MDK-26.2-ModDevGradle.git), pinned revision in [`../platform/reference-sources.json`](../platform/reference-sources.json) | hydrate locally only |
+| NeoForged docs | target-current | Supported APIs and examples | [NeoForged documentation](https://docs.neoforged.net/); source [NeoForged Documentation repository](https://github.com/neoforged/Documentation.git) | link/clone locally |
+| ModDevGradle | 2.0.144 | Minecraft dependency resolution, runs, IDE/source generation | [ModDevGradle documentation](https://docs.neoforged.net/toolchain/docs/plugins/mdg/); source [ModDevGradle repository](https://github.com/neoforged/ModDevGradle.git) | link/clone locally |
+| NeoForge | 26.2.0.67 | API implementation and exact lifecycle behaviour | `net.neoforged:neoforge:26.2.0.67`, [NeoForged Maven](https://maven.neoforged.net/releases/), [NeoForge source](https://github.com/neoforged/NeoForge.git) | resolver/local source only |
 | Minecraft Java | 26.2 | Vanilla classes, methods, fields, registries and behaviour | resolved by ModDevGradle from Mojang metadata/services | strictly local only |
-| Mojang mappings | target-bound | Official names used by the MDK/toolchain | mapping licence reference `https://github.com/NeoForged/NeoForm/blob/main/Mojang.md` | metadata/licence pointer only |
+| Mojang mappings | target-bound | Official names used by the MDK/toolchain | mapping licence reference [NeoForm Mojang mapping notice](https://github.com/NeoForged/NeoForm/blob/main/Mojang.md) | metadata/licence pointer only |
 | Temurin JDK | 25.0.4+7 | Java API, NIO, Instrumentation, FFM/Panama | installed toolchain; source at `$JAVA_HOME/lib/src.zip` | local only |
-| Gradle | 9.2.1 | tasks, source sets, dependency management, toolchains | `https://docs.gradle.org/9.2.1/userguide/userguide.html` | link/local cache |
-| ASM | 9.10.1 | bytecode parsing/generation/transformation | Maven Central: `org.ow2.asm:asm`, `asm-commons` | resolver/local sources |
-| LWJGL | 3.4.1 | OpenGL/GLFW/native bindings/GPU paths | Maven Central + `https://github.com/LWJGL/lwjgl3.git` | resolver/local sources |
-| GraalVM Polyglot | 25.3.4.1 | embedded JS/Python and host-access APIs | Maven Central + `https://www.graalvm.org/latest/reference-manual/embed-languages/` | resolver/local sources |
-| JUnit | 6.1.3 | unit/test-platform APIs | Maven Central + `https://docs.junit.org/` | resolver/local sources |
-| ArchUnit | 1.4.2 | architecture test APIs | Maven Central + `https://www.archunit.org/` | resolver/local sources |
+| Gradle | 9.2.1 | tasks, source sets, dependency management, toolchains | [Gradle 9.2.1 User Manual](https://docs.gradle.org/9.2.1/userguide/userguide.html) | link/local cache |
+| ASM | 9.10.1 | bytecode parsing/generation/transformation | Maven Central: `org.ow2.asm:asm`, `asm-commons`; [ASM project](https://asm.ow2.io/) | resolver/local sources |
+| LWJGL | 3.4.1 | OpenGL/GLFW/native bindings/GPU paths | Maven Central + [LWJGL source](https://github.com/LWJGL/lwjgl3.git) | resolver/local sources |
+| GraalVM Polyglot | 25.3.4.1 | embedded JS/Python and host-access APIs | Maven Central + [GraalVM embedded-language documentation](https://www.graalvm.org/latest/reference-manual/embed-languages/) | resolver/local sources |
+| JUnit | 6.1.3 | unit/test-platform APIs | Maven Central + [JUnit documentation](https://docs.junit.org/) | resolver/local sources |
+| ArchUnit | 1.4.2 | architecture test APIs | Maven Central + [ArchUnit documentation](https://www.archunit.org/) | resolver/local sources |
 
 The machine-readable manifest is authoritative when this table and a pinned repository value disagree.
 
@@ -202,10 +202,10 @@ The index itself stays local because it may reveal or contain material derived f
 
 When Minecraft, NeoForge, ModDevGradle, Java, Gradle or a major library changes:
 
-1. update `platform/versions.json` and the canonical template;
-2. update `platform/toolchain-requirements.json`;
-3. update `vault/manifest.json` if acquisition semantics changed;
-4. update `platform/reference-sources.json` and any immutable upstream revision;
+1. update [`../platform/versions.json`](../platform/versions.json) and the canonical template;
+2. update [`../platform/toolchain-requirements.json`](../platform/toolchain-requirements.json);
+3. update [`../vault/manifest.json`](../vault/manifest.json) if acquisition semantics changed;
+4. update [`../platform/reference-sources.json`](../platform/reference-sources.json) and any immutable upstream revision;
 5. refresh the local corpus and provenance file;
 6. rebuild/reference-index the hydrated sources;
 7. run the clean-cache public build;
@@ -214,13 +214,13 @@ When Minecraft, NeoForge, ModDevGradle, Java, Gradle or a major library changes:
 
 ## Publication safety
 
-Current-tree guard:
+Current-tree guard: [`../tools/redistribution_guard.py`](../tools/redistribution_guard.py).
 
 ```bash
 python tools/redistribution_guard.py
 ```
 
-Reachable-history guard:
+Reachable-history guard: [`../tools/history_redistribution_guard.py`](../tools/history_redistribution_guard.py).
 
 ```bash
 python tools/history_redistribution_guard.py
