@@ -1,11 +1,13 @@
-# Upstream Readable Snapshots
+# Upstream Reference Policy
 
-This directory is generated from checksummed artifacts in `vault/`.
+Tracked upstream snapshots are intentionally not stored in this directory.
 
-Run:
+When a maintainer needs the canonical NeoForge 26.2 MDK for comparison or provenance, run:
 
 ```bash
-python tools/hydrate_references.py
+python tools/hydrate_references.py --mdk
 ```
 
-The current canonical snapshot is `mdk-26.2/`, extracted from the exact supplied MDK archive. Treat files here as immutable upstream evidence; modify `templates/` or `mods/` instead.
+The pinned checkout is created under `.reference-cache/upstream/mdk-26.2`, outside the tracked repository surface. `vault/manifest.json` records the official repository and immutable revision used for that checkout.
+
+This directory remains as a policy/navigation anchor only. Do not copy hydrated Minecraft, NeoForge, JDK, LWJGL, Maven-cache or MDK payloads here.
