@@ -18,22 +18,18 @@ For Minecraft/NeoForge mod-development work, also read:
 4. [`../platform/reference-sources.json`](../platform/reference-sources.json)
 5. [`../vault/manifest.json`](../vault/manifest.json)
 6. [`skills/neoforge-26.2-mod-development/SKILL.md`](skills/neoforge-26.2-mod-development/SKILL.md) for the pinned NeoForge 26.2 target
-7. the relevant canonical Gridelyx template files under [`../templates/neoforge-26.2`](../templates/neoforge-26.2)
+7. the relevant canonical Gridelyx template files under [`../templates/neoforge-26.2/`](../templates/neoforge-26.2/)
 
 The public repository intentionally contains **routing, versions, coordinates, provenance, skills and Gridelyx-owned source instead of vendored upstream payloads**.
 
-Hydrate the high-value official/open-source reference corpus locally with:
+Hydrate the high-value official/open-source reference corpus locally with [`../tools/hydrate_ai_references.py`](../tools/hydrate_ai_references.py) and build its searchable index with [`../tools/build_reference_indexes.py`](../tools/build_reference_indexes.py):
 
 ```bash
 python tools/hydrate_ai_references.py --core
 python tools/build_reference_indexes.py --corpus
 ```
 
-This produces an ignored local searchable corpus at:
-
-```text
-.reference-cache/index/reference-corpus.jsonl
-```
+This produces an ignored local searchable corpus at `.reference-cache/index/reference-corpus.jsonl`.
 
 Each indexed chunk carries source ID, version, resolved revision where available, roles, file hash, original path and local provenance. Agents should search this corpus before guessing a version-specific API.
 
@@ -41,13 +37,13 @@ Minecraft development sources produced/resolved by ModDevGradle are **local refe
 
 ## General project context
 
-Generate the deterministic repository index with:
+Generate the deterministic repository index with [`../tools/repo_index.py`](../tools/repo_index.py):
 
 ```bash
 python tools/repo_index.py
 ```
 
-Generate a compact lexical context pack with:
+Generate a compact lexical context pack with [`../tools/ai_context_pack.py`](../tools/ai_context_pack.py):
 
 ```bash
 python tools/ai_context_pack.py "your task description"
@@ -59,7 +55,7 @@ AI context files are navigation aids; implementation, schemas, official/pinned r
 
 ## Publication guardrails
 
-Before treating a branch as publication-ready, run:
+Before treating a branch as publication-ready, use [`../tools/redistribution_guard.py`](../tools/redistribution_guard.py), [`../tools/history_redistribution_guard.py`](../tools/history_redistribution_guard.py), and [`../tools/reference_sources_check.py`](../tools/reference_sources_check.py):
 
 ```bash
 python tools/redistribution_guard.py
