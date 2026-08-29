@@ -19,7 +19,7 @@ Unless an artifact has been separately reviewed and intentionally approved for r
 - archive chunks or reconstructed upstream archives;
 - hydrated upstream MDK/source/reference trees.
 
-`vault/manifest.json` records acquisition/provenance metadata only. `tools/redistribution_guard.py` enforces the tracked-file boundary using the actual Git index. `.gitignore` is defense in depth, not the sole control.
+[`vault/manifest.json`](../vault/manifest.json) records acquisition/provenance metadata only. [`tools/redistribution_guard.py`](../tools/redistribution_guard.py) enforces the tracked-file boundary using the actual Git index. [`.gitignore`](../.gitignore) is defense in depth, not the sole control.
 
 ## Acquisition versus redistribution
 
