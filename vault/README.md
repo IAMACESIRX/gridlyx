@@ -10,16 +10,16 @@ Build and run behavior:
 2. NeoForge ModDevGradle resolves Minecraft, NeoForge, mappings, and the development runtime into local Gradle caches.
 3. Maven dependencies such as LWJGL, ASM, GraalVM Polyglot, JUnit and ArchUnit are resolved from their configured repositories.
 4. Optional upstream source/reference material is hydrated only into `.reference-cache/`, which is ignored by Git.
-5. `tools/redistribution_guard.py` rejects tracked JARs, archives, native binaries, class files and upstream reference trees.
+5. [`tools/redistribution_guard.py`](../tools/redistribution_guard.py) rejects tracked JARs, archives, native binaries, class files and upstream reference trees.
 
-Validation:
+Validation uses [`tools/hydrate_references.py`](../tools/hydrate_references.py) and [`tools/redistribution_guard.py`](../tools/redistribution_guard.py):
 
 ```bash
 python tools/hydrate_references.py --check
 python tools/redistribution_guard.py
 ```
 
-Optional pinned MDK reference checkout:
+Optional pinned MDK reference checkout also uses [`tools/hydrate_references.py`](../tools/hydrate_references.py):
 
 ```bash
 python tools/hydrate_references.py --mdk
