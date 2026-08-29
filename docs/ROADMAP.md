@@ -1,6 +1,6 @@
 # Gridelyx roadmap
 
-Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md) and `../platform/chat-requirements.json`. Dependencies/tools are canonicalized in [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md), [`CAPABILITY_DEPENDENCY_MATRIX.md`](CAPABILITY_DEPENDENCY_MATRIX.md), `../platform/toolchain-requirements.json` and `../vault/manifest.json`. Feature analysis, critical path and prioritisation are governed by [`FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md) and [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md).
+Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_REQUIREMENTS_TRACEABILITY.md) and [`../platform/chat-requirements.json`](../platform/chat-requirements.json). Dependencies/tools are canonicalized in [`DEPENDENCIES_AND_TOOLCHAIN.md`](DEPENDENCIES_AND_TOOLCHAIN.md), [`CAPABILITY_DEPENDENCY_MATRIX.md`](CAPABILITY_DEPENDENCY_MATRIX.md), [`../platform/toolchain-requirements.json`](../platform/toolchain-requirements.json) and [`../vault/manifest.json`](../vault/manifest.json). Feature analysis, critical path and prioritisation are governed by [`FEATURE_DECISION_FRAMEWORK.md`](FEATURE_DECISION_FRAMEWORK.md) and [`DEVELOPMENT_MAP.md`](DEVELOPMENT_MAP.md).
 
 ## Readiness scale
 
@@ -17,8 +17,8 @@ Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_RE
 **Goal:** make the repository understandable, recoverable and resistant to scope/evidence/dependency/decision drift before product implementation accelerates.
 
 - [x] Select **Gridelyx** as root brand and **Gridelyx Studio** as integrated suite.
-- [x] Freeze canonical identity/compatibility state in `platform/brand.json`.
-- [x] Record requested GitHub slug/description in `platform/repository-metadata.json`.
+- [x] Freeze canonical identity/compatibility state in [`platform/brand.json`](../platform/brand.json).
+- [x] Record requested GitHub slug/description in [`platform/repository-metadata.json`](../platform/repository-metadata.json).
 - [x] Cross-edition launcher + creator + runtime + production product definition.
 - [x] Java/Bedrock split behind neutral capability contracts.
 - [x] Native bridge foundation.
@@ -181,12 +181,12 @@ Retained scope is canonicalized in [`CHAT_REQUIREMENTS_TRACEABILITY.md`](CHAT_RE
 
 ## Phase 9 — public dependency acquisition and toolchain reproducibility
 
-- [x] Replace the repository binary-vault/chunk design with metadata-only `vault/manifest.json` acquisition schema v2.
+- [x] Replace the repository binary-vault/chunk design with metadata-only [`vault/manifest.json`](../vault/manifest.json) acquisition schema v2.
 - [x] Prohibit repository storage for Minecraft, NeoForge, MDK, JDK, Gradle, LWJGL and Maven-resolved dependency payloads.
-- [x] Add `.github/actions/gridelyx-toolchain/action.yml` to install locked Temurin JDK and Gradle dynamically in CI.
+- [x] Add [`.github/actions/gridelyx-toolchain/action.yml`](../.github/actions/gridelyx-toolchain/action.yml) to install locked Temurin JDK and Gradle dynamically in CI.
 - [x] Route Minecraft/NeoForge/mappings through ModDevGradle and Java libraries through normal Gradle/Maven resolution.
 - [x] Pin the optional official NeoForge 26.2 MDK reference revision and hydrate it only beneath ignored `.reference-cache/`.
-- [x] Add `tools/redistribution_guard.py` to reject prohibited binary/archive/native payloads in the actual Git index.
+- [x] Add [`tools/redistribution_guard.py`](../tools/redistribution_guard.py) to reject prohibited binary/archive/native payloads in the actual Git index.
 - [x] Remove the obsolete binary importer, binary reconstruction tool and remote-import pending marker.
 - [x] Move generated upstream reference indexes to ignored `.reference-cache/index/`.
 - [ ] Validate the complete Java build from a clean public runner with empty dependency caches.
