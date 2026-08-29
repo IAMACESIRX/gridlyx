@@ -1,0 +1,56 @@
+name: Gridelyx Code Reference Comments
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: code-reference-comments-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  synchronize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Generate project-local reference comments
+        run: python tools/code_reference_comments.py --fix
+
+      - name: Verify generated reference comments
+        run: python tools/code_reference_comments.py --check
+
+      - name: Validate patch whitespace
+        run: git diff --check
+
+      - name: Require pull requests to include generated comments
+        if: github.event_name == 'pull_request'
+        run: |
+          if ! git diff --quiet; then
+            echo 'Project-local reference comments are stale.'
+            echo 'Run: python tools/code_reference_comments.py --fix'
+            git diff --stat
+            exit 1
+          fi
+
+      - name: Commit synchronized comments
+        if: github.event_name == 'push'
+        run: |
+          if git diff --quiet; then
+            echo 'No reference-comment changes required.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- '*.py' '*.yml' '*.yaml' '*.toml' '*.sh' '*.bash' '*.zsh' '*.ps1' '*.java' '*.kt' '*.kts' '*.groovy' '*.gradle' '*.js' '*.jsx' '*.ts' '*.tsx' '*.rs' '*.c' '*.cc' '*.cpp' '*.cxx' '*.h' '*.hh' '*.hpp' '*.hxx' '*.cs' '*.go'
+          git commit -m 'Synchronize project-local code reference links'
+          git push
