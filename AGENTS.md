@@ -18,20 +18,20 @@ For non-trivial work:
 4. Read [`ai/AI_ORGANISATION.md`](ai/AI_ORGANISATION.md) and [`ai/DRIFT_MITIGATION.md`](ai/DRIFT_MITIGATION.md).
 5. Inspect `platform/brand.json`, `platform/repository-metadata.json`, `platform/chat-requirements.json`, `platform/toolchain-requirements.json`, work state, decision ledger and assumption ledger.
 6. Use the relevant domain in `ai/context-map.json` instead of scanning unrelated trees.
-7. Read `platform/versions.json`, provider manifests and relevant `references/index/` entries before guessing external APIs.
+7. Read `platform/versions.json`, `vault/manifest.json`, provider manifests and relevant reference-policy docs before guessing external APIs or acquisition paths.
 8. For broad tasks, use `tools/repo_index.py` and `tools/ai_context_pack.py`.
 9. Treat implementation, schemas, CI/runtime evidence and explicit human corrections as stronger than AI summaries/generated indexes.
 10. Update planning/readiness/decision/assumption/dependency state when a change alters project truth.
 
 ## Brand rule
 
-**Gridelyx** is the canonical root brand; **Gridelyx Studio** is the integrated suite. New project-owned names use Gridelyx. Existing Gridelyx/VFSB source, ABI, protocol, persisted and filename identifiers are migration compatibility state governed by [`docs/REBRAND_PLAN.md`](docs/REBRAND_PLAN.md). Do not introduce new retired-brand identifiers and do not blindly rename compatibility boundaries without migration tests.
+**Gridelyx** is the canonical root brand; **Gridelyx Studio** is the integrated suite. New project-owned names use Gridelyx. Existing compatibility-boundary identifiers are governed by the current migration/compatibility contracts. Do not introduce retired-brand identifiers and do not blindly rename versioned compatibility boundaries without migration tests.
 
 Product/API slug remains `gridelyx`; the requested GitHub repository slug is `gridlyx` and is recorded separately in `platform/repository-metadata.json`.
 
 ## Requirements preservation
 
-[`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and `platform/chat-requirements.json` are the retained whole-chat scope, currently CR-001 through CR-034. A future agent may not remove or materially weaken a requirement because it is difficult, outside normal Minecraft APIs, expensive, lower priority or not currently target-validated. Such discoveries change integration level, schedule and evidence burden. Scope removal needs explicit human approval recorded in the decision ledger.
+[`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) and `platform/chat-requirements.json` are the retained whole-chat scope. A future agent may not remove or materially weaken a requirement because it is difficult, outside normal Minecraft APIs, expensive, lower priority or not currently target-validated. Such discoveries change integration level, schedule and evidence burden. Scope removal needs explicit human approval recorded in the decision ledger.
 
 ## Feature decision protocol
 
@@ -67,18 +67,24 @@ Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRE
 - `native/` — trusted native ABI/companion code.
 - `bridges/` — neutral sidecar/language bridge examples and protocols.
 - `ai/` — compact navigation/handoff/work state/continuity controls, not duplicated source truth.
-- `references/index/` — compact reference knowledge; `vault/` — exact recovery/deep-inspection material and should not be scanned by default.
+- `references/` — Gridelyx-authored policy/navigation only; hydrated upstream checkouts and local indexes belong under ignored `.reference-cache/`.
+- `vault/` — metadata-only upstream acquisition manifest; it is **not** a binary vault.
 - `platform/` — versions, brand/repository metadata, capabilities, requirements, feature-analysis and toolchain manifests.
 
-## Dependency/toolchain rules
+## Dependency/toolchain and public-repository rules
 
-[`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](docs/DEPENDENCIES_AND_TOOLCHAIN.md) and `platform/toolchain-requirements.json` are canonical.
+[`docs/DEPENDENCIES_AND_TOOLCHAIN.md`](docs/DEPENDENCIES_AND_TOOLCHAIN.md), `platform/toolchain-requirements.json` and `vault/manifest.json` are canonical.
 
 - Never invent a version for an unpinned tool.
 - Tool installation is not proof that a feature works.
 - Optional language/native/production tooling is capability-specific, not universally required.
-- Reference JDK/LWJGL archives are not default Minecraft runtime dependencies.
-- Do not claim the large remote reference-vault payload is complete while [`vault/REMOTE_BINARY_IMPORT_PENDING.md`](vault/REMOTE_BINARY_IMPORT_PENDING.md) exists.
+- **Never commit upstream JARs, class files, distribution archives, installers, native binaries, decompiled Minecraft source, Maven caches, JDK/Gradle distributions or hydrated upstream source trees.**
+- Minecraft/NeoForge development artifacts are resolved by the supported NeoForge/Gradle toolchain into local or runner caches.
+- JDK and Gradle are dynamically installed in CI through `.github/actions/gridelyx-toolchain/action.yml`; local developers may use compatible installed toolchains.
+- LWJGL, ASM, GraalVM, JUnit, ArchUnit and other Java libraries are package-manager dependencies, not vendored reference bundles.
+- Optional NeoForge MDK comparison material is hydrated only to `.reference-cache/upstream/mdk-26.2` from the pinned official revision.
+- `.gitignore` is not the only control: `tools/redistribution_guard.py` must pass against the actual Git index.
+- Do not recreate the deleted `tools/vault.py`, `tools/import_binary_vault.py`, binary chunk scheme or `REMOTE_BINARY_IMPORT_PENDING.md` design unless the human owner explicitly reverses the public-repository policy.
 - Before release claims, presently unpinned Python/Rust/CMake/compiler/Go/.NET/encoder policies need supported-version evidence.
 
 ## Launcher / acquisition rules
@@ -88,10 +94,11 @@ Use FACT / DERIVED / ASSUMPTION / HYPOTHESIS / DESIGN CHOICE / UNKNOWN / REQUIRE
 - Prefer Mojang metadata for Minecraft/version/library/runtime truth; official loader metadata/Mavens for loaders; Modrinth and authorized CurseForge APIs for content.
 - CurseForge access must respect approved API/current terms and author third-party-distribution controls.
 - Never scrape around a provider outage/auth failure where a supported API/channel is required.
-- Every acquired artifact gets local SHA-256; verify upstream hashes/signatures when available and retain provenance.
+- Every acquired artifact gets local SHA-256 where appropriate; verify upstream hashes/signatures when available and retain provenance.
 - Imported local files are not assumed redistributable.
 - Dependency resolution preserves required/optional/incompatible/embedded semantics and explains decisions.
-- Writable instance state stays isolated; immutable hash-addressed artifacts may be deliberately deduplicated.
+- Writable instance state stays isolated; immutable hash-addressed artifacts may be deliberately deduplicated in user-local Gridelyx storage.
+- Acquiring an artifact for an authorized user/runtime does not grant permission to publish that artifact from the Gridelyx source repository.
 
 ## Java/mod engineering workflow
 
@@ -148,6 +155,8 @@ Use supported Script/Add-On/Editor APIs when sufficient. Preview APIs are versio
 
 Never commit credentials, tokens or personal data. Treat generated source, mods and imported archives as untrusted until reviewed. Sanitize archive paths before extraction. Third-party code/assets require licence/provenance review. Preserve upstream/template licensing separately from project licensing. Deep integration must not bypass authentication, entitlement, DRM, anti-cheat or platform security controls.
 
+For public-repository dependency handling, provenance records may point at upstream artifacts but must not copy prohibited payloads into the source tree. Runtime/download caches stay outside Git.
+
 ## Required continuity gates
 
 ```bash
@@ -156,10 +165,12 @@ python tools/chat_requirements_check.py
 python tools/toolchain_requirements_check.py
 python tools/feature_planning_check.py
 python tools/terminology_check.py
+python tools/hydrate_references.py --check
+python tools/redistribution_guard.py
 ```
 
 These prove control-plane consistency, not Minecraft runtime compatibility.
 
 ## Definition of done
 
-A change is done only when relevant formatting/lint/build/test gates pass, evidence/readiness and requirements/dependency/planning paths are synchronized, and the architecture remains replaceable, bounded, diagnosable, version-aware, recoverable and provenance-aware. Interface presence alone is not runtime support.
+A change is done only when relevant formatting/lint/build/test gates pass, evidence/readiness and requirements/dependency/planning paths are synchronized, the no-redistribution acquisition policy remains intact, and the architecture remains replaceable, bounded, diagnosable, version-aware, recoverable and provenance-aware. Interface presence alone is not runtime support.
