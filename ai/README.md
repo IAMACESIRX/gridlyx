@@ -4,9 +4,10 @@ For any substantial Gridelyx Studio task, read in this order:
 
 1. [`../AGENTS.md`](../AGENTS.md)
 2. [`../AI_HANDOFF.md`](../AI_HANDOFF.md)
-3. [`CONTEXT.md`](CONTEXT.md)
-4. [`context-map.json`](context-map.json)
-5. task-specific authoritative files named by the context map
+3. [`../docs/LINKING_POLICY.md`](../docs/LINKING_POLICY.md)
+4. [`CONTEXT.md`](CONTEXT.md)
+5. [`context-map.json`](context-map.json)
+6. task-specific authoritative files named by the context map
 
 ## Mod-development reference surface
 
@@ -52,6 +53,10 @@ python tools/ai_context_pack.py "your task description"
 Do not ingest [`../vault/`](../vault/) as though it contains binaries: it is acquisition metadata only. Do not ingest binaries, build outputs, Gradle/Maven caches or every generated workspace unless the task specifically needs local runtime evidence.
 
 AI context files are navigation aids; implementation, schemas, official/pinned references and validation evidence remain authoritative.
+
+## Documentation navigation discipline
+
+Follow [`../docs/LINKING_POLICY.md`](../docs/LINKING_POLICY.md). Markdown references to resolvable files, directories and official pages should be clickable. Machine-readable/code files must remain valid syntax: do not inject Markdown links into JSON, Python, YAML, Java, Rust, C/C++ or similar formats. Keep command fences literal and provide clickable references in adjacent Markdown prose.
 
 ## Publication guardrails
 
