@@ -1,7 +1,7 @@
 site_name: Gridelyx Studio
 site_description: Cross-edition Minecraft launcher, creator, runtime, world editor, AI development and production platform.
-repo_url: https://github.com/IAMACESIRX/minecraft-advanced-mod-development-kit
-repo_name: IAMACESIRX/gridlyx (rename target)
+repo_url: https://github.com/IAMACESIRX/gridlyx
+repo_name: IAMACESIRX/gridlyx
 docs_dir: docs
 site_dir: site
 strict: true
