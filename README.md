@@ -31,7 +31,7 @@
 - **Architecture diagrams as code:** [`docs/ARCHITECTURE_DIAGRAMS.md`](docs/ARCHITECTURE_DIAGRAMS.md)
 - **User journeys:** [`docs/USER_JOURNEYS.md`](docs/USER_JOURNEYS.md)
 - **Impact-effort matrix:** [`docs/IMPACT_EFFORT_MATRIX.md`](docs/IMPACT_EFFORT_MATRIX.md)
-- **Technical documentation site:** `mkdocs.yml` / [`docs/index.md`](docs/index.md)
+- **Technical documentation site:** [`mkdocs.yml`](mkdocs.yml) / [`docs/index.md`](docs/index.md)
 - **Interactive API docs:** [`docs/api/index.md`](docs/api/index.md)
 - **Release notes / changelog:** [`docs/RELEASE_NOTES_AND_CHANGELOGS.md`](docs/RELEASE_NOTES_AND_CHANGELOGS.md) / [`CHANGELOG.md`](CHANGELOG.md)
 - **Labels and filtering:** [`docs/LABELS_AND_FILTERING.md`](docs/LABELS_AND_FILTERING.md)
@@ -61,13 +61,13 @@ For AI/agent work:
 2. [`AI_HANDOFF.md`](AI_HANDOFF.md)
 3. [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md)
 4. [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md)
-5. `platform/chat-requirements.json`
-6. `platform/feature-analysis.schema.json`
-7. `platform/toolchain-requirements.json`
-8. `vault/manifest.json`
-9. `ai/context-map.json`
-10. `platform/portfolio-board.json`
-11. `ai/work-state.json`, decision ledger and assumption ledger
+5. [`platform/chat-requirements.json`](platform/chat-requirements.json)
+6. [`platform/feature-analysis.schema.json`](platform/feature-analysis.schema.json)
+7. [`platform/toolchain-requirements.json`](platform/toolchain-requirements.json)
+8. [`vault/manifest.json`](vault/manifest.json)
+9. [`ai/context-map.json`](ai/context-map.json)
+10. [`platform/portfolio-board.json`](platform/portfolio-board.json)
+11. [`ai/work-state.json`](ai/work-state.json), [`ai/decision-ledger.json`](ai/decision-ledger.json) and [`ai/assumption-ledger.json`](ai/assumption-ledger.json)
 
 ## Canonical identity
 
@@ -78,7 +78,7 @@ For AI/agent work:
 - Protocol prefix target: `GLYX`
 - Executable target: `gridelyx`
 
-Machine-readable identity: `platform/brand.json`. Requested GitHub metadata: `platform/repository-metadata.json`.
+Machine-readable identity: [`platform/brand.json`](platform/brand.json). Requested GitHub metadata: [`platform/repository-metadata.json`](platform/repository-metadata.json).
 
 Versioned compatibility identifiers may remain at explicit migration boundaries while old saves/protocols/ABIs are supported, but they do not change the canonical Gridelyx product identity. Compatibility changes require migration tests rather than blind text replacement.
 
@@ -88,7 +88,7 @@ Versioned compatibility identifiers may remain at explicit migration boundaries 
 
 Gridelyx Studio is designed to start without requiring Java merely to open the desktop application. For Java Edition instances it will resolve/acquire the appropriate Java runtime, Minecraft version, loader, libraries, assets and content graph through legitimate/authorized channels.
 
-Target loader/content support includes vanilla, Fabric, Quilt, Forge, NeoForge, extensible legacy/future loader adapters, Modrinth, authorized CurseForge access, resource/shader/datapacks/worlds, deterministic dependency resolution, hashes/provenance/content locks, isolated instances, snapshots/clone/fork/diff/import/export and both simple and expert UX. Provider policy is in `studio/providers/providers.json` and [`docs/ACQUISITION_AND_RESOLUTION.md`](docs/ACQUISITION_AND_RESOLUTION.md).
+Target loader/content support includes vanilla, Fabric, Quilt, Forge, NeoForge, extensible legacy/future loader adapters, Modrinth, authorized CurseForge access, resource/shader/datapacks/worlds, deterministic dependency resolution, hashes/provenance/content locks, isolated instances, snapshots/clone/fork/diff/import/export and both simple and expert UX. Provider policy is in [`studio/providers/providers.json`](studio/providers/providers.json) and [`docs/ACQUISITION_AND_RESOLUTION.md`](docs/ACQUISITION_AND_RESOLUTION.md).
 
 ### Java creator/runtime plane
 
@@ -132,7 +132,7 @@ Gridelyx Production retains deterministic replay/event logging, rational-time ti
 
 Substantial Gridelyx features use the **Feature Decision Packet** in [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md). It includes W5x5x5 repeated Who/What/When/Where/How/Why and inverse analysis, task decomposition, project-values checks, cost/time/money/energy diagnostics, 10-minute through 10-year horizons, opportunity cost, regret minimisation, reversibility, risk, inversion, second-order thinking, overlap/Venn analysis, Eisenhower classification, first principles, benchmarking, Feynman explanation, MVP, timeboxing, pre-mortem, asymmetric risk, working backward, Pareto/80-20, Critical Path Method, Cynefin and Kanban.
 
-This machinery guides sequencing and architecture. It does not erase a retained feature merely because its cost is high. Machine contract: `platform/feature-analysis.schema.json`; issue intake: `.github/ISSUE_TEMPLATE/feature-evaluation.yml`.
+This machinery guides sequencing and architecture. It does not erase a retained feature merely because its cost is high. Machine contract: [`platform/feature-analysis.schema.json`](platform/feature-analysis.schema.json); issue intake: [`.github/ISSUE_TEMPLATE/feature-evaluation.yml`](.github/ISSUE_TEMPLATE/feature-evaluation.yml).
 
 ## Stakeholder, documentation and release communication system
 
@@ -155,8 +155,8 @@ See [`docs/DOCUMENTATION_TOOLCHAIN.md`](docs/DOCUMENTATION_TOOLCHAIN.md) for the
 The complete retained conversation scope is not left in chat history. It is recorded in:
 
 - [`docs/CHAT_REQUIREMENTS_TRACEABILITY.md`](docs/CHAT_REQUIREMENTS_TRACEABILITY.md) — human-readable CR ledger;
-- `platform/chat-requirements.json` — machine-readable requirements/evidence paths;
-- `tools/chat_requirements_check.py` — CI validation;
+- [`platform/chat-requirements.json`](platform/chat-requirements.json) — machine-readable requirements/evidence paths;
+- [`tools/chat_requirements_check.py`](tools/chat_requirements_check.py) — CI validation;
 - [`docs/TODO.md`](docs/TODO.md) — live implementation ledger;
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — staged sequencing;
 - [`docs/DEVELOPMENT_MAP.md`](docs/DEVELOPMENT_MAP.md) — critical path, lanes, horizons and Kanban;
@@ -164,7 +164,7 @@ The complete retained conversation scope is not left in chat history. It is reco
 - [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md) — governance/program plan;
 - [`docs/PROJECT_VALUES.md`](docs/PROJECT_VALUES.md) — decision invariants;
 - [`docs/FEATURE_DECISION_FRAMEWORK.md`](docs/FEATURE_DECISION_FRAMEWORK.md) — feature evaluation method;
-- [`docs/STAKEHOLDER_DASHBOARD.md`](docs/STAKEHOLDER_DASHBOARD.md) / `platform/portfolio-board.json` — executive portfolio view.
+- [`docs/STAKEHOLDER_DASHBOARD.md`](docs/STAKEHOLDER_DASHBOARD.md) / [`platform/portfolio-board.json`](platform/portfolio-board.json) — executive portfolio view.
 
 A future contributor/AI may not silently remove a requested capability merely because it is difficult or not supported by a normal mod API. The integration level and validation burden change; the requirement remains until explicitly superseded.
 
@@ -194,7 +194,7 @@ Documentation lane:
 - mkdocs-swagger-ui-tag `0.8.0`;
 - Mermaid browser asset `11.17.2`.
 
-Additional subsystem tools include Python, Rust/Cargo, CMake/C++ compiler, optional Go/.NET bridge toolchains, optional Dev Containers, external encoder/decompiler adapters and Bedrock target runtimes. Their exact pin/support state is machine-readable in `platform/toolchain-requirements.json`.
+Additional subsystem tools include Python, Rust/Cargo, CMake/C++ compiler, optional Go/.NET bridge toolchains, optional Dev Containers, external encoder/decompiler adapters and Bedrock target runtimes. Their exact pin/support state is machine-readable in [`platform/toolchain-requirements.json`](platform/toolchain-requirements.json).
 
 ## Public dependency acquisition
 
