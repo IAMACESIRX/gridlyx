@@ -35,8 +35,9 @@ FORBIDDEN_UPSTREAM_PREFIXES = (
     "references/upstream/lwjgl",
     "references/upstream/jdk",
 )
+
 # Chunked payloads were historically designed around ~24 MiB pieces. A large-blob
-# tripwire catches a renamed chunk even when its extension is intentionally hidden.
+# tripwire catches renamed chunks even if an unknown binary signature is used.
 LARGE_BLOB_TRIPWIRE = 20 * 1024 * 1024
 ALLOWED_LARGE_SUFFIXES = (
     ".png",
@@ -45,6 +46,27 @@ ALLOWED_LARGE_SUFFIXES = (
     ".webp",
     ".gif",
     ".svg",
+)
+
+# Magic numbers detect renamed archives/executables/classes regardless of filename.
+# ZIP covers JAR/JMOD/ordinary ZIP containers; all of those are forbidden as
+# upstream/vendored payloads by the public-source policy.
+FORBIDDEN_MAGIC: tuple[tuple[bytes, str], ...] = (
+    (b"PK\x03\x04", "ZIP/JAR/JMOD archive"),
+    (b"PK\x05\x06", "empty ZIP archive"),
+    (b"PK\x07\x08", "spanned ZIP archive"),
+    (b"\xca\xfe\xba\xbe", "Java class file"),
+    (b"MZ", "PE/Windows executable"),
+    (b"\x7fELF", "ELF executable/shared library"),
+    (b"\xfe\xed\xfa\xce", "Mach-O binary"),
+    (b"\xce\xfa\xed\xfe", "Mach-O binary"),
+    (b"\xfe\xed\xfa\xcf", "Mach-O 64-bit binary"),
+    (b"\xcf\xfa\xed\xfe", "Mach-O 64-bit binary"),
+    (b"\xca\xfe\xba\xbe", "Java class/Mach-O universal magic"),
+    (b"\xca\xfe\xba\xbf", "Mach-O universal binary"),
+    (b"7z\xbc\xaf\x27\x1c", "7z archive"),
+    (b"Rar!\x1a\x07", "RAR archive"),
+    (b"\x1f\x8b", "gzip-compressed payload"),
 )
 
 
@@ -114,6 +136,25 @@ def blob_sizes(oids: list[str]) -> dict[str, tuple[str, int]]:
     return result
 
 
+def blob_prefix(oid: str, limit: int = 16) -> bytes:
+    proc = subprocess.Popen(
+        ["git", "cat-file", "blob", oid],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    try:
+        if proc.stdout is None:
+            return b""
+        prefix = proc.stdout.read(limit)
+        proc.stdout.close()
+        return prefix
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+        proc.wait()
+
+
 def path_violation(path: str) -> str | None:
     lower = path.lower()
     if lower.endswith(FORBIDDEN_SUFFIXES) or FORBIDDEN_PART.search(lower):
@@ -123,10 +164,18 @@ def path_violation(path: str) -> str | None:
     return None
 
 
+def magic_violation(prefix: bytes) -> str | None:
+    for magic, description in FORBIDDEN_MAGIC:
+        if prefix.startswith(magic):
+            return description
+    return None
+
+
 def scan(refs: list[str]) -> list[str]:
     failures: list[str] = []
     objects = enumerate_objects(refs)
     meta = blob_sizes(sorted({item.oid for item in objects}))
+    prefix_cache: dict[str, bytes] = {}
 
     for item in objects:
         reason = path_violation(item.path)
@@ -135,12 +184,19 @@ def scan(refs: list[str]) -> list[str]:
             continue
 
         object_type, size = meta.get(item.oid, ("", 0))
+        if object_type != "blob":
+            continue
+
+        prefix = prefix_cache.setdefault(item.oid, blob_prefix(item.oid))
+        magic_reason = magic_violation(prefix)
+        if magic_reason:
+            failures.append(
+                f"forbidden binary signature ({magic_reason}): {item.path} [{item.oid}]"
+            )
+            continue
+
         lower = item.path.lower()
-        if (
-            object_type == "blob"
-            and size >= LARGE_BLOB_TRIPWIRE
-            and not lower.endswith(ALLOWED_LARGE_SUFFIXES)
-        ):
+        if size >= LARGE_BLOB_TRIPWIRE and not lower.endswith(ALLOWED_LARGE_SUFFIXES):
             failures.append(
                 f"large historical blob requires explicit review ({size} bytes): {item.path} [{item.oid}]"
             )
