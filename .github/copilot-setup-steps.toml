@@ -13,10 +13,12 @@ run_static_validation = true
 run_spotless_check = true
 run_checkstyle = true
 no_secrets_in_generated_code = true
+no_upstream_binary_redistribution = true
 advanced_engines_default = false
 
 [workspace]
 template = "templates/neoforge-26.2"
 mods = "mods"
 experiments = "experiments"
-reference_index = "references/index"
+reference_cache = ".reference-cache"
+reference_index = ".reference-cache/index"
