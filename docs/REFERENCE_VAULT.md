@@ -20,19 +20,19 @@ Tracked content must not include upstream JARs, class files, ZIP/TAR archives, i
 
 The Java/NeoForge build deliberately relies on supported dependency resolution instead of checked-in binaries:
 
-1. GitHub Actions installs Eclipse Temurin JDK 25 through `actions/setup-java`.
-2. GitHub Actions installs the locked Gradle release through `gradle/actions/setup-gradle`.
-3. The `net.neoforged.moddev` plugin resolves the required Minecraft/NeoForge development runtime and mappings into the runner/developer Gradle cache.
+1. GitHub Actions installs Eclipse Temurin JDK 25 through [`actions/setup-java`](https://github.com/actions/setup-java).
+2. GitHub Actions installs the locked Gradle release through [`gradle/actions/setup-gradle`](https://github.com/gradle/actions/tree/main/setup-gradle).
+3. The [`net.neoforged.moddev`](https://docs.neoforged.net/toolchain/docs/plugins/mdg/) plugin resolves the required Minecraft/NeoForge development runtime and mappings into the runner/developer Gradle cache.
 4. Maven dependencies such as LWJGL, ASM, GraalVM Polyglot, JUnit and ArchUnit are resolved from configured package repositories.
 5. Build outputs contain Gridelyx/mod artifacts; upstream game/runtime dependencies are not committed back to Git.
 
-The supported GitHub Action entry point is `.github/actions/gridelyx-toolchain/action.yml`.
+The supported GitHub Action entry point is [`.github/actions/gridelyx-toolchain/action.yml`](../.github/actions/gridelyx-toolchain/action.yml).
 
 ## Optional source/reference hydration
 
-The NeoForge 26.2 MDK is an optional comparison/provenance reference, not a build input. Its official repository and pinned revision are recorded in `vault/manifest.json`.
+The NeoForge 26.2 MDK is an optional comparison/provenance reference, not a build input. Its official repository and pinned revision are recorded in [`vault/manifest.json`](../vault/manifest.json).
 
-To hydrate it locally:
+To hydrate it locally with [`tools/hydrate_references.py`](../tools/hydrate_references.py):
 
 ```bash
 python tools/hydrate_references.py --mdk
@@ -42,14 +42,14 @@ The checkout is written to `.reference-cache/upstream/mdk-26.2` and remains igno
 
 ## Enforcement
 
-Run:
+Run [`tools/hydrate_references.py`](../tools/hydrate_references.py) and [`tools/redistribution_guard.py`](../tools/redistribution_guard.py):
 
 ```bash
 python tools/hydrate_references.py --check
 python tools/redistribution_guard.py
 ```
 
-`tools/redistribution_guard.py` scans the actual Git index using `git ls-files`. It rejects tracked JARs, class files, archives, native binaries, installer formats, chunked parts, and known upstream reference trees. This means `.gitignore` is not the only protection: even a force-added prohibited payload fails validation.
+[`tools/redistribution_guard.py`](../tools/redistribution_guard.py) scans the actual Git index using `git ls-files`. It rejects tracked JARs, class files, archives, native binaries, installer formats, chunked parts, and known upstream reference trees. This means [`.gitignore`](../.gitignore) is not the only protection: even a force-added prohibited payload fails validation.
 
 ## Minecraft source policy
 
