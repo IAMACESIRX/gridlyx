@@ -39,8 +39,10 @@ def properties(path: Path) -> dict[str, str]:
     return result
 
 
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def git_blob_sha1(path: Path) -> str:
+    content = path.read_bytes()
+    header = f"blob {len(content)}\0".encode("ascii")
+    return hashlib.sha1(header + content).hexdigest()
 
 
 def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]) -> None:
@@ -77,10 +79,14 @@ def validate_project(project: Path, errors: list[str], seen_ids: dict[str, Path]
     if not props.get("mod_license"):
         error(errors, f"{label}: mod_license is empty")
 
-    build_path = project / "build.gradle"
-    build = build_path.read_text(encoding="utf-8", errors="replace")
-    if sha256(build_path) != BUILD_LOCK["sha256"]:
-        error(errors, f"{label}: build.gradle differs from the locked master build")
+    if BUILD_LOCK.get("schema_version") != 2 or not BUILD_LOCK.get("git_blob_sha1"):
+        error(errors, "platform/master-build.lock.json must use schema_version 2 with git_blob_sha1")
+    else:
+        build_path = project / "build.gradle"
+        if git_blob_sha1(build_path) != BUILD_LOCK["git_blob_sha1"]:
+            error(errors, f"{label}: build.gradle differs from the locked master build")
+
+    build = (project / "build.gradle").read_text(encoding="utf-8", errors="replace")
     required_build_tokens = [
         f"net.neoforged.moddev' version '{LOCK['moddevgradle']}'",
         "id 'checkstyle'",
