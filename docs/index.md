@@ -28,7 +28,7 @@
 | Architect | [Architecture Diagrams](ARCHITECTURE_DIAGRAMS.md) |
 | Feature owner | [Feature Decision Framework](FEATURE_DECISION_FRAMEWORK.md) |
 | API/tool developer | [Interactive API Documentation](api/index.md) |
-| Maintainer | [Roadmap](ROADMAP.md), [TODO](TODO.md), [Release Communications](RELEASE_NOTES_AND_CHANGELOGS.md) |
+| Maintainer | [Roadmap](ROADMAP.md), [TODO](TODO.md), [Release Communications](RELEASE_NOTES_AND_CHANGELOGS.md), [Linking Policy](LINKING_POLICY.md) |
 | AI agent | root [`AGENTS.md`](../AGENTS.md), [`AI_HANDOFF.md`](../AI_HANDOFF.md), [`ai/README.md`](../ai/README.md), then the target skill/reference manifest |
 
 ## Dependency and reference architecture
@@ -39,6 +39,7 @@ Use these layers:
 
 - **Human dependency inventory:** [Dependencies & Toolchain](DEPENDENCIES_AND_TOOLCHAIN.md) and [Capability Dependency Matrix](CAPABILITY_DEPENDENCY_MATRIX.md).
 - **Human + AI reference guide:** [AI Modding Reference Corpus](AI_MODDING_REFERENCE_CORPUS.md).
+- **Documentation navigation rule:** [Linking Policy](LINKING_POLICY.md).
 - **Machine-readable versions:** [`../platform/versions.json`](../platform/versions.json).
 - **Machine-readable prerequisites:** [`../platform/toolchain-requirements.json`](../platform/toolchain-requirements.json).
 - **Machine-readable reference/source routing:** [`../platform/reference-sources.json`](../platform/reference-sources.json).
