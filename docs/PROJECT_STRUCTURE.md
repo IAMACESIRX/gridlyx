@@ -88,40 +88,40 @@ This is the target ownership map for **Gridelyx / Gridelyx Studio**. New impleme
 
 ## Ownership rules
 
-### `studio/core`
+### [`studio/core`](../studio/core/)
 Models Minecraft/loader/content/runtime concepts without GUI dependencies. It owns deterministic instance/resolution/provenance contracts shared by desktop, CLI and AI tooling.
 
-### `studio/desktop`
+### [`studio/desktop`](../studio/desktop/)
 Owns Gridelyx Studio UI, OS integration, authentication UX, credential-store bindings, downloads, settings, updater, process launching, patch/runtime composition and user-facing recovery.
 
-### `studio/providers`
+### [`studio/providers`](../studio/providers/)
 Contains declarative provider/loader descriptions. Network implementations remain provider-specific so terms, authentication, caching and rate-limit policy cannot bleed between providers.
 
-### `templates/.../advanced`
+### [`templates/.../advanced`](../templates/neoforge-26.2/src/advanced/)
 Owns Java in-game creator/runtime mechanisms: UAL/Polyloader, scripting, bytecode/JVM/native bridges, world/asset editing, rendering, scene/physics and live-development infrastructure. It must not become the desktop launcher.
 
-### `bedrock`
+### [`bedrock`](../bedrock/)
 Owns supported Bedrock Script/Add-On/Editor assets and target adapters. Neutral Gridelyx operations should be reused where practical; target capability differences remain explicit.
 
-### `native`
+### [`native`](../native/)
 Owns trusted native process/in-process code and ABI boundaries. Deep binary/runtime patching follows [`DEEP_INTEGRATION_ARCHITECTURE.md`](DEEP_INTEGRATION_ARCHITECTURE.md) and explicit version/fingerprint/provenance/rollback records.
 
-### `bridges`
+### [`bridges`](../bridges/)
 Owns language-neutral/sidecar protocols and example implementations. A connected bridge has no implicit world/server authority; capabilities and permissions govern operations.
 
-### `platform`
+### [`platform`](../platform/)
 Owns machine-readable project truth consumed by CI/tools: Gridelyx identity, terminology migration, versions, capabilities, build locks, retained requirements and toolchain state. Changes are contract changes.
 
-### `ai`
+### [`ai`](../ai/)
 Contains compact context/navigation/project-control state, not copied source trees. AI context points to authoritative files and cannot promote assumptions by repetition.
 
-### `references`
-Contains Gridelyx-authored navigation/policy material only. Upstream source checkouts are hydrated to `.reference-cache/`, never copied into tracked `references/upstream/` directories.
+### [`references`](../references/)
+Contains Gridelyx-authored navigation/policy material only. Upstream source checkouts are hydrated to `.reference-cache/`, never copied into tracked [`references/upstream/`](../references/upstream/) directories.
 
-### `vault`
-Contains acquisition metadata only. It is not a binary store. `manifest.json` describes official providers, locked versions/revisions and resolver strategy; `tools/redistribution_guard.py` prevents tracked upstream archives/binaries.
+### [`vault`](../vault/)
+Contains acquisition metadata only. It is not a binary store. [`manifest.json`](../vault/manifest.json) describes official providers, locked versions/revisions and resolver strategy; [`tools/redistribution_guard.py`](../tools/redistribution_guard.py) prevents tracked upstream archives/binaries.
 
-### `docs/community`
+### [`docs/community`](community/)
 Owns newcomer/contributor orientation and evidence literacy. Community docs must distinguish planning/framework state from tested/target-validated support.
 
 ## Runtime data layout
