@@ -9,7 +9,7 @@ Target state:
 - ModDevGradle: `2.0.144`
 - Java language/toolchain: `25`
 - Gradle: `9.2.1`
-- canonical project root: `templates/neoforge-26.2`
+- canonical project root: [`../../../templates/neoforge-26.2/`](../../../templates/neoforge-26.2/)
 
 This is a **routing and engineering skill**, not a copy of the NeoForge MDK, Minecraft source, NeoForge binaries or dependency archives.
 
@@ -17,16 +17,16 @@ This is a **routing and engineering skill**, not a copy of the NeoForge MDK, Min
 
 Before generating version-specific mod code, read:
 
-1. `AGENTS.md`
-2. `docs/AI_MODDING_REFERENCE_CORPUS.md`
-3. `platform/versions.json`
-4. `platform/reference-sources.json`
-5. `platform/toolchain-requirements.json`
-6. `templates/neoforge-26.2/build.gradle`
-7. `templates/neoforge-26.2/gradle.properties`
-8. the relevant Gridelyx template source/resources for the requested feature.
+1. [`../../../AGENTS.md`](../../../AGENTS.md)
+2. [`../../../docs/AI_MODDING_REFERENCE_CORPUS.md`](../../../docs/AI_MODDING_REFERENCE_CORPUS.md)
+3. [`../../../platform/versions.json`](../../../platform/versions.json)
+4. [`../../../platform/reference-sources.json`](../../../platform/reference-sources.json)
+5. [`../../../platform/toolchain-requirements.json`](../../../platform/toolchain-requirements.json)
+6. [`../../../templates/neoforge-26.2/build.gradle`](../../../templates/neoforge-26.2/build.gradle)
+7. [`../../../templates/neoforge-26.2/gradle.properties`](../../../templates/neoforge-26.2/gradle.properties)
+8. the relevant Gridelyx template source/resources under [`../../../templates/neoforge-26.2/`](../../../templates/neoforge-26.2/) for the requested feature.
 
-If `.reference-cache/index/reference-corpus.jsonl` exists, use it to locate exact upstream source/doc files before broad filesystem scanning.
+If `.reference-cache/index/reference-corpus.jsonl` exists locally, use it to locate exact upstream source/doc files before broad filesystem scanning.
 
 ## Evidence order
 
@@ -35,8 +35,8 @@ Use evidence in this order:
 1. target-validated Gridelyx code/tests;
 2. Gridelyx pinned build/template configuration;
 3. pinned official NeoForge MDK;
-4. official NeoForged documentation for the target line;
-5. NeoForge/ModDevGradle source inspection;
+4. [official NeoForged documentation](https://docs.neoforged.net/) for the target line;
+5. [NeoForge](https://github.com/neoforged/NeoForge) / [ModDevGradle](https://github.com/neoforged/ModDevGradle) source inspection;
 6. resolved dependency source/Javadocs;
 7. locally generated Minecraft development source for exact vanilla signatures/behaviour;
 8. hypothesis requiring compile/GameTest/runtime validation.
@@ -59,15 +59,15 @@ Use the canonical template as the source of structure. Keep ordinary gameplay co
 
 Consult, in order:
 
-- canonical template main mod class and metadata templates;
-- pinned MDK example;
-- NeoForged `Mod Files` / getting-started documentation.
+- canonical template main mod class and metadata templates under [`../../../templates/neoforge-26.2/`](../../../templates/neoforge-26.2/);
+- pinned MDK example identified in [`../../../platform/reference-sources.json`](../../../platform/reference-sources.json);
+- [NeoForged documentation](https://docs.neoforged.net/) for mod files/getting started.
 
 Ensure `mod_id`, package/group and metadata substitutions remain internally consistent.
 
 ### Registries / content
 
-Use deferred/official NeoForge registry mechanisms appropriate to 26.2. Consult NeoForged registry documentation and the exact target APIs before generating code.
+Use deferred/official NeoForge registry mechanisms appropriate to 26.2. Consult [NeoForged documentation](https://docs.neoforged.net/) and the exact target APIs before generating code.
 
 Prefer a single registry controller per logical mod domain over scattered static registration.
 
@@ -91,13 +91,13 @@ Validate generated output for determinism and review the diff before committing 
 
 ### Events / lifecycle
 
-Do not assume an event bus or lifecycle stage from older Forge/NeoForge versions. Resolve the exact 26.2 event/API using official docs/source.
+Do not assume an event bus or lifecycle stage from older Forge/NeoForge versions. Resolve the exact 26.2 event/API using [official documentation](https://docs.neoforged.net/) or source.
 
 Keep client-only event handlers out of dedicated-server classloading paths.
 
 ### Networking
 
-Resolve the exact payload/channel registration APIs from current NeoForged documentation/source.
+Resolve the exact payload/channel registration APIs from current [NeoForged documentation](https://docs.neoforged.net/) or [NeoForge source](https://github.com/neoforged/NeoForge).
 
 Enforce:
 
@@ -118,7 +118,7 @@ Start with supported NeoForge/Minecraft rendering hooks. Escalate to Gridelyx ad
 
 When using LWJGL/direct GPU paths:
 
-- consult resolved LWJGL sources/Javadocs;
+- consult resolved LWJGL sources/Javadocs and the [LWJGL source repository](https://github.com/LWJGL/lwjgl3);
 - respect render-thread/context ownership;
 - validate buffer lifetime and native memory;
 - batch/cull before claiming performance;
@@ -126,7 +126,7 @@ When using LWJGL/direct GPU paths:
 
 ### Bytecode / Mixins / Instrumentation
 
-Use exact descriptors and structural fingerprints from the resolved target. Consult Gridelyx advanced runtime + ASM docs/source.
+Use exact descriptors and structural fingerprints from the resolved target. Consult Gridelyx advanced runtime plus [ASM documentation](https://asm.ow2.io/) and source references in [`../../../platform/reference-sources.json`](../../../platform/reference-sources.json).
 
 Do not transform classes from memory.
 
@@ -141,7 +141,7 @@ unsafe/unknown target fingerprint -> fail closed
 
 ### Scripts / polyglot
 
-GraalVM guest code is capability-gated. Use explicit host access, bounded execution and clear fault domains. External connection does not imply world/server authority.
+GraalVM guest code is capability-gated. Use explicit host access, bounded execution and clear fault domains. External connection does not imply world/server authority. Consult the [GraalVM embedded-language documentation](https://www.graalvm.org/latest/reference-manual/embed-languages/) for exact host/guest APIs.
 
 ## Dependency lookup
 
@@ -162,11 +162,11 @@ org.junit:junit-bom:6.1.3
 com.tngtech.archunit:archunit:1.4.2
 ```
 
-Treat `platform/versions.json` / Gradle configuration as authoritative if versions change.
+Treat [`../../../platform/versions.json`](../../../platform/versions.json) and the canonical Gradle configuration under [`../../../templates/neoforge-26.2/`](../../../templates/neoforge-26.2/) as authoritative if versions change.
 
 ## Local reference commands
 
-Validate acquisition policy:
+Validate acquisition policy with [`../../../tools/hydrate_references.py`](../../../tools/hydrate_references.py), [`../../../tools/redistribution_guard.py`](../../../tools/redistribution_guard.py), and [`../../../tools/history_redistribution_guard.py`](../../../tools/history_redistribution_guard.py):
 
 ```bash
 python tools/hydrate_references.py --check
@@ -174,25 +174,25 @@ python tools/redistribution_guard.py
 python tools/history_redistribution_guard.py
 ```
 
-Hydrate the pinned MDK:
+Hydrate the pinned MDK with [`../../../tools/hydrate_references.py`](../../../tools/hydrate_references.py):
 
 ```bash
 python tools/hydrate_references.py --mdk
 ```
 
-Hydrate the high-value AI corpus:
+Hydrate the high-value AI corpus with [`../../../tools/hydrate_ai_references.py`](../../../tools/hydrate_ai_references.py):
 
 ```bash
 python tools/hydrate_ai_references.py --core
 ```
 
-Build indexes:
+Build indexes with [`../../../tools/build_reference_indexes.py`](../../../tools/build_reference_indexes.py):
 
 ```bash
 python tools/build_reference_indexes.py --corpus
 ```
 
-Resolve development dependencies from a clean/refreshing Gradle cache:
+Resolve development dependencies from a clean/refreshing Gradle cache using the canonical template [`../../../templates/neoforge-26.2/`](../../../templates/neoforge-26.2/):
 
 ```bash
 cd templates/neoforge-26.2
