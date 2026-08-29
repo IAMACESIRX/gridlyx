@@ -28,17 +28,17 @@ request / AI intent -----> |  mod workspace       |
 
 ## Zones
 
-### `templates/`
-Known-good Gridelyx-owned starting points. `templates/neoforge-26.2` is the canonical construction target and applies NeoForge ModDevGradle directly; it does not require a checked-in MDK archive or NeoForge installer.
+### [`templates/`](../templates/)
+Known-good Gridelyx-owned starting points. [`templates/neoforge-26.2`](../templates/neoforge-26.2/) is the canonical construction target and applies NeoForge ModDevGradle directly; it does not require a checked-in MDK archive or NeoForge installer.
 
-### `mods/`
+### [`mods/`](../mods/)
 Each directory is a standalone Gradle mod project. This sacrifices some deduplication in exchange for isolation: one broken experimental mod does not poison the build model of every other mod.
 
-### `references/`
+### [`references/`](../references/)
 Human/AI-readable Gridelyx documentation, proposals and navigation metadata. Complete third-party snapshots are not tracked here. Optional reference checkouts live under `.reference-cache/`.
 
-### `vault/`
-Despite the historical directory name, this is **metadata-only**. `vault/manifest.json` records official providers, version locks, acquisition mechanisms and the rule that upstream binary payloads are prohibited from repository storage.
+### [`vault/`](../vault/)
+Despite the historical directory name, this is **metadata-only**. [`vault/manifest.json`](../vault/manifest.json) records official providers, version locks, acquisition mechanisms and the rule that upstream binary payloads are prohibited from repository storage.
 
 ### `.reference-cache/`
 Ignored local acquisition/reference area. Optional upstream source checkouts and locally generated reference indexes may be materialised here without entering Git history.
@@ -52,13 +52,13 @@ The JDK is a compiler/runtime toolchain. Minecraft and NeoForge are development/
 
 Gridelyx therefore preserves **version/provenance reproducibility without binary redistribution**:
 
-- JDK: dynamically installed by `actions/setup-java` in CI or supplied by the developer locally;
-- Gradle: dynamically installed by `gradle/actions/setup-gradle` in CI;
-- Minecraft + NeoForge + mappings: resolved by `net.neoforged.moddev`;
+- JDK: dynamically installed by [`actions/setup-java`](https://github.com/actions/setup-java) in CI or supplied by the developer locally;
+- Gradle: dynamically installed by [`gradle/actions/setup-gradle`](https://github.com/gradle/actions/tree/main/setup-gradle) in CI;
+- Minecraft + NeoForge + mappings: resolved by [`net.neoforged.moddev`](https://docs.neoforged.net/toolchain/docs/plugins/mdg/);
 - Java libraries: resolved from configured Maven repositories;
 - optional MDK comparison source: pinned Git checkout under `.reference-cache/`.
 
-`tools/redistribution_guard.py` independently checks the tracked Git index and rejects prohibited binary/archive payloads.
+[`tools/redistribution_guard.py`](../tools/redistribution_guard.py) independently checks the tracked Git index and rejects prohibited binary/archive payloads.
 
 ## Validation levels
 
