@@ -75,14 +75,14 @@ Status values:
 - **Status:** **Resolved** as classification/handling; no warning suppression required.
 - **Prevention:** root failures and consequential warnings are logged separately.
 
-### FIX-2026-08-29-007 — Source synchronization can normalize line endings
+### FIX-2026-08-29-007 — Source synchronization normalized line endings
 
 - **Subsystem:** `tools/code_reference_comments.py`
 - **Symptom:** synchronization produced an unrelated line-ending-only diff in a Windows batch file.
 - **Root cause:** `Path.read_text()` used universal-newline translation and the writer forced `newline="\n"`.
 - **Fix:** preserve raw input newlines, transform a normalized logical representation, restore the original consistent newline convention on write, and reject mixed newline conventions instead of silently normalizing them.
-- **Verification:** **pending** a two-pass synchronizer run after the permanent generator repair lands.
-- **Status:** **Fixed / verification pending**.
+- **Verification:** Code Reference run `33287351035` repaired the generator, generated the required patch, passed `--check` and `git diff --check`, and pushed `54ef6c13c05c91e99a1c433eb3ddfef47a566c3e` without the prior line-ending-only batch-file regression.
+- **Status:** **Resolved**.
 - **Prevention:** text rewriters preserve encoding and newline conventions unless normalization is explicitly their purpose.
 
 ### FIX-2026-08-30-008 — Canonical native bridge header deleted during cleanup
@@ -91,8 +91,8 @@ Status values:
 - **Symptom:** Bedrock run `33287033311`, job `99191903872`, failed with `missing native/cpp/include/gridelyx_native.h` after the runtime restoration succeeded.
 - **Root cause:** commit `0219800d995822d0858d9fdf6bc6256d48f1f925` added the canonical header, then commit `c96b30081e260fad09562d7eaeabdde995ac0b6c` removed it as if it were retired even though active bridge contracts still referenced it.
 - **Fix:** restore the canonical ABI v2 header with `gridelyx_abi_version`, `gridelyx_protocol_version`, shared-memory handle/snapshot declarations and exported `gridelyx_shm_*` functions.
-- **Verification:** **pending** Bedrock and Native CI after the corrective commit.
-- **Status:** **Fixed / verification pending**.
+- **Verification:** Native CI run `33287351065` progressed past the header check and exposed the independent missing `native/cpp/src/gridelyx_native.cpp` implementation.
+- **Status:** **Resolved**.
 - **Prevention:** cleanup/deletion changes must pass inbound-reference and contract checks before canonical files are removed.
 
 ### FIX-2026-08-30-009 — Generated code-reference edit invalidated master Gradle lock
@@ -100,9 +100,9 @@ Status values:
 - **Subsystem:** build reproducibility / code-reference synchronizer
 - **Symptom:** Platform CI run `33287033314` and Public Clean Build run `33287033324` both failed because canonical `build.gradle` blob `c56cf6ff32d31c95d7a1ee5a2a779f26852d5458` did not match locked `daa82666eefb4472471b250b70e2505e3fad95c9`.
 - **Root cause:** code-reference synchronization commit `710efff1be41cf44c1e1e82e87f94b5df235c62c` modified the canonical Gradle file without refreshing `platform/master-build.lock.json`.
-- **Fix:** refresh the lock to `c56cf6ff32d31c95d7a1ee5a2a779f26852d5458`; additionally, when the code-reference generator itself changes canonical `build.gradle`, its workflow now refreshes and re-checks the lock in the same transaction.
-- **Verification:** **pending** Platform CI and Public Clean Build.
-- **Status:** **Fixed / verification pending**.
+- **Fix:** refresh the lock to `c56cf6ff32d31c95d7a1ee5a2a779f26852d5458`; additionally, when the code-reference generator itself changes canonical `build.gradle`, its workflow refreshes and re-checks the lock in the same transaction.
+- **Verification:** Public Clean Build run `33287351044` and Platform CI run `33287351071` both passed the master-build-lock check at `c56cf6ff32d31c95d7a1ee5a2a779f26852d5458` before reaching later independent failures.
+- **Status:** **Resolved**.
 - **Prevention:** generated changes to lock-governed inputs must update their derived lock atomically.
 
 ### FIX-2026-08-30-010 — Markdown linkifier remained wired to merged feature branch
@@ -111,8 +111,8 @@ Status values:
 - **Symptom:** Documentation CI run `33287033327` found dozens of resolvable prose targets still non-clickable even though a linkification workflow existed.
 - **Root cause:** after the feature branch was merged, the workflow still listened for pushes to `gridelyx-rebrand-reload-orchestrator` and still pushed generated Markdown back to that branch instead of `main`.
 - **Fix:** retarget push/PR automation to `main`, push synchronized Markdown to `main`, and serialize it with the code-reference synchronizer using a shared repository-autofix concurrency group.
-- **Verification:** **pending** Markdown Linkify and Documentation CI.
-- **Status:** **Fixed / verification pending**.
+- **Verification:** Markdown Linkify run `33287351039` was triggered from `main`, waited behind the code-reference run, then checked out the current `main` head. Its later resolver failure is tracked separately as FIX-2026-08-30-013.
+- **Status:** **Resolved**.
 - **Prevention:** branch retirement/merge checklists must migrate every workflow trigger and push destination.
 
 ### FIX-2026-08-30-011 — Bot-authored synchronization commits do not trigger chained Actions
@@ -120,9 +120,9 @@ Status values:
 - **Subsystem:** GitHub Actions orchestration
 - **Symptom:** code-reference bot commit `bb26fd2e9d43dc453401a951c27d411da831e2f3` became `main` but produced zero follow-up workflow runs.
 - **Root cause:** GitHub suppresses most new workflow runs created by pushes made with a repository `GITHUB_TOKEN`, preventing recursive automation loops.
-- **Fix:** do not rely on bot-push recursion. Autofix workflows are serialized from the original authorized push and check out the current branch head when they actually execute; a final authorized verification commit is used after generated state stabilizes.
-- **Verification:** **pending** the serialized autofix cycle and final verification pass.
-- **Status:** **External limitation** with repository-side orchestration mitigation.
+- **Fix:** do not rely on bot-push recursion. The two autofix workflows share one concurrency group and explicitly check out the branch ref for push runs so whichever executes second consumes the latest stabilized branch head.
+- **Verification:** on the `600525442e234075a5fa9e5dcbcd1978c1b89206` cycle, Code Reference run `33287351035` pushed `54ef6c13c05c91e99a1c433eb3ddfef47a566c3e`; the queued Markdown run `33287351039` then checked out that newer bot-authored head even though the bot commit itself emitted no new workflow graph.
+- **Status:** **External limitation** with verified repository-side orchestration mitigation.
 - **Prevention:** workflow chains must not assume a `GITHUB_TOKEN` push emits a second push-triggered workflow graph.
 
 ### FIX-2026-08-30-012 — Stakeholder dashboard retained link to deliberately removed marker
@@ -131,9 +131,39 @@ Status values:
 - **Symptom:** Documentation CI reported `docs/STAKEHOLDER_DASHBOARD.md:54` linking to missing `../vault/REMOTE_BINARY_IMPORT_PENDING.md`.
 - **Root cause:** commit `a06f64c7ed7258f606375a225c31c210e2f40c39` deliberately removed the obsolete pending marker, but the dashboard retained the old link and old state description.
 - **Fix:** point the health indicator at `vault/README.md` and describe the current acquisition-only/no-redistributed-binaries policy rather than recreating an obsolete marker.
-- **Verification:** **pending** Markdown link validation.
-- **Status:** **Fixed / verification pending**.
+- **Verification:** Markdown Linkify run `33287351039` no longer reported `REMOTE_BINARY_IMPORT_PENDING.md`; its remaining failures were separate resolver-semantics defects captured in FIX-2026-08-30-013.
+- **Status:** **Resolved**.
 - **Prevention:** deletion of documentation-state markers must include repository-wide inbound-link validation.
+
+### FIX-2026-08-30-013 — Markdown converter and link audit used inconsistent path semantics
+
+- **Subsystem:** `tools/markdown_linkify.py`
+- **Symptom:** Markdown Linkify run `33287351039` successfully converted 47 files, then failed its own audit with bogus broken destinations such as `gridlyx/`, `docs/`, and `community/`.
+- **Root cause:** `repo_href()` rewrote a target equal to the source directory from `.` to `target.name`, producing self-links like `docs/` from inside `docs/`. Separately, `local_link_exists()` only checked source-relative paths even though conversion deliberately supports both source-relative and repository-root target resolution.
+- **Fix:** represent same-directory links as `./` and make local-link validation use the same `resolve_repo_target()` semantics as conversion: source-relative first, repository-root fallback only when the target actually exists.
+- **Verification:** **pending** the Markdown Linkify run triggered by the corrective commit.
+- **Status:** **Fixed / verification pending**.
+- **Prevention:** transformation and validation must share one resolver contract; a fixer must pass its own audit after a rewrite.
+
+### FIX-2026-08-30-014 — Canonical C++ native implementation deleted after ABI v2 migration
+
+- **Subsystem:** native C++ bridge / Bedrock and Native CI
+- **Symptom:** Native CI run `33287351065` failed on both Linux and Windows at `tools/bedrock_check.py` with `missing native/cpp/src/gridelyx_native.cpp`.
+- **Root cause:** commit `24a9a193becf94a527c32d77edec2e0ceb302d9b` implemented the canonical Gridelyx ABI v2 / GLXM shared-memory source, then commit `7342092b5002e183f5be6286674611350762ac99` deleted that canonical implementation fifteen seconds later as supposedly retired while the header, CMake/native workspace, Bedrock checks, and consumers still required it.
+- **Fix:** restore the exact canonical `24a9a193` C++ implementation with cross-platform shared memory, GLXM magic/protocol validation, sequence publication/snapshot semantics, payload access and cleanup.
+- **Verification:** **pending** Native CI and Platform/Bedrock contract validation.
+- **Status:** **Fixed / verification pending**.
+- **Prevention:** identity-cleanup deletion requires an inbound-reference graph and a successful native/Bedrock contract check before removal.
+
+### FIX-2026-08-30-015 — Canonical Java FFM native bridge deleted after rename
+
+- **Subsystem:** advanced Java FFM/native interoperability
+- **Symptom:** Public Clean Build run `33287351044` reached real advanced compilation, then `BedrockNativeSession.java` failed because `com.example.examplemod.advanced.nativeinterop.GridelyxNativeBridge` and its `SharedMemorySession` type did not exist.
+- **Root cause:** commit `d5cd0f618e3102f33271e7217f5298141fc88595` renamed/established the canonical Java Gridelyx ABI v2 bridge, then commit `f3fa4b1184f3b885afb0beae477b0791cd649897` deleted it nine seconds later as supposedly retired while `BedrockNativeSession` still imported it.
+- **Fix:** restore the exact canonical `d5cd0f61` Java FFM bridge, including ABI/protocol verification, shared-memory create/open/unlink, payload publication with CRC32, sequence access and safe lifecycle close behavior.
+- **Verification:** **pending** Public Clean Build and Advanced Engine CI.
+- **Status:** **Fixed / verification pending**.
+- **Prevention:** migration cleanup must compile all active consumers and validate inbound imports before deleting a renamed implementation.
 
 ## Verification evidence
 
@@ -145,7 +175,14 @@ Status values:
 - Platform build-lock failure: `https://github.com/IAMACESIRX/gridlyx/actions/runs/33287033314`
 - Public Clean Build build-lock failure: `https://github.com/IAMACESIRX/gridlyx/actions/runs/33287033324`
 - Documentation link-state failure: `https://github.com/IAMACESIRX/gridlyx/actions/runs/33287033327`
-- Successful generated non-workflow synchronization commit: `https://github.com/IAMACESIRX/gridlyx/commit/710efff1be41cf44c1e1e82e87f94b5df235c62c`
+- Verified code-reference/newline synchronization: `https://github.com/IAMACESIRX/gridlyx/actions/runs/33287351035`
+- Markdown resolver failure after branch wiring repair: `https://github.com/IAMACESIRX/gridlyx/actions/runs/33287351039`
+- Public clean build advanced Java bridge failure: `https://github.com/IAMACESIRX/gridlyx/actions/runs/33287351044`
+- Native C++ implementation failure: `https://github.com/IAMACESIRX/gridlyx/actions/runs/33287351065`
+- Platform CI follow-on Bedrock/native failure: `https://github.com/IAMACESIRX/gridlyx/actions/runs/33287351071`
+- Advanced Engine follow-on validation failure: `https://github.com/IAMACESIRX/gridlyx/actions/runs/33287351076`
+- Reachable-history publication audit success: `https://github.com/IAMACESIRX/gridlyx/actions/runs/33287351092`
+- Successful generated non-workflow synchronization commit: `https://github.com/IAMACESIRX/gridlyx/commit/54ef6c13c05c91e99a1c433eb3ddfef47a566c3e`
 
 ## Entry template
 

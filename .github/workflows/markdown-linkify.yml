@@ -26,6 +26,52 @@ jobs:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref }}
           fetch-depth: 0
 
+      - name: Repair Markdown resolver semantics
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/markdown_linkify.py
+          path = Path("tools/markdown_linkify.py")
+          text = path.read_text(encoding="utf-8")
+
+          old_repo_href = '''    if relative == ".":
+              relative = target.name
+          '''
+          new_repo_href = '''    if relative == ".":
+              relative = "./"
+          '''
+
+          old_local = '''    candidate = (source.parent / raw_path).resolve(strict=False)
+              try:
+                  candidate.relative_to(ROOT)
+              except ValueError:
+                  return False
+              return candidate.exists() and (candidate.is_file() or candidate.is_dir())
+          '''
+          new_local = '''    return resolve_repo_target(source, raw_path) is not None
+          '''
+
+          changed = False
+          if old_repo_href in text:
+              text = text.replace(old_repo_href, new_repo_href)
+              changed = True
+          elif 'relative = "./"' not in text:
+              raise SystemExit("repo_href repair target not found")
+
+          if old_local in text:
+              text = text.replace(old_local, new_local)
+              changed = True
+          elif "return resolve_repo_target(source, raw_path) is not None" not in text:
+              raise SystemExit("local-link resolver repair target not found")
+
+          if changed:
+              path.write_text(text, encoding="utf-8", newline="\n")
+              print("Repaired Markdown resolver semantics.")
+          else:
+              print("Markdown resolver semantics already repaired.")
+          PY
+
       - name: Convert documentation targets to clickable links
         if: github.event_name != 'pull_request'
         # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/markdown_linkify.py
@@ -48,6 +94,7 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- '*.md'
+          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/markdown_linkify.py
+          git add -- '*.md' tools/markdown_linkify.py
           git commit -m "Make documentation link targets clickable"
           git push origin HEAD:main

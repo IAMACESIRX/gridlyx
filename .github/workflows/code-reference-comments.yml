@@ -21,107 +21,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref }}
           fetch-depth: 0
-
-      - name: Repair generator newline preservation
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/code_reference_comments.py
-          path = Path("tools/code_reference_comments.py")
-          text = path.read_text(encoding="utf-8")
-
-          old_strip = '''def strip_generated_comments(text: str) -> str:
-              generated_prefixes = (
-              "# Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
-              "// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
-          )
-              lines = [
-                  line
-                  for line in text.splitlines()
-                  if not line.lstrip().startswith(generated_prefixes)
-              ]
-              result = "\\n".join(lines)
-              if text.endswith("\\n"):
-                  result += "\\n"
-              return result
-          '''
-          new_strip = '''def strip_generated_comments(text: str) -> str:
-              generated_prefixes = (
-                  "# Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
-                  "// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
-              )
-              lines = [
-                  line
-                  for line in text.splitlines()
-                  if not line.lstrip().startswith(generated_prefixes)
-              ]
-              result = "\\n".join(lines)
-              if text.endswith("\\n"):
-                  result += "\\n"
-              return result
-          '''
-
-          old_main = '''        try:
-                      original = full_path.read_text(encoding="utf-8")
-                  except (UnicodeDecodeError, OSError):
-                      continue
-          
-                  updated = transformed_text(path, original, tracked, by_basename, java_roots)
-                  if updated == original:
-                      continue
-          
-                  changed.append(path.as_posix())
-                  if args.fix:
-                      full_path.write_text(updated, encoding="utf-8", newline="\\n")
-          '''
-          new_main = '''        try:
-                      with full_path.open("r", encoding="utf-8", newline="") as handle:
-                          original = handle.read()
-                  except (UnicodeDecodeError, OSError):
-                      continue
-          
-                  crlf_count = original.count("\\r\\n")
-                  remainder = original.replace("\\r\\n", "")
-                  if crlf_count and ("\\r" in remainder or "\\n" in remainder):
-                      raise ValueError(f"mixed newline conventions are unsupported: {path}")
-                  if crlf_count:
-                      logical = original.replace("\\r\\n", "\\n")
-                      newline = "\\r\\n"
-                  elif "\\r" in original:
-                      if "\\n" in original:
-                          raise ValueError(f"mixed newline conventions are unsupported: {path}")
-                      logical = original.replace("\\r", "\\n")
-                      newline = "\\r"
-                  else:
-                      logical = original
-                      newline = "\\n"
-          
-                  updated_logical = transformed_text(path, logical, tracked, by_basename, java_roots)
-                  updated = updated_logical if newline == "\\n" else updated_logical.replace("\\n", newline)
-                  if updated == original:
-                      continue
-          
-                  changed.append(path.as_posix())
-                  if args.fix:
-                      with full_path.open("w", encoding="utf-8", newline="") as handle:
-                          handle.write(updated)
-          '''
-
-          changed = False
-          if old_strip in text:
-              text = text.replace(old_strip, new_strip)
-              changed = True
-          if old_main in text:
-              text = text.replace(old_main, new_main)
-              changed = True
-          if changed:
-              path.write_text(text, encoding="utf-8", newline="\n")
-              print("Repaired generator formatting and newline preservation.")
-          else:
-              print("Generator newline preservation already repaired.")
-          PY
 
       - name: Generate project-local reference comments
         # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/code_reference_comments.py
@@ -129,6 +30,7 @@ jobs:
 
       - name: Refresh generated canonical Gradle lock when needed
         run: |
+          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/build.gradle
           if ! git diff --quiet -- templates/neoforge-26.2/build.gradle; then
             # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/build_lock.py
             python tools/build_lock.py --refresh
@@ -145,15 +47,18 @@ jobs:
 
       - name: Show workflow reference patch
         run: |
+          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/tree/main/.github/workflows
           if git diff --quiet -- .github/workflows; then
             echo 'No workflow reference comments require privileged synchronization.'
           else
             echo 'BEGIN WORKFLOW REFERENCE PATCH'
+            # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/tree/main/.github/workflows
             git diff -- .github/workflows
             echo 'END WORKFLOW REFERENCE PATCH'
           fi
 
       - name: Restore workflow files before bot commit
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/tree/main/.github/workflows
         run: git restore -- .github/workflows
 
       - name: Require pull requests to include generated non-workflow comments
