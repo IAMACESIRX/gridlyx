@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
   "canonical_path": "templates/neoforge-26.2/build.gradle",
-  "git_blob_sha1": "daa82666eefb4472471b250b70e2505e3fad95c9",
+  "git_blob_sha1": "c56cf6ff32d31c95d7a1ee5a2a779f26852d5458",
   "policy": "All generated mod workspaces inherit this build.gradle byte-for-byte. Change only by an explicit platform lock refresh."
 }

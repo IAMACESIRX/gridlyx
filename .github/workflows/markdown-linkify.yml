@@ -3,15 +3,18 @@ name: Markdown Linkify
 on:
   push:
     branches:
-      - gridelyx-rebrand-reload-orchestrator
+      - main
   pull_request:
     branches:
       - main
-      - gridelyx-rebrand-reload-orchestrator
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: repository-autofix-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   linkify:
@@ -25,9 +28,11 @@ jobs:
 
       - name: Convert documentation targets to clickable links
         if: github.event_name != 'pull_request'
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/markdown_linkify.py
         run: python tools/markdown_linkify.py --fix
 
       - name: Verify clickable and resolvable links
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/markdown_linkify.py
         run: python tools/markdown_linkify.py --check
 
       - name: Check whitespace
@@ -45,4 +50,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- '*.md'
           git commit -m "Make documentation link targets clickable"
-          git push origin HEAD:gridelyx-rebrand-reload-orchestrator
+          git push origin HEAD:main

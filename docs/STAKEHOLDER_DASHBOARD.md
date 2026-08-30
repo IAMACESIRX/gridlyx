@@ -51,7 +51,7 @@ production + release hardening
 | Java canonical lane | Minecraft 26.2 / NeoForge 26.2.0.67 / Java 25 | `platform/versions.json` |
 | Cross-edition target | Java + Bedrock behind capability adapters | [`FEATURE_MAP.md`](FEATURE_MAP.md) |
 | AI continuity | deterministic context map/index + handoff and decision ledgers | `ai/` |
-| Large reference payload | manifest/control ready; remote binary import still pending while marker exists | [`vault/REMOTE_BINARY_IMPORT_PENDING.md`](../vault/REMOTE_BINARY_IMPORT_PENDING.md) |
+| Large reference payload | acquisition-only manifest/control is active; upstream binary storage is prohibited | [`vault/README.md`](../vault/README.md) |
 | Repository rename | requested `IAMACESIRX/gridlyx`; GitHub metadata action tracked separately | `platform/repository-metadata.json` |
 
 ## Stakeholder filters

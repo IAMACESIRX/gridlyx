@@ -11,8 +11,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: code-reference-comments-${{ github.ref }}
-  cancel-in-progress: true
+  group: repository-autofix-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   synchronize:
@@ -23,15 +23,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Repair generated-comment cleanup predicate
+      - name: Repair generator newline preservation
         run: |
           python - <<'PY'
           from pathlib import Path
 
+          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/code_reference_comments.py
           path = Path("tools/code_reference_comments.py")
           text = path.read_text(encoding="utf-8")
-          old = '    lines = [line for line in text.splitlines() if MARKER not in line]'
-          new = '''    generated_prefixes = (
+
+          old_strip = '''def strip_generated_comments(text: str) -> str:
+              generated_prefixes = (
               "# Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
               "// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
           )
@@ -39,18 +41,103 @@ jobs:
                   line
                   for line in text.splitlines()
                   if not line.lstrip().startswith(generated_prefixes)
-              ]'''
-          if old in text:
-              path.write_text(text.replace(old, new), encoding="utf-8", newline="\n")
-              print("Repaired generated-comment cleanup predicate.")
+              ]
+              result = "\\n".join(lines)
+              if text.endswith("\\n"):
+                  result += "\\n"
+              return result
+          '''
+          new_strip = '''def strip_generated_comments(text: str) -> str:
+              generated_prefixes = (
+                  "# Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
+                  "// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
+              )
+              lines = [
+                  line
+                  for line in text.splitlines()
+                  if not line.lstrip().startswith(generated_prefixes)
+              ]
+              result = "\\n".join(lines)
+              if text.endswith("\\n"):
+                  result += "\\n"
+              return result
+          '''
+
+          old_main = '''        try:
+                      original = full_path.read_text(encoding="utf-8")
+                  except (UnicodeDecodeError, OSError):
+                      continue
+          
+                  updated = transformed_text(path, original, tracked, by_basename, java_roots)
+                  if updated == original:
+                      continue
+          
+                  changed.append(path.as_posix())
+                  if args.fix:
+                      full_path.write_text(updated, encoding="utf-8", newline="\\n")
+          '''
+          new_main = '''        try:
+                      with full_path.open("r", encoding="utf-8", newline="") as handle:
+                          original = handle.read()
+                  except (UnicodeDecodeError, OSError):
+                      continue
+          
+                  crlf_count = original.count("\\r\\n")
+                  remainder = original.replace("\\r\\n", "")
+                  if crlf_count and ("\\r" in remainder or "\\n" in remainder):
+                      raise ValueError(f"mixed newline conventions are unsupported: {path}")
+                  if crlf_count:
+                      logical = original.replace("\\r\\n", "\\n")
+                      newline = "\\r\\n"
+                  elif "\\r" in original:
+                      if "\\n" in original:
+                          raise ValueError(f"mixed newline conventions are unsupported: {path}")
+                      logical = original.replace("\\r", "\\n")
+                      newline = "\\r"
+                  else:
+                      logical = original
+                      newline = "\\n"
+          
+                  updated_logical = transformed_text(path, logical, tracked, by_basename, java_roots)
+                  updated = updated_logical if newline == "\\n" else updated_logical.replace("\\n", newline)
+                  if updated == original:
+                      continue
+          
+                  changed.append(path.as_posix())
+                  if args.fix:
+                      with full_path.open("w", encoding="utf-8", newline="") as handle:
+                          handle.write(updated)
+          '''
+
+          changed = False
+          if old_strip in text:
+              text = text.replace(old_strip, new_strip)
+              changed = True
+          if old_main in text:
+              text = text.replace(old_main, new_main)
+              changed = True
+          if changed:
+              path.write_text(text, encoding="utf-8", newline="\n")
+              print("Repaired generator formatting and newline preservation.")
           else:
-              print("Cleanup predicate already repaired.")
+              print("Generator newline preservation already repaired.")
           PY
 
       - name: Generate project-local reference comments
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/code_reference_comments.py
         run: python tools/code_reference_comments.py --fix
 
+      - name: Refresh generated canonical Gradle lock when needed
+        run: |
+          if ! git diff --quiet -- templates/neoforge-26.2/build.gradle; then
+            # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/build_lock.py
+            python tools/build_lock.py --refresh
+          fi
+          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/build_lock.py
+          python tools/build_lock.py --check
+
       - name: Verify complete generated state
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/code_reference_comments.py
         run: python tools/code_reference_comments.py --check
 
       - name: Validate patch whitespace
