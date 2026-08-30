@@ -1,3 +1,4 @@
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/native/cpp/include/gridelyx_native.h
 #include "gridelyx_native.h"
 
 #include <cstddef>

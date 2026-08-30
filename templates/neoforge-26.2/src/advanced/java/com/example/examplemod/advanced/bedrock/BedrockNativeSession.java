@@ -1,5 +1,6 @@
 package com.example.examplemod.advanced.bedrock;
 
+// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/templates/neoforge-26.2/src/advanced/java/com/example/examplemod/advanced/nativeinterop/GridelyxNativeBridge.java
 import com.example.examplemod.advanced.nativeinterop.GridelyxNativeBridge;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
