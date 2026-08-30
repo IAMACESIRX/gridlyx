@@ -69,6 +69,7 @@ nav:
       - Decision Framework: FEATURE_DECISION_FRAMEWORK.md
       - Project Values: PROJECT_VALUES.md
       - Linking Policy: LINKING_POLICY.md
+      - Fix Log: FIX_LOG.md
       - TODO: TODO.md
       - Labels and Filtering: LABELS_AND_FILTERING.md
   - Release & Community:

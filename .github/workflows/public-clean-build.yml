@@ -7,13 +7,21 @@ on:
       - '.github/actions/gridelyx-toolchain/**'
       - '.github/workflows/public-clean-build.yml'
       - 'templates/neoforge-26.2/**'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/versions.json
       - 'platform/versions.json'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/master-build.lock.json
       - 'platform/master-build.lock.json'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/toolchain-requirements.json
       - 'platform/toolchain-requirements.json'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/vault/manifest.json
       - 'vault/manifest.json'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/hydrate_references.py
       - 'tools/hydrate_references.py'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/redistribution_guard.py
       - 'tools/redistribution_guard.py'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/validate_platform.py
       - 'tools/validate_platform.py'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/build_lock.py
       - 'tools/build_lock.py'
   push:
     branches: [main, master]
@@ -21,13 +29,21 @@ on:
       - '.github/actions/gridelyx-toolchain/**'
       - '.github/workflows/public-clean-build.yml'
       - 'templates/neoforge-26.2/**'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/versions.json
       - 'platform/versions.json'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/master-build.lock.json
       - 'platform/master-build.lock.json'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/platform/toolchain-requirements.json
       - 'platform/toolchain-requirements.json'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/vault/manifest.json
       - 'vault/manifest.json'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/hydrate_references.py
       - 'tools/hydrate_references.py'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/redistribution_guard.py
       - 'tools/redistribution_guard.py'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/validate_platform.py
       - 'tools/validate_platform.py'
+      # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/build_lock.py
       - 'tools/build_lock.py'
 
 permissions:
@@ -41,18 +57,22 @@ jobs:
   clean-room-java:
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    env:
-      GRADLE_USER_HOME: ${{ runner.temp }}/gridelyx-empty-gradle-home
     steps:
       - name: Checkout Gridelyx source only
         uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
+      - name: Configure isolated Gradle home
+        shell: bash
+        run: echo "GRADLE_USER_HOME=$RUNNER_TEMP/gridelyx-empty-gradle-home" >> "$GITHUB_ENV"
+
       - name: Prove tracked tree contains no redistributed upstream payloads
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/redistribution_guard.py
         run: python tools/redistribution_guard.py
 
       - name: Install locked Java and Gradle dynamically
+        # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/.github/actions/gridelyx-toolchain/action.yml
         uses: ./.github/actions/gridelyx-toolchain
 
       - name: Start from an empty Gradle dependency cache
@@ -65,9 +85,13 @@ jobs:
 
       - name: Validate source and acquisition contracts
         run: |
+          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/hydrate_references.py
           python tools/hydrate_references.py --check
+          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/redistribution_guard.py
           python tools/redistribution_guard.py
+          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/build_lock.py
           python tools/build_lock.py --check
+          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/validate_platform.py
           python tools/validate_platform.py
 
       - name: Resolve upstream development dependencies and build from scratch
@@ -88,6 +112,7 @@ jobs:
 
       - name: Re-prove source tree stayed payload-free
         run: |
+          # Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/tools/redistribution_guard.py
           python tools/redistribution_guard.py
           git status --short
 
