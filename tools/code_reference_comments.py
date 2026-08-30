@@ -336,9 +336,9 @@ def line_references(
 
 def strip_generated_comments(text: str) -> str:
     generated_prefixes = (
-    "# Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
-    "// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
-)
+        "# Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
+        "// Gridelyx local reference: https://github.com/IAMACESIRX/gridlyx/blob/main/",
+    )
     lines = [
         line
         for line in text.splitlines()
@@ -397,17 +397,36 @@ def main() -> int:
             continue
         full_path = ROOT / path.as_posix()
         try:
-            original = full_path.read_text(encoding="utf-8")
+            with full_path.open("r", encoding="utf-8", newline="") as handle:
+                original = handle.read()
         except (UnicodeDecodeError, OSError):
             continue
 
-        updated = transformed_text(path, original, tracked, by_basename, java_roots)
+        crlf_count = original.count("\r\n")
+        remainder = original.replace("\r\n", "")
+        if crlf_count and ("\r" in remainder or "\n" in remainder):
+            raise ValueError(f"mixed newline conventions are unsupported: {path}")
+        if crlf_count:
+            logical = original.replace("\r\n", "\n")
+            newline = "\r\n"
+        elif "\r" in original:
+            if "\n" in original:
+                raise ValueError(f"mixed newline conventions are unsupported: {path}")
+            logical = original.replace("\r", "\n")
+            newline = "\r"
+        else:
+            logical = original
+            newline = "\n"
+
+        updated_logical = transformed_text(path, logical, tracked, by_basename, java_roots)
+        updated = updated_logical if newline == "\n" else updated_logical.replace("\n", newline)
         if updated == original:
             continue
 
         changed.append(path.as_posix())
         if args.fix:
-            full_path.write_text(updated, encoding="utf-8", newline="\n")
+            with full_path.open("w", encoding="utf-8", newline="") as handle:
+                handle.write(updated)
 
     if args.check and changed:
         print("FAIL: project-local reference comments are missing or stale:")
